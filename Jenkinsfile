@@ -14,7 +14,7 @@ pipeline {
             checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/UKHomeOffice/keycloak-theme-govuk.git']]])
             sh 'npm install'
             sh 'npm run build'
-            stash includes: "govuk/*", name: "govuk"
+            stash includes: "govuk/**", name: "govuk"
         }
     }
     stage('Build SMS 2FA') {
