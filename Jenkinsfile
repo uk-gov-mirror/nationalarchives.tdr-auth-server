@@ -33,11 +33,14 @@ pipeline {
         agent {
             label 'master'
         }
-        unstash 'govuk'
-        unstash 'sms-authenticator'
-        unstash 'sms-templates'
-        unstash 'messages'
-        sh 'docker build -t nationalarchives/auth .'
+        steps {
+            unstash 'govuk'
+            unstash 'sms-authenticator'
+            unstash 'sms-templates'
+            unstash 'messages'
+            sh 'docker build -t nationalarchives/auth .'
+        }
+
     }
   }
 }
