@@ -1,6 +1,8 @@
 pipeline {
   agent none
-
+  parameters {
+    choice(name: "STAGE", choices: ["intg", "staging", "prod"], description: "The stage you are building the auth server for")
+  }
   stages {
     stage('Build Theme') {
         agent {
@@ -38,9 +40,13 @@ pipeline {
             unstash 'sms-authenticator'
             unstash 'sms-templates'
             unstash 'messages'
-            sh 'docker build -t nationalarchives/auth .'
+            sh 'docker build -t nationalarchives/tdr-auth-server .'
+            withCredentials([usernamePassword(credentialsId: "docker", usernameVariable: "USERNAME", passwordVariable: "PASSWORD")]) {
+                sh "echo $PASSWORD | docker login --username $USERNAME --password-stdin"
+                sh "docker push nationalarchives/tdr-auth-server:${params.STAGE}"
+                slackSend color: "good", message: "The keycloak auth app has been pushed to docker hub", channel: "#tdr"
+            }
         }
-
     }
   }
 }
