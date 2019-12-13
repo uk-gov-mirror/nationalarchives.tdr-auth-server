@@ -26,7 +26,7 @@ pipeline {
                     }
                 }
                 steps {
-                    checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/UKGovernmentBEIS/keycloak-sms-authenticator-sns.git']]])
+                    checkout([$class: 'GitSCM', branches: [[name: '*/develop']], userRemoteConfigs: [[url: 'https://github.com/UKGovernmentBEIS/keycloak-sms-authenticator-sns.git']]])
                     sh '/apache-maven-3.6.3/bin/mvn package'
                     stash includes: "target/keycloak-sms-authenticator-sns-*.jar", name: "sms-authenticator"
                     stash includes: "templates/sms-*", name: "sms-templates"
