@@ -41,11 +41,12 @@ pipeline {
             label 'master'
         }
         steps {
+            sh "rm -rf target"
             unstash 'govuk'
             unstash 'sms-authenticator'
             unstash 'sms-templates'
             unstash 'messages'
-            sh 'docker build -t nationalarchives/tdr-auth-server .'
+            sh "docker build -t nationalarchives/tdr-auth-server:${params.STAGE} ."
             withCredentials([usernamePassword(credentialsId: "docker", usernameVariable: "USERNAME", passwordVariable: "PASSWORD")]) {
                 sh "echo $PASSWORD | docker login --username $USERNAME --password-stdin"
                 sh "docker push nationalarchives/tdr-auth-server:${params.STAGE}"
