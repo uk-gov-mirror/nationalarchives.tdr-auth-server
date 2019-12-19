@@ -1,7 +1,12 @@
 pipeline {
-  agent none
+  agent {
+    label "master"
+  }
   parameters {
     choice(name: "STAGE", choices: ["intg", "staging", "prod"], description: "The stage you are building the auth server for")
+  }
+  environment {
+    mgmtAccount = sh(returnStdout: true, script: 'echo $MANAGEMENT_ACCOUNT').trim()
   }
   stages {
     stage('Build artifacts') {
@@ -54,5 +59,30 @@ pipeline {
             }
         }
     }
+    stage("Update ECS container") {
+        agent {
+            ecs {
+                inheritFrom "aws"
+                taskrole "arn:aws:iam::${env.mgmtAccount}:role/TDRJenkinsNodeRole${params.STAGE.capitalize()}"
+            }
+        }
+        steps {
+            script {
+                def accountNumber = getAccountNumberFromStage()
+                sh "python /update_service.py ${accountNumber} ${STAGE} keycloak"
+                slackSend color: "good", message: "The keycloak app has been updated in ECS", channel: "#tdr"
+            }
+        }
+    }
   }
+}
+
+def getAccountNumberFromStage() {
+    def stageToAccountMap = [
+            "intg": env.INTG_ACCOUNT,
+            "staging": env.STAGING_ACCOUNT,
+            "prod": env.PROD_ACCOUNT
+    ]
+
+    return stageToAccountMap.get(params.STAGE)
 }
