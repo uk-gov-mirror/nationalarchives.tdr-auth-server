@@ -11,7 +11,7 @@ The first two are run in parallel.
 
 One clones the Home Office's govuk keycloak theme project and builds it.
 
-The other clones a TNA fork of BEIS' SMS MFA keycloak repo and builds that. The original repo is missing a dependency in the pom which I've added in the fork. 
+The other clones a [TNA fork](https://github.com/nationalarchives/keycloak-sms-authenticator-sns) of BEIS' SMS MFA keycloak repo and builds that. The original repo is missing a dependency in the pom which I've added in the fork. 
 
 The output from both of these are stashed and then unstashed in the third stage. They are then used to build the Dockerfile.
 
