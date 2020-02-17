@@ -69,7 +69,7 @@ pipeline {
         steps {
             script {
                 def accountNumber = getAccountNumberFromStage()
-                sh "python /update_service.py ${accountNumber} ${STAGE} keycloak"
+                sh "python3 /update_service.py ${accountNumber} ${STAGE} keycloak"
                 slackSend color: "good", message: "The keycloak app has been updated in ECS", channel: "#tdr"
             }
         }
