@@ -55,7 +55,7 @@ pipeline {
             withCredentials([usernamePassword(credentialsId: "docker", usernameVariable: "USERNAME", passwordVariable: "PASSWORD")]) {
                 sh "echo $PASSWORD | docker login --username $USERNAME --password-stdin"
                 sh "docker push nationalarchives/tdr-auth-server:${params.STAGE}"
-                slackSend color: "good", message: "The keycloak auth app has been pushed to docker hub", channel: "#tdr"
+                slackSend color: "good", message: "The keycloak auth app has been pushed to docker hub", channel: "#tdr-releases"
             }
         }
     }
@@ -70,7 +70,7 @@ pipeline {
             script {
                 def accountNumber = getAccountNumberFromStage()
                 sh "python3 /update_service.py ${accountNumber} ${STAGE} keycloak"
-                slackSend color: "good", message: "The keycloak app has been updated in ECS", channel: "#tdr"
+                slackSend color: "good", message: "The keycloak app has been updated in ECS", channel: "#tdr-releases"
             }
         }
     }
