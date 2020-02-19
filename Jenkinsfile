@@ -24,20 +24,6 @@ pipeline {
                     stash includes: "govuk/**", name: "govuk"
                 }
             }
-            stage('Build SMS 2FA') {
-                agent {
-                    ecs {
-                        inheritFrom 'maven'
-                    }
-                }
-                steps {
-                    checkout([$class: 'GitSCM', branches: [[name: '*/develop']], userRemoteConfigs: [[url: 'https://github.com/nationalarchives/keycloak-sms-authenticator-sns.git']]])
-                    sh '/apache-maven-3.6.3/bin/mvn package'
-                    stash includes: "target/keycloak-sms-authenticator-sns-*.jar", name: "sms-authenticator"
-                    stash includes: "templates/sms-*", name: "sms-templates"
-                    stash includes: "templates/messages/messages_en.properties", name: "messages"
-                }
-            }
         }
     }
 
@@ -48,9 +34,6 @@ pipeline {
         steps {
             sh "rm -rf target"
             unstash 'govuk'
-            unstash 'sms-authenticator'
-            unstash 'sms-templates'
-            unstash 'messages'
             sh "docker build -t nationalarchives/tdr-auth-server:${params.STAGE} ."
             withCredentials([usernamePassword(credentialsId: "docker", usernameVariable: "USERNAME", passwordVariable: "PASSWORD")]) {
                 sh "echo $PASSWORD | docker login --username $USERNAME --password-stdin"
