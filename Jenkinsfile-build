@@ -4,34 +4,62 @@ pipeline {
     agent none
 
     stages {
-      stage('Build artifacts') {
-        parallel {
-          stage('Build Theme') {
-            agent {
-              ecs {
-                inheritFrom 'npm'
-              }
-            }
-            steps {
-              checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/UKHomeOffice/keycloak-theme-govuk.git']]])
-              sh 'npm install'
-              sh 'npm run build'
-              stash includes: "govuk/**", name: "govuk"
-            }
-          }
-        }
-      }
       stage('Build keycloak') {
         agent {
           label 'master'
         }
-        steps {
-          sh "rm -rf target"
-          unstash 'govuk'
-          script {
-            docker.withRegistry('', 'docker') {
-              docker.build("nationalarchives/tdr-auth-server:${versionTag}").push()
-              slackSend color: "good", message: "*Auth server* :whale: The Keycloak auth app has been pushed to Docker Hub", channel: "#tdr-releases"
+        when {
+          expression {
+            env.BRANCH_NAME == "master"
+          }
+        }
+        stages {
+          stage('Tag Release') {
+            steps {
+              sh "git tag ${versionTag}"
+              sshagent(['github-jenkins']) {
+                sh("git push origin ${versionTag}")
+              }
+            }
+          }
+          stage('Build artifacts') {
+            parallel {
+              stage('Build Theme') {
+                agent {
+                  ecs {
+                    inheritFrom 'npm'
+                  }
+                }
+                steps {
+                  checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/UKHomeOffice/keycloak-theme-govuk.git']]])
+                  sh 'npm install'
+                  sh 'npm run build'
+                  stash includes: "govuk/**", name: "govuk"
+                }
+              }
+            }
+          }
+          stage('Push docker image') {
+            steps {
+              sh "rm -rf target"
+              unstash 'govuk'
+              script {
+                docker.withRegistry('', 'docker') {
+                  docker.build("nationalarchives/tdr-auth-server:${versionTag}").push()
+                  slackSend color: "good", message: "*Auth server* :whale: The Keycloak auth app has been pushed to Docker Hub", channel: "#tdr-releases"
+                }
+              }
+            }
+          }
+          stage('Deploy to integration') {
+            steps {
+              build(
+                job: "TDR Auth Server Deploy",
+                parameters: [
+                  string(name: "STAGE", value: "intg"),
+                  string(name: "TO_DEPLOY", value: versionTag)
+                ],
+                wait: false)
             }
           }
         }
