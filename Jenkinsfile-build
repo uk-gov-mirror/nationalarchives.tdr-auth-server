@@ -4,24 +4,11 @@ pipeline {
     agent none
 
     stages {
-      stage('Build keycloak') {
+      stage('Check Docker image build') {
         agent {
           label 'master'
         }
-        when {
-          expression {
-            env.BRANCH_NAME == "master"
-          }
-        }
         stages {
-          stage('Tag Release') {
-            steps {
-              sh "git tag ${versionTag}"
-              sshagent(['github-jenkins']) {
-                sh("git push origin ${versionTag}")
-              }
-            }
-          }
           stage('Build artifacts') {
             parallel {
               stage('Build Theme') {
@@ -39,6 +26,29 @@ pipeline {
               }
             }
           }
+          stage('Build docker image') {
+            steps {
+              sh "rm -rf target"
+              unstash 'govuk'
+              script {
+                docker.withRegistry('', 'docker') {
+                  docker.build("nationalarchives/tdr-auth-server:${versionTag}")
+                }
+              }
+            }
+          }
+        }
+      }
+      stage('Post-build') {
+        agent {
+          label 'master'
+        }
+        when {
+          expression {
+            env.BRANCH_NAME == "master"
+          }
+        }
+        stages {
           stage('Push docker image') {
             steps {
               sh "rm -rf target"
@@ -55,11 +65,19 @@ pipeline {
             steps {
               build(
                 job: "TDR Auth Server Deploy",
-                parameters: [
-                  string(name: "STAGE", value: "intg"),
-                  string(name: "TO_DEPLOY", value: versionTag)
-                ],
-                wait: false)
+                  parameters: [
+                    string(name: "STAGE", value: "intg"),
+                    string(name: "TO_DEPLOY", value: versionTag)
+                  ],
+                  wait: false)
+            }
+          }
+          stage('Tag Release') {
+            steps {
+              sh "git tag ${versionTag}"
+              sshagent(['github-jenkins']) {
+                sh("git push origin ${versionTag}")
+              }
             }
           }
         }
