@@ -17,7 +17,7 @@ pipeline {
         script {
           docker.withRegistry('', 'docker') {
             sh "docker pull nationalarchives/tdr-auth-server:${params.TO_DEPLOY}"
-            sh "docker tag nationalarchives/tdr-auth-server:${params.TO_DEPLOY} nationalarchives/consignment-api:${params.STAGE}"
+            sh "docker tag nationalarchives/tdr-auth-server:${params.TO_DEPLOY} nationalarchives/tdr-auth-server:${params.STAGE}"
             sh "docker push nationalarchives/tdr-auth-server:${params.STAGE}"
             slackSend color: "good", message: "*Auth server* :whale: The Keycloak auth app has been pushed to Docker Hub", channel: "#tdr-releases"
           }
