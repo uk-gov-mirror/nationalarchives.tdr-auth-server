@@ -30,6 +30,10 @@ pipeline {
             steps {
               sh "rm -rf target"
               unstash 'govuk'
+              sshagent(['github-jenkins']) {
+                sh("git clone --branch add-keycloak-configuration git@github.com:nationalarchives/tdr-configurations.git")
+                sh("cp tdr-configurations/keycloak/realm-export.json .")
+              }
               script {
                 docker.withRegistry('', 'docker') {
                   docker.build("nationalarchives/tdr-auth-server:${versionTag}")
