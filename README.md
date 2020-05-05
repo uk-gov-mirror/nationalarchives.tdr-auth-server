@@ -15,5 +15,11 @@ The other clones a [TNA fork](https://github.com/nationalarchives/keycloak-sms-a
 
 The output from both of these are stashed and then unstashed in the third stage. They are then used to build the Dockerfile.
 
+#### import-realm shell script
+
+The import-realm.sh runs scripts to update the Keycloak json configuration file (which is held in a private repository).
+
+Primarily it injects secret values which cannot be safely stored in the configuration file.
+
 #### Configuration file
 The standalone-ha.xml is mostly the standard configuration for keycloak with a few changes to get it to work with the load balancer. Some of these are discussed in the keycloak [documentation](https://www.keycloak.org/docs/latest/server_installation/#_setting-up-a-load-balancer-or-proxy)
