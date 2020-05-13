@@ -40,6 +40,11 @@ pipeline {
                 }
               }
             }
+            post {
+              always {
+                sh("rm -rf tdr-configurations")
+              }
+            }
           }
         }
       }
@@ -87,8 +92,4 @@ pipeline {
         }
       }
     }
-    post {
-      always {
-        sh("rm -rf tdr-configurations")
-      }
 }
