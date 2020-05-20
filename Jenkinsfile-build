@@ -1,5 +1,11 @@
 def versionTag = "v${env.BUILD_NUMBER}"
 
+def setBuildStatus(String status, String desc) {
+  withCredentials([string(credentialsId: 'github-jenkins-api-key', variable: 'GITHUB_ACCESS_TOKEN')]) {
+    String sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+    String url = "https://api.github.com/repos/nationalarchives/tdr-auth-server/statuses/${sha}"
+    sh "curl -XPOST '${url}' -H 'Authorization: bearer ${env.GITHUB_ACCESS_TOKEN}' --data '{\"state\":\"${status}\",\"target_url\":\"${env.BUILD_URL}\",\"description\":\"${desc}\",\"context\":\"Jenkins TDR Auth Server build\"}'"
+
 pipeline {
     agent none
 
@@ -18,6 +24,7 @@ pipeline {
                   }
                 }
                 steps {
+                  setBuildStatus("pending", "Jenkins build has started")
                   checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/UKHomeOffice/keycloak-theme-govuk.git']]])
                   sh 'npm install'
                   sh 'npm run build'
@@ -91,5 +98,17 @@ pipeline {
           }
         }
       }
+    }
+    post {
+        failure {
+          node('master') {
+            setBuildStatus("failure", "Jenkins build has failed")
+          }
+        }
+        success {
+          node('master') {
+            setBuildStatus("success", "Jenkins build has completed successfully")
+          }
+        }
     }
 }
