@@ -5,6 +5,8 @@ def setBuildStatus(String status, String desc) {
     String sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
     String url = "https://api.github.com/repos/nationalarchives/tdr-auth-server/statuses/${sha}"
     sh "curl -XPOST '${url}' -H 'Authorization: bearer ${env.GITHUB_ACCESS_TOKEN}' --data '{\"state\":\"${status}\",\"target_url\":\"${env.BUILD_URL}\",\"description\":\"${desc}\",\"context\":\"Jenkins TDR Auth Server build\"}'"
+  }
+ }
 
 pipeline {
     agent none
