@@ -21,11 +21,14 @@ pipeline {
                   }
                 }
                 steps {
-                  tdr.reportStartOfBuildToGitHub("${repo}")
-                  checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/UKHomeOffice/keycloak-theme-govuk.git']]])
-                  sh 'npm install'
-                  sh 'npm run build'
-                  stash includes: "govuk/**", name: "govuk"
+                  script {
+                    tdr.reportStartOfBuildToGitHub("${repo}")
+                    checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/UKHomeOffice/keycloak-theme-govuk.git']]])
+                    sh 'npm install'
+                    sh 'npm run build'
+                    stash includes: "govuk/**", name: "govuk"
+                  }
+
                 }
               }
             }
@@ -99,12 +102,16 @@ pipeline {
     post {
         failure {
           node('master') {
-            tdr.reportFailedBuildToGitHub("${repo}")
+            script {
+              tdr.reportFailedBuildToGitHub("${repo}")
+            }
           }
         }
         success {
           node('master') {
-            tdr.reportSuccessfulBuildToGitHub("${repo}")
+            script {
+              tdr.reportSuccessfulBuildToGitHub("${repo}")
+            }
           }
         }
     }
