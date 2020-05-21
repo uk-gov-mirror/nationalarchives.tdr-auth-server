@@ -21,7 +21,7 @@ pipeline {
                   }
                 }
                 steps {
-                  reportStartOfBuildToGitHub("${repo}")
+                  tdr.reportStartOfBuildToGitHub("${repo}")
                   checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/UKHomeOffice/keycloak-theme-govuk.git']]])
                   sh 'npm install'
                   sh 'npm run build'
@@ -99,12 +99,12 @@ pipeline {
     post {
         failure {
           node('master') {
-            reportFailedBuildToGitHub("${repo}")
+            tdr.reportFailedBuildToGitHub("${repo}")
           }
         }
         success {
           node('master') {
-            reportSuccessfulBuildToGitHub("${repo}")
+            tdr.reportSuccessfulBuildToGitHub("${repo}")
           }
         }
     }
