@@ -1,4 +1,4 @@
-library("tdr")
+library("tdr-jenkinslib")
 
 def versionTag = "v${env.BUILD_NUMBER}"
 def repo = "tdr-auth-server"
@@ -22,13 +22,12 @@ pipeline {
                 }
                 steps {
                   script {
-                    tdr.reportStartOfBuildToGitHub("${repo}")
-                    checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/UKHomeOffice/keycloak-theme-govuk.git']]])
-                    sh 'npm install'
-                    sh 'npm run build'
-                    stash includes: "govuk/**", name: "govuk"
+                    tdr.reportStartOfBuildToGitHub(repo)
                   }
-
+                  checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/UKHomeOffice/keycloak-theme-govuk.git']]])
+                  sh 'npm install'
+                  sh 'npm run build'
+                  stash includes: "govuk/**", name: "govuk"
                 }
               }
             }
@@ -103,14 +102,14 @@ pipeline {
         failure {
           node('master') {
             script {
-              tdr.reportFailedBuildToGitHub("${repo}")
+              tdr.reportFailedBuildToGitHub(repo)
             }
           }
         }
         success {
           node('master') {
             script {
-              tdr.reportSuccessfulBuildToGitHub("${repo}")
+              tdr.reportSuccessfulBuildToGitHub(repo)
             }
           }
         }
