@@ -1,4 +1,7 @@
+library("tdr-jenkinslib")
+
 def versionTag = "v${env.BUILD_NUMBER}"
+def repo = "tdr-auth-server"
 
 pipeline {
     agent none
@@ -18,6 +21,9 @@ pipeline {
                   }
                 }
                 steps {
+                  script {
+                    tdr.reportStartOfBuildToGitHub(repo)
+                  }
                   checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/UKHomeOffice/keycloak-theme-govuk.git']]])
                   sh 'npm install'
                   sh 'npm run build'
@@ -91,5 +97,21 @@ pipeline {
           }
         }
       }
+    }
+    post {
+        failure {
+          node('master') {
+            script {
+              tdr.reportFailedBuildToGitHub(repo)
+            }
+          }
+        }
+        success {
+          node('master') {
+            script {
+              tdr.reportSuccessfulBuildToGitHub(repo)
+            }
+          }
+        }
     }
 }
