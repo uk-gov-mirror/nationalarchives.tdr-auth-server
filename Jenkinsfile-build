@@ -71,7 +71,8 @@ pipeline {
               script {
                 docker.withRegistry('', 'docker') {
                   docker.build("nationalarchives/tdr-auth-server:${versionTag}").push()
-                  slackSend color: "good", message: "*Auth server* :whale: The Keycloak auth app has been pushed to Docker Hub", channel: "#tdr-releases"
+                  tdr.postToDaTdrSlackChannel(colour: "good",
+                                              message: "*Auth server* :whale: The Keycloak auth app has been pushed to Docker Hub")
                 }
               }
             }
