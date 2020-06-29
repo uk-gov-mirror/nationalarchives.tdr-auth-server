@@ -1,7 +1,21 @@
 #!/bin/bash
 
-cat /tmp/realm-export.json | jq '(.clients[] | select (.clientId == "tdr").secret) = env.CLIENT_SECRET' \
-       | jq '(.clients[] | select (.clientId == "tdr-backend-checks").secret) = env.BACKEND_CHECKS_CLIENT_SECRET' > /tmp/realm.json
-sed -i "s,http://localhost:9000,$FRONTEND_URL,g" /tmp/realm.json
+# retrieves secret values for the TDR realm and replaces placeholder secret values
+# creates a json file containing both top level realm and TDR realm configuration in an array
+# allows all TDR realms to be imported as single json configuration file
 
-/opt/jboss/tools/docker-entrypoint.sh
+cat /tmp/tdr-realm-export.json | jq '(.clients[] | select (.clientId == "tdr").secret) = env.CLIENT_SECRET' \
+      | jq '(.clients[] | select (.clientId == "tdr-backend-checks").secret) = env.BACKEND_CHECKS_CLIENT_SECRET' > /tmp/tdr-realm.json
+sed -i "s,http://localhost:9000,$FRONTEND_URL,g" /tmp/tdr-realm.json
+
+> /tmp/tdr-combined-realms.json
+echo '[' >> /tmp/tdr-combined-realms.json
+
+cat /tmp/master-realm-export.json >> /tmp/tdr-combined-realms.json
+echo ',' >> /tmp/tdr-combined-realms.json
+
+cat /tmp/tdr-realm.json >> /tmp/tdr-combined-realms.json
+
+echo ']' >> /tmp/tdr-combined-realms.json
+
+/opt/jboss/tdr-entrypoint.sh
