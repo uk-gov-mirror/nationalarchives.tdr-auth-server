@@ -17,9 +17,11 @@ The output from both of these are stashed and then unstashed in the third stage.
 
 ### import-realm shell script
 
-The import-realm.sh runs scripts to update the Keycloak json configuration file (which is held in a private repository).
+The import-realm.sh runs scripts to update the Keycloak json configuration files (which are held in a private repository).
 
-Primarily it injects secret values which cannot be safely stored in the configuration file.
+Primarily it:
+ * injects secret values which cannot be safely stored in the configuration file.
+ * combines multiple realm json configuration files into a single json realm configuration file for import into Keycloak
 
 ### Configuration file
 The standalone-ha.xml is mostly the standard configuration for keycloak with a few changes to get it to work with the load balancer. Some of these are discussed in the keycloak [documentation](https://www.keycloak.org/docs/latest/server_installation/#_setting-up-a-load-balancer-or-proxy)
@@ -27,11 +29,11 @@ The standalone-ha.xml is mostly the standard configuration for keycloak with a f
 ### Updating Keycloak Configuration json
 
 To update Keycloak with, for example, a new client:
-1. Update the Keycloak json configuration file. See README for the tdr-configuration private repository on how to do this.
+1. Update the relevant Keycloak json configuration file (tdr-realm-export.json or master-realm-export.json). See README for the tdr-configuration private repository on how to do this.
 2. If the change to Keycloak makes use of a new secret value, for example a new client secret:
   * Add the new secret value to the parameter store using Terraform: https://github.com/nationalarchives/tdr-terraform-environments
     
     This ensures that the secret value is stored securely and is not exposed in the code.
   
-  * Update the import-realm.sh script to replace the placeholder secret value in the realm-export.json configuration file, with the new secret value set in the Terraform.
+  * Update the import-realm.sh script to replace the placeholder secret value in the relevant realm json configuration file, with the new secret value set in the Terraform.
 3. Run the Jenkins build

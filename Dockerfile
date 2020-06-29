@@ -9,5 +9,5 @@ COPY master-realm-export.json /tmp
 COPY tdr-realm-export.json /tmp
 COPY import-realm.sh /tmp
 COPY standalone-ha.xml /opt/jboss/keycloak/standalone/configuration/
-#COPY govuk/ /opt/jboss/keycloak/themes/govuk/
+COPY govuk/ /opt/jboss/keycloak/themes/govuk/
 ENTRYPOINT /tmp/import-realm.sh
