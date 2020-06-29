@@ -8,14 +8,12 @@ cat /tmp/tdr-realm-export.json | jq '(.clients[] | select (.clientId == "tdr").s
       | jq '(.clients[] | select (.clientId == "tdr-backend-checks").secret) = env.BACKEND_CHECKS_CLIENT_SECRET' > /tmp/tdr-realm.json
 sed -i "s,http://localhost:9000,$FRONTEND_URL,g" /tmp/tdr-realm.json
 
-> /tmp/tdr-combined-realms.json
-echo '[' >> /tmp/tdr-combined-realms.json
-
-cat /tmp/master-realm-export.json >> /tmp/tdr-combined-realms.json
-echo ',' >> /tmp/tdr-combined-realms.json
-
-cat /tmp/tdr-realm.json >> /tmp/tdr-combined-realms.json
-
-echo ']' >> /tmp/tdr-combined-realms.json
+{
+  echo '['
+  cat /tmp/master-realm-export.json
+  echo ','
+  cat /tmp/tdr-realm.json
+  echo ']'
+} >> /tmp/realm.json
 
 /opt/jboss/tdr-entrypoint.sh

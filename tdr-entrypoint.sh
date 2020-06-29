@@ -69,13 +69,9 @@ fi
 ################
 
 if [[ -n ${KEYCLOAK_IMPORT:-} ]]; then
-  SYS_PROPS+=" -Dkeycloak.import=$KEYCLOAK_IMPORT"
-fi
-
-if [[ -n ${KEYCLOAK_TDR_IMPORT:-} ]]; then
   SYS_PROPS+=" -Dkeycloak.migration.action=import"
   SYS_PROPS+=" -Dkeycloak.migration.provider=singleFile"
-  SYS_PROPS+=" -Dkeycloak.migration.file=/tmp/$KEYCLOAK_TDR_IMPORT"
+  SYS_PROPS+=" -Dkeycloak.migration.file=$KEYCLOAK_IMPORT"
   SYS_PROPS+=" -Dkeycloak.migration.strategy=OVERWRITE_EXISTING"
 fi
 
