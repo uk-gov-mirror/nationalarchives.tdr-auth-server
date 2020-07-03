@@ -1,24 +1,26 @@
 {
-  "tdrClient": {
-    "redirectUris": [
-      "https://tdr-staging.nationalarchives.gov.uk/*"
-    ],
-    "webOrigins": [
-      "*"
-    ]
-  },
-  "tdrBackendChecksClient": {
-    "redirectUris": [
-      "https://tdr-staging.nationalarchives.gov.uk/*"
-    ]
-  },
-  "tdrFeClient": {
-    "redirectUris": [
-      "https://tdr-staging.nationalarchives.gov.uk/*"
-    ],
-    "webOrigins": [
-      "https://tdr-staging.nationalarchives.gov.uk",
-      "*"
-    ]
+  "clients": {
+    "tdr": {
+      "redirectUris": [
+        "https://tdr-staging.nationalarchives.gov.uk/*"
+      ],
+      "webOrigins": [
+        "*"
+      ]
+    },
+    "tdr-backend-checks": {
+      "redirectUris": [
+        "https://tdr-staging.nationalarchives.gov.uk/*"
+      ]
+    },
+    "tdr-fe": {
+      "redirectUris": [
+        "https://tdr-staging.nationalarchives.gov.uk/*"
+      ],
+      "webOrigins": [
+        "https://tdr-staging.nationalarchives.gov.uk",
+        "*"
+      ]
+    }
   }
 }
