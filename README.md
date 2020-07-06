@@ -51,12 +51,11 @@ To update Keycloak with, for example, a new client:
 ## Running Locally
 
 To run, build and test locally:
-1. Create a tmp directory in the cloned repository (/tdr-auth-server/tmp)
-2. Copy the master-realm-export.json and tdr-realm-export.json from the tdr-configuration repository into the tdr-auth-server/tmp directory
-3. Build the docker image locally: 
+1. Copy the master-realm-export.json and tdr-realm-export.json from the tdr-configuration repository into the tdr-auth-server directory
+2. Build the docker image locally: 
   * Navigate to the cloned repository: `$ cd tdr-auth-server`
   * Run the docker build command: `$ docker build -t nationalarchives/tdr-auth-server:[your build tag] .`
-4. Run the local docker image: `$ docker run -d --name [some name] -p 8081:8080 -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin -e KEYCLOAK_IMPORT=/tmp/realm.json -e CLIENT_SECRET=[some value] -e BACKEND_CHECKS_CLIENT_SECRET=[some value] -e KEYCLOAK_CONFIGURATION_PROPERTIES=[env]_properties.json nationalarchives/tdr-auth-server:[your build tag]`
+3. Run the local docker image: `$ docker run -d --name [some name] -p 8081:8080 -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin -e KEYCLOAK_IMPORT=/tmp/realm.json -e CLIENT_SECRET=[some value] -e BACKEND_CHECKS_CLIENT_SECRET=[some value] -e KEYCLOAK_CONFIGURATION_PROPERTIES=[env]_properties.json nationalarchives/tdr-auth-server:[your build tag]`
   * `KEYCLOAK_USER`: root Keycloak user name
   * `KEYCLOAK_PASSWORD`: password for the root Keycloak user
   * `KEYCLOAK_IMPORT`: Location of the generated Keycloak realm json file that contains the configuration for all TDR realms
