@@ -1,15 +1,32 @@
 #!/bin/bash
-set -eou pipefail
+
+#Copyright 2016 Red Hat, Inc. and/or its affiliates
+#and other contributors as indicated by the @author tags.
+#
+#Licensed under the Apache License, Version 2.0 (the "License");
+#you may not use this file except in compliance with the License.
+#You may obtain a copy of the License at
+#
+#http://www.apache.org/licenses/LICENSE-2.0
+#
+#Unless required by applicable law or agreed to in writing, software
+#distributed under the License is distributed on an "AS IS" BASIS,
+#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#See the License for the specific language governing permissions and
+#limitations under the License.
 
 # PLEASE NOTE THE FOLLOWING
-# THIS SCRIPT IS COPIED FROM: /opt/jboss/tools/docker-entrypoint.sh
-# IT HAS ADDITIONAL TDR SPECIFIC FUNCTIONALITY FOR IMPORTING REALM JSON CONFIGURATION
-# IF THERE IS AN UPDATE OF KEYCLOAK VERSION THEN THIS FILE NEEDS TO BE KEPT INLINE WITH THE NEW docker-entrypoint.sh script
+# This script copied from: https://github.com/keycloak/keycloak-containers/blob/master/server/tools/docker-entrypoint.sh
+# It has additional TDR specific functionality for importing realm json at container start up including the top level realm json
+# If the is an update of Keycloak version then this file needs to be updated accordingly with any changes to the source script.
 
 # usage: file_env VAR [DEFAULT]
 #    ie: file_env 'XYZ_DB_PASSWORD' 'example'
 # (will allow for "$XYZ_DB_PASSWORD_FILE" to fill in the value of
 #  "$XYZ_DB_PASSWORD" from a file, especially for Docker's secrets feature)
+
+set -eou pipefail
+
 file_env() {
     local var="$1"
     local fileVar="${var}_FILE"

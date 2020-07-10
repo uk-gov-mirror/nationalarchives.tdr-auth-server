@@ -7,12 +7,9 @@ All of our documentation is stored in the [tdr-dev-documentation](https://github
 **Important Note**
 
 When updating Keycloak version the **tdr-entrypoint.sh** script needs to be updated to ensure it is kept up-to-date with any changes:
-1. Pull the Keycloak docker image version required locally
-2. Start the new Keycloak docker image locally
-3. Log onto the running Keycloak docker image
-4. On the docker image navigate to the provided Keycloak entry point script: */opt/jboss/tools/docker-entrypoint.sh*
-5. Copy the new version of the Keycloak provided entry point script: */opt/jboss/tools/docker-entrypoint.sh* into the *tdr-entrypoint.sh* script
-6. Add the following commands to the updated *tdr-entrypoint.sh*:
+1. Copy latest version of the file from GitHub: https://github.com/keycloak/keycloak-containers/blob/master/server/tools/docker-entrypoint.sh
+2. Copy the new version of the Keycloak provided entry point script into the *tdr-entrypoint.sh* script
+3. Add the following commands to the updated *tdr-entrypoint.sh*:
 
 ```
 if [[ -n ${TDR_KEYCLOAK_IMPORT:-} ]]; then
