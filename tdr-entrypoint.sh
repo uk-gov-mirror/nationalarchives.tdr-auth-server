@@ -1,6 +1,11 @@
 #!/bin/bash
 set -eou pipefail
 
+# PLEASE NOTE THE FOLLOWING
+# THIS SCRIPT IS COPIED FROM: /opt/jboss/tools/docker-entrypoint.sh
+# IT HAS ADDITIONAL TDR SPECIFIC FUNCTIONALITY FOR IMPORTING REALM JSON CONFIGURATION
+# IF THERE IS AN UPDATE OF KEYCLOAK VERSION THEN THIS FILE NEEDS TO BE KEPT INLINE WITH THE NEW docker-entrypoint.sh script
+
 # usage: file_env VAR [DEFAULT]
 #    ie: file_env 'XYZ_DB_PASSWORD' 'example'
 # (will allow for "$XYZ_DB_PASSWORD_FILE" to fill in the value of
@@ -68,11 +73,15 @@ fi
 # Realm import #
 ################
 
-if [[ -n ${KEYCLOAK_IMPORT:-} ]]; then
+if [[ -n ${TDR_KEYCLOAK_IMPORT:-} ]]; then
   SYS_PROPS+=" -Dkeycloak.migration.action=import"
   SYS_PROPS+=" -Dkeycloak.migration.provider=singleFile"
-  SYS_PROPS+=" -Dkeycloak.migration.file=$KEYCLOAK_IMPORT"
+  SYS_PROPS+=" -Dkeycloak.migration.file=$TDR_KEYCLOAK_IMPORT"
   SYS_PROPS+=" -Dkeycloak.migration.strategy=OVERWRITE_EXISTING"
+fi
+
+if [[ -n ${KEYCLOAK_IMPORT:-} ]]; then
+    SYS_PROPS+=" -Dkeycloak.import=$KEYCLOAK_IMPORT"
 fi
 
 ########################

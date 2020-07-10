@@ -2,6 +2,28 @@
 
 All of our documentation is stored in the [tdr-dev-documentation](https://github.com/nationalarchives/tdr-dev-documentation) repository.
 
+## Updating Keycloak version
+
+**Important Note**
+
+When updating Keycloak version the **tdr-entrypoint.sh** script needs to be updated to ensure it is kept up-to-date with any changes:
+1. Pull the Keycloak docker image version required locally
+2. Start the new Keycloak docker image locally
+3. Log onto the running Keycloak docker image
+4. On the docker image navigate to the provided Keycloak entry point script: */opt/jboss/tools/docker-entrypoint.sh*
+5. Copy the new version of the Keycloak provided entry point script: */opt/jboss/tools/docker-entrypoint.sh* into the *tdr-entrypoint.sh* script
+6. Add the following commands to the updated *tdr-entrypoint.sh*:
+
+```
+if [[ -n ${TDR_KEYCLOAK_IMPORT:-} ]]; then
+  SYS_PROPS+=" -Dkeycloak.migration.action=import"
+  SYS_PROPS+=" -Dkeycloak.migration.provider=singleFile"
+  SYS_PROPS+=" -Dkeycloak.migration.file=$TDR_KEYCLOAK_IMPORT"
+  SYS_PROPS+=" -Dkeycloak.migration.strategy=OVERWRITE_EXISTING"
+fi
+
+```
+
 ## Dockerfile
 This repository holds the Dockerfile used to build our keycloak server which we will be using for authentication and authorisation. 
 
@@ -34,6 +56,7 @@ The tdr-entrypoint.sh script provides the entry point on start up of the Keycloa
 It has specific TDR commands around realm import, and is copied from the default entrypoint script provided in the keycloak image (/opt/jboss/tools/docker-entrypoint.sh)
 
 ## Configuration file
+
 The standalone-ha.xml is mostly the standard configuration for keycloak with a few changes to get it to work with the load balancer. Some of these are discussed in the keycloak [documentation](https://www.keycloak.org/docs/latest/server_installation/#_setting-up-a-load-balancer-or-proxy)
 
 ## Updating Keycloak Configuration json
@@ -55,7 +78,7 @@ To run, build and test locally:
 2. Build the docker image locally: 
   * Navigate to the cloned repository: `$ cd tdr-auth-server`
   * Run the docker build command: `$ docker build -t nationalarchives/tdr-auth-server:[your build tag] .`
-3. Run the local docker image: `$ docker run -d --name [some name] -p 8081:8080 -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin -e KEYCLOAK_IMPORT=/tmp/realm.json -e CLIENT_SECRET=[some value] -e BACKEND_CHECKS_CLIENT_SECRET=[some value] -e KEYCLOAK_CONFIGURATION_PROPERTIES=[env]_properties.json nationalarchives/tdr-auth-server:[your build tag]`
+3. Run the local docker image: `$ docker run -d --name [some name] -p 8081:8080 -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin -e TDR_KEYCLOAK_IMPORT=/tmp/realm.json -e CLIENT_SECRET=[some value] -e BACKEND_CHECKS_CLIENT_SECRET=[some value] -e KEYCLOAK_CONFIGURATION_PROPERTIES=[env]_properties.json nationalarchives/tdr-auth-server:[your build tag]`
   * `KEYCLOAK_USER`: root Keycloak user name
   * `KEYCLOAK_PASSWORD`: password for the root Keycloak user
   * `KEYCLOAK_IMPORT`: Location of the generated Keycloak realm json file that contains the configuration for all TDR realms
