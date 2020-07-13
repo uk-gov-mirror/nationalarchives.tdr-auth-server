@@ -1,0 +1,25 @@
+{
+  "clients": {
+    "tdr": {
+      "redirectUris": [
+        "https://tdr-integration.nationalarchives.gov.uk/*",
+        "http://localhost:9000/*"
+      ]
+    },
+    "tdr-backend-checks": {
+      "redirectUris": [
+        "https://tdr-integration.nationalarchives.gov.uk/*"
+      ]
+    },
+    "tdr-fe": {
+      "redirectUris": [
+        "https://tdr-integration.nationalarchives.gov.uk/*",
+        "http://localhost:9000/*"
+      ],
+      "webOrigins": [
+        "https://tdr-integration.nationalarchives.gov.uk/*",
+        "http://localhost:9000/*"
+      ]
+    }
+  }
+}
