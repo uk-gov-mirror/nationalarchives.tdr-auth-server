@@ -59,7 +59,7 @@ The standalone-ha.xml is mostly the standard configuration for keycloak with a f
 ## Updating Keycloak Configuration json
 
 To update Keycloak with, for example, a new client:
-1. Update the relevant Keycloak json configuration file (tdr-realm-export.json or master-realm-export.json). See README for the tdr-configuration private repository on how to do this.
+1. Update the relevant Keycloak json configuration file (tdr-realm-export.json). See README for the tdr-configuration private repository on how to do this.
 2. If the change to Keycloak makes use of a new secret value, for example a new client secret:
   * Add the new secret value to the parameter store using Terraform: https://github.com/nationalarchives/tdr-terraform-environments
     
@@ -71,14 +71,14 @@ To update Keycloak with, for example, a new client:
 ## Running Locally
 
 To run, build and test locally:
-1. Copy the master-realm-export.json and tdr-realm-export.json from the tdr-configuration repository into the tdr-auth-server directory
+1. Copy the tdr-realm-export.json from the tdr-configuration repository into the tdr-auth-server directory
 2. Build the docker image locally: 
   * Navigate to the cloned repository: `$ cd tdr-auth-server`
   * Run the docker build command: `$ docker build -t nationalarchives/tdr-auth-server:[your build tag] .`
-3. Run the local docker image: `$ docker run -d --name [some name] -p 8081:8080 -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin -e TDR_KEYCLOAK_IMPORT=/tmp/realm.json -e CLIENT_SECRET=[some value] -e BACKEND_CHECKS_CLIENT_SECRET=[some value] -e KEYCLOAK_CONFIGURATION_PROPERTIES=[env]_properties.json nationalarchives/tdr-auth-server:[your build tag]`
+3. Run the local docker image: `$ docker run -d --name [some name] -p 8081:8080 -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin -e KEYCLOAK_IMPORT=/tmp/tdr-realm.json -e CLIENT_SECRET=[some value] -e BACKEND_CHECKS_CLIENT_SECRET=[some value] -e KEYCLOAK_CONFIGURATION_PROPERTIES=[env]_properties.json nationalarchives/tdr-auth-server:[your build tag]`
   * `KEYCLOAK_USER`: root Keycloak user name
   * `KEYCLOAK_PASSWORD`: password for the root Keycloak user
-  * `KEYCLOAK_IMPORT`: Location of the generated Keycloak realm json file that contains the configuration for all TDR realms
+  * `KEYCLOAK_IMPORT`: Location of the generated Keycloak TDR realm json file that contains the configuration for the TDR realm
   * `CLIENT_SECRET`: tdr client secret value
   * `BACKEND_CHECKS_CLIENT_SECRET`: tdr-backend-checks client secret value
   * `KEYCLOAK_CONFIGURATION_PROPERTIES`: json file containing specific Keycloak configuration to a TDR environment
@@ -87,4 +87,4 @@ To run, build and test locally:
 
 To log into the running docker container with a bash shell: `$ docker exec -it [your container name] bash`
 
-Make changes to the realm export json files in the tmp directory as necessary to test new configurations.
+Make changes to the realm export json file as necessary to test new configurations.

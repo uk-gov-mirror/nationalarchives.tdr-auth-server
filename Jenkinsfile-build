@@ -39,7 +39,6 @@ pipeline {
               sshagent(['github-jenkins']) {
                 sh("git clone --branch master git@github.com:nationalarchives/tdr-configurations.git")
                 sh("cp tdr-configurations/keycloak/tdr-realm-export.json .")
-                sh("cp tdr-configurations/keycloak/master-realm-export.json .")
               }
               script {
                 docker.withRegistry('', 'docker') {
