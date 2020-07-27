@@ -56,17 +56,39 @@ It has specific TDR commands around realm import, and is copied from the default
 
 The standalone-ha.xml is mostly the standard configuration for keycloak with a few changes to get it to work with the load balancer. Some of these are discussed in the keycloak [documentation](https://www.keycloak.org/docs/latest/server_installation/#_setting-up-a-load-balancer-or-proxy)
 
-## Updating Keycloak Configuration json
+## Manually Updating Keycloak Configuration json
 
 To update Keycloak with, for example, a new client:
 1. Update the relevant Keycloak json configuration file (tdr-realm-export.json). See README for the tdr-configuration private repository on how to do this.
 2. If the change to Keycloak makes use of a new secret value, for example a new client secret:
   * Add the new secret value to the parameter store using Terraform: https://github.com/nationalarchives/tdr-terraform-environments
     
-    This ensures that the secret value is stored securely and is not exposed in the code.
+    This ensures that the secret value is stored securely, and is not exposed in the code.
   
   * Update the update_env_client_configuration.py script to replace the placeholder secret value in the relevant realm json configuration file, with the new secret value set in the Terraform.
-3. Run the Jenkins build
+  * Update the update_env_client_configuration.py script to add any TDR environment specific configuration to the realm json configuration file.
+  
+4. Copy the updated "tdr-realm-export.json" into the tdr-auth-server repo
+5. Set the following environment variables:
+  * CLIENT_SECRET: `[TDR environment client secret]` (this will be the client secret value for the TDR environment being updated. This is stored in the AWS parameter stored for the environment)
+  * BACKEND_CHECKS_CLIENT_SECRET: `[TDR environment backend checks client secret]` (this will be the client secret value for the TDR environment being updated. This is stored in the AWS parameter stored for the environment)
+  * KEYCLOAK_CONFIGURATION_PROPERTIES: `[TDR env]_properties.json` (properties file for the TDR env being updated)
+6. Run the following command: `[location of tdr-auth-server repo] $ python manual_import_env_realm.py` (Can set up a virtual python environment to run this if needed)
+7. This will generate the "tdr-realm.json file" updated with the correct configuration for the TDR environment to be updated
+8. Login to TDR environment instance of Keycloak to update as an administrator;
+9. In the left-hand navigation panel select: Import
+10. Browse to the generated version of the "tdr-realm.json" in the tdr-auth-server repo and select it.
+11. For the import options set the following:
+ * `Import groups`: ON
+ * `Import clients`: ON
+ * `Import realm roles`: ON
+ * `Import client roles`: ON
+ * `If resource exists`: Overwrite
+12. Click "Import"
+13. Check the changes to the configuration are present in the Keycloak instance
+14. **DELETE THE GENERATED tdr-realm.json FROM LOCAL MACHINE** 
+
+   This **MUST** be done as the file contains the secret values for the Keycloak instance
 
 ## Running Locally
 
