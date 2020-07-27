@@ -1,0 +1,22 @@
+library("tdr-jenkinslib")
+
+def repo = "tdr-auth-server"
+
+pipeline {
+    agent {
+        ecs {
+            inheritFrom 'python'
+        }
+    }
+    parameters {
+        choice(name: "STAGE", choices: ["intg", "staging", "prod"], description: "TDR environment where Keycloak configuration will be updated")
+    }
+    stages {
+        stage("Update Keycloak configuration") {
+            steps {
+                echo 'HERE'
+            }
+        }
+    }
+
+}
