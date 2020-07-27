@@ -1,7 +1,10 @@
 #!/usr/bin/python3
 import subprocess
+import os
 
 from update_keycloak_configuration import update_keycloak_configuration
 
-update_keycloak_configuration('/tmp/')
+env_properties_file = os.environ['KEYCLOAK_CONFIGURATION_PROPERTIES']
+
+update_keycloak_configuration('/tmp/', env_properties_file)
 subprocess.call(['/opt/jboss/tools/docker-entrypoint.sh'])

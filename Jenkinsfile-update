@@ -38,10 +38,11 @@ pipeline {
     stage("Import TDR realm configuration") {
       steps {
         script {
+          env_properties_file = "${params.STAGE}_properties.json"
           //Hide the output of the python command to stop keycloak credentials appearing in console output
           sh """
             set +x
-            python3 /partial_import_env_realm.py ${params.STAGE} ${keycloak_user} ${keycloak_password}
+            python3 /partial_import_env_realm.py ${params.STAGE} ${keycloak_user} ${keycloak_password} ${env_properties_file}
           """
         }
       }

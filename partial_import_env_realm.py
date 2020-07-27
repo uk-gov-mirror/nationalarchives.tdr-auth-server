@@ -12,6 +12,7 @@ stage_to_url = dict(
 stage: str = sys.argv[1]
 keycloak_user: str = sys.argv[2]
 keycloak_password: str = sys.argv[3]
+env_properties_file: str = sys.argv[4]
 base_auth_url = stage_to_url.get(stage)
 keycloak_auth_url = f'{base_auth_url}/auth/realms/master/protocol/openid-connect/token'
 keycloak_tdr_partial_import_url = f'{base_auth_url}/auth/admin/realms/tdr/partialImport'
@@ -24,7 +25,7 @@ def get_access_token():
     return access_token
 
 
-update_keycloak_configuration('')
+update_keycloak_configuration('', env_properties_file)
 token = get_access_token()
 headers = {'Content-Type': 'application/json', 'Authorization': f'bearer {token}'}
 
