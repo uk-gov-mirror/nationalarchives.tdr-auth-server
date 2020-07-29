@@ -1,6 +1,6 @@
 import json
 
-from update_env_client_configuration import update_client_configuration
+from update_client_configuration import update_client_configuration
 
 def update_keycloak_configuration(directory_path, env_properties_file):
     with open(f'{directory_path}tdr-realm-export.json', 'r+') as tdr_realm:

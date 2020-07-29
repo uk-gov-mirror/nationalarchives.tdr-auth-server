@@ -33,17 +33,23 @@ pipeline {
           keycloak_password_key = "/${params.STAGE}/keycloak/admin/password"
           keycloak_user = sh(script: "python3 /ssm_get_parameter.py ${account_number} ${params.STAGE} ${keycloak_user_key}", returnStdout: true).trim()
           keycloak_password = sh(script: "python3 /ssm_get_parameter.py ${account_number} ${params.STAGE} ${keycloak_password_key}", returnStdout: true).trim()
+          tdr_client_secret = sh(script: "python3 /ssm_get_parameter.py ${account_number} ${params.STAGE} /${params.STAGE}/keycloak/client/secret", returnStdout: true).trim()
+          tdr_backend_checks_secret = sh(script: "python3 /ssm_get_parameter.py ${account_number} ${params.STAGE} /${params.STAGE}/keycloak/backend_checks_client/secret", returnStdout: true).trim()
         }
       }
     }
     stage("Import TDR realm configuration") {
+      environment {
+        CLIENT_SECRET = '${tdr_client_secret}'
+        BACKEND_CHECKS_CLIENT_SECRET = '${tdr_backend_checks_secret}'
+      }
       steps {
         script {
           env_properties_file = "${params.STAGE}_properties.json"
           //Hide the output of the python command to stop keycloak credentials appearing in console output
           sh """
             set +x
-            python3 /partial_import_env_realm.py ${params.STAGE} ${keycloak_user} ${keycloak_password} ${params.UPDATE_POLICY}
+            python3 update_import_env_realm.py ${params.STAGE} ${keycloak_user} ${keycloak_password} ${params.UPDATE_POLICY}
           """
         }
       }
