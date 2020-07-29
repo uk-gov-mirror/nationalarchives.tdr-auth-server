@@ -3,7 +3,7 @@ USER root
 RUN microdnf update && microdnf install python3
 
 COPY environment-properties /tmp/environment-properties
-COPY import_env_realm.py import_env_realm.py update_env_client_configuration.py tdr-realm-export.json /tmp/
+COPY import_env_realm.py import_env_realm.py update_env_client_configuration.py update_keycloak_configuration.py tdr-realm-export.json /tmp/
 COPY standalone-ha.xml /opt/jboss/keycloak/standalone/configuration/
 COPY govuk/ /opt/jboss/keycloak/themes/govuk/
 RUN chown -R jboss /tmp/environment-properties
