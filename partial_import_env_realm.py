@@ -34,8 +34,7 @@ with open('tdr-realm.json', 'r+') as tdr_realm:
     full_tdr_realm_data = json.load(tdr_realm)
     # Keys defined in the Keycloak representation for partial imports:
     # https://www.keycloak.org/docs-api/11.0/rest-api/index.html#_partialimportrepresentation
-    # 'users' key not included to ensure existing user not overridden by mistake
-    partial_import_keys = ["clients", "roles", "groups", "identityProviders"]
+    partial_import_keys = ["clients", "roles", "groups", "identityProviders", "users"]
     partial_import_data = {"policy": f"{update_policy}"}
 
     for key in partial_import_keys:
