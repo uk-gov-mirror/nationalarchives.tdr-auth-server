@@ -5,7 +5,6 @@ import sys
 from update_keycloak_configuration import update_keycloak_configuration
 
 stage_to_url = dict(
-    local='http://localhost:8081',
     intg='https://auth.tdr-integration.nationalarchives.gov.uk/',
     staging='https://auth.tdr-staging.nationalarchives.gov.uk/'
 )
@@ -13,7 +12,8 @@ stage_to_url = dict(
 stage: str = sys.argv[1]
 keycloak_user: str = sys.argv[2]
 keycloak_password: str = sys.argv[3]
-env_properties_file: str = sys.argv[4]
+update_policy: str = sys.argv[4]
+env_properties_file: str = f'{stage}_properties.json'
 base_auth_url = stage_to_url.get(stage)
 keycloak_auth_url = f'{base_auth_url}/auth/realms/master/protocol/openid-connect/token'
 keycloak_tdr_partial_import_url = f'{base_auth_url}/auth/admin/realms/tdr/partialImport'
@@ -34,8 +34,9 @@ with open('tdr-realm.json', 'r+') as tdr_realm:
     full_tdr_realm_data = json.load(tdr_realm)
     # Keys defined in the Keycloak representation for partial imports:
     # https://www.keycloak.org/docs-api/11.0/rest-api/index.html#_partialimportrepresentation
+    # 'users' key not included to ensure existing user not overridden by mistake
     partial_import_keys = ["clients", "roles", "groups", "identityProviders"]
-    partial_import_data = {"policy": "OVERWRITE"}
+    partial_import_data = {"policy": f"{update_policy}"}
 
     for key in partial_import_keys:
         if key not in full_tdr_realm_data:

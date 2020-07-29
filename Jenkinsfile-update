@@ -9,6 +9,7 @@ pipeline {
   }
   parameters {
     choice(name: "STAGE", choices: ["intg", "staging", "prod"], description: "TDR environment where Keycloak configuration will be updated")
+    choise(name: "UPDATE_POLICY", choices: ["OVERWRITE", "SKIP", "FAIL"], description: "Action to be performed on existing Keycloak resources")
   }
   stages {
     stage("Get TDR realm configuration") {
@@ -42,7 +43,7 @@ pipeline {
           //Hide the output of the python command to stop keycloak credentials appearing in console output
           sh """
             set +x
-            python3 /partial_import_env_realm.py ${params.STAGE} ${keycloak_user} ${keycloak_password} ${env_properties_file}
+            python3 /partial_import_env_realm.py ${params.STAGE} ${keycloak_user} ${keycloak_password} ${params.UPDATE_POLICY}
           """
         }
       }
