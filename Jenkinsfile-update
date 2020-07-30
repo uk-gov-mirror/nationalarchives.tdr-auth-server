@@ -40,8 +40,8 @@ pipeline {
     }
     stage("Import TDR realm configuration") {
       environment {
-        CLIENT_SECRET = '${tdr_client_secret}'
-        BACKEND_CHECKS_CLIENT_SECRET = '${tdr_backend_checks_secret}'
+        CLIENT_SECRET = "${tdr_client_secret}"
+        BACKEND_CHECKS_CLIENT_SECRET = "${tdr_backend_checks_secret}"
       }
       steps {
         script {
