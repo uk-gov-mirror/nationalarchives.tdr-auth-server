@@ -2,11 +2,11 @@ import requests
 import json
 import sys
 
-from update_keycloak_configuration import update_keycloak_configuration
+from update_realm_configuration import update_realm_configuration
 
 stage_to_url = dict(
-    intg='https://auth.tdr-integration.nationalarchives.gov.uk/',
-    staging='https://auth.tdr-staging.nationalarchives.gov.uk/'
+    intg='https://auth.tdr-integration.nationalarchives.gov.uk',
+    staging='https://auth.tdr-staging.nationalarchives.gov.uk'
 )
 
 stage: str = sys.argv[1]
@@ -26,7 +26,7 @@ def get_access_token():
     access_token = authentication_data['access_token']
     return access_token
 
-update_keycloak_configuration('', env_properties_file)
+update_realm_configuration('', env_properties_file)
 token = get_access_token()
 headers = {'Content-Type': 'application/json', 'Authorization': f'bearer {token}'}
 
