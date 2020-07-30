@@ -49,7 +49,7 @@ pipeline {
           //Hide the output of the python command to stop keycloak credentials appearing in console output
           sh """
             set +x
-            python3 update_import_env_realm.py ${params.STAGE} ${keycloak_user} ${keycloak_password} ${params.UPDATE_POLICY}
+            python3 update_env_realm.py ${params.STAGE} ${keycloak_user} ${keycloak_password} ${params.UPDATE_POLICY}
           """
         }
       }
