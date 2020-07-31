@@ -5,7 +5,7 @@ import sys
 from update_realm_configuration import update_realm_configuration
 
 stage_to_url = dict(
-    intg='http://localhost:8081',  # 'https://auth.tdr-integration.nationalarchives.gov.uk',
+    intg='https://auth.tdr-integration.nationalarchives.gov.uk',
     staging='https://auth.tdr-staging.nationalarchives.gov.uk'
 )
 
