@@ -74,13 +74,13 @@ def update_realm():
         data=json.dumps(full_realm_data),
         headers=headers
     )
-    print(f"Top Level Result: {top_level_result.status_code}")
+    print(f"Top Level Import Response Status: {top_level_result.status_code}")
 
     partial_result = requests.post(
         f'{base_auth_url}/auth/admin/realms/tdr/partialImport',
         data=json.dumps(partial_import_data),
         headers=headers
     )
-    print(f"Partial Result: {partial_result.status_code}")
+    print(f"Partial Import Response Status: {partial_result.status_code}")
 
 update_realm()
