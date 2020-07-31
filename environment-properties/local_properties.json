@@ -1,0 +1,22 @@
+{
+  "clients": {
+    "tdr": {
+      "redirectUris": [
+        "http://localhost:9000/*"
+      ]
+    },
+    "tdr-backend-checks": {
+      "redirectUris": [
+        "http://localhost:9000/*"
+      ]
+    },
+    "tdr-fe": {
+      "redirectUris": [
+        "http://localhost:9000/*"
+      ],
+      "webOrigins": [
+        "http://localhost:9000"
+      ]
+    }
+  }
+}
