@@ -75,9 +75,9 @@ Two REST endpoints are used to update a Keycloak realm:
     * `SKIP`: Skips any existing resources and does not update them
     * `FAIL`: Causes the whole import to fail
     * `OVERWRITE`: Overwrites the existing resource
-    * This option only applies to the partial import
+    * **Note**: This option only applies to the partial import
 
-**Note**: The `OVERWRITE` option is not available in the Jenkins job as it causes users existing group mappings to be removed.
+**Note**: The `OVERWRITE` option is not available in the Jenkins job as it causes undesirable behaviours, such as users existing group mappings to be removed.
 
 To update Keycloak with, for example, a new client:
 1. Update the relevant Keycloak json configuration file (tdr-realm-export.json). See README for the tdr-configuration private repository on how to do this.
@@ -99,10 +99,18 @@ To run, build and test locally:
 2. Build the docker image locally: 
   * Navigate to the cloned repository: `$ cd tdr-auth-server`
   * Run the docker build command: `[location of repo] $ docker build -t nationalarchives/tdr-auth-server:[your build tag] .`
-3. Run the local docker image: `[location of repo] $ docker run -d --name [some name] -p 8081:8080 -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin -e KEYCLOAK_IMPORT=/tmp/tdr-realm.json -e CLIENT_SECRET=[some value] -e BACKEND_CHECKS_CLIENT_SECRET=[some value] -e KEYCLOAK_CONFIGURATION_PROPERTIES=[env]_properties.json nationalarchives/tdr-auth-server:[your build tag]`
+3. Run the local docker image: 
+```
+[location of repo] $ docker run -d --name [some name] -p 8081:8080 \
+  -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin -e KEYCLOAK_IMPORT=/tmp/tdr-realm.json \
+  -e REALM_ADMIN_CLIENT_SECRET=[some value] -e CLIENT_SECRET=[some value] -e BACKEND_CHECKS_CLIENT_SECRET=[some value] \
+  -e KEYCLOAK_CONFIGURATION_PROPERTIES=[env]_properties.json \
+  nationalarchives/tdr-auth-server:[your build tag]
+```
   * `KEYCLOAK_USER`: root Keycloak user name
   * `KEYCLOAK_PASSWORD`: password for the root Keycloak user
   * `KEYCLOAK_IMPORT`: Location of the generated Keycloak TDR realm json file that contains the configuration for the TDR realm
+  * `REALM_ADMIN_CLIENT_SECRET`: tdr realm admin client secret value
   * `CLIENT_SECRET`: tdr client secret value
   * `BACKEND_CHECKS_CLIENT_SECRET`: tdr-backend-checks client secret value
   * `KEYCLOAK_CONFIGURATION_PROPERTIES`: json file containing specific Keycloak configuration to a TDR environment
@@ -113,8 +121,16 @@ To log into the running docker container with a bash shell: `$ docker exec -it [
 
 Make changes to the realm export json file as necessary to test new configurations.
 
-To update the realm configuration on the locally run Keycloak instances run the following python command:
+To update the realm configuration on the locally running Keycloak instances:
+1. Add the Keycloak configuration json file to the root of the project: tdr-realm-export.json
+2. Make necessary changes to the configuration json
+3. Add the following environment variables:
+  * `REALM_ADMIN_CLIENT_SECRET`: tdr realm admin client secret value
+  * `CLIENT_SECRET`: tdr client secret value
+  * `BACKEND_CHECKS_CLIENT_SECRET`: tdr-backend-checks client secret value
+  * `KEYCLOAK_CONFIGURATION_PROPERTIES`: json file containing specific Keycloak configuration to a TDR environment
+4. Run the following python command:
 
 ```
-[location of repo] $ python update_env_realm.py local admin admin [update policy option: OVERWRITE/SKIP/FAIL]
+[location of repo] $ python update_env_realm.py local [update policy option: OVERWRITE/SKIP/FAIL]
 ```

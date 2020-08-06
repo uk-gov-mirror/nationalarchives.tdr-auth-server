@@ -1,6 +1,7 @@
 import requests
 import json
 import sys
+import os
 
 from update_realm_configuration import update_realm_configuration
 
@@ -11,21 +12,19 @@ stage_to_url = dict(
 )
 
 stage: str = sys.argv[1]
-keycloak_user: str = sys.argv[2]
-keycloak_password: str = sys.argv[3]
-update_policy: str = sys.argv[4]
-env_properties_file: str = f'{stage}_properties.json'
+update_policy: str = sys.argv[2]
+client_secret = os.environ['REALM_ADMIN_CLIENT_SECRET']
+env_properties_file = os.environ['KEYCLOAK_CONFIGURATION_PROPERTIES']
 base_auth_url = stage_to_url.get(stage)
 
 def get_access_token():
     payload = {
-        'username': keycloak_user,
-        'password': keycloak_password,
-        'grant_type': 'password',
-        'client_id': 'admin-cli'
+        'client_secret': client_secret,
+        'grant_type': 'client_credentials',
+        'client_id': 'tdr-realm-admin'
     }
     authentication_request = requests.post(
-        f'{base_auth_url}/auth/realms/master/protocol/openid-connect/token',
+        f'{base_auth_url}/auth/realms/tdr/protocol/openid-connect/token',
         data=payload
     )
     authentication_data = authentication_request.json()

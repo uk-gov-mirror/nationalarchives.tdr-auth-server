@@ -29,12 +29,9 @@ pipeline {
       steps {
         script {
           account_number = tdr.getAccountNumberFromStage(params.STAGE)
-          keycloak_user_key = "/${params.STAGE}/keycloak/admin/user"
-          keycloak_password_key = "/${params.STAGE}/keycloak/admin/password"
-          keycloak_user = sh(script: "python3 /ssm_get_parameter.py ${account_number} ${params.STAGE} ${keycloak_user_key}", returnStdout: true).trim()
-          keycloak_password = sh(script: "python3 /ssm_get_parameter.py ${account_number} ${params.STAGE} ${keycloak_password_key}", returnStdout: true).trim()
           tdr_client_secret = sh(script: "python3 /ssm_get_parameter.py ${account_number} ${params.STAGE} /${params.STAGE}/keycloak/client/secret", returnStdout: true).trim()
           tdr_backend_checks_secret = sh(script: "python3 /ssm_get_parameter.py ${account_number} ${params.STAGE} /${params.STAGE}/keycloak/backend_checks_client/secret", returnStdout: true).trim()
+          tdr_realm_admin_client_secret = sh(script: "python3 /ssm_get_parameter.py ${account_number} ${params.STAGE} /${params.STAGE}/keycloak/realm_admin_client/secret", returnStdout: true).trim()
         }
       }
     }
@@ -42,15 +39,10 @@ pipeline {
       environment {
         CLIENT_SECRET = "${tdr_client_secret}"
         BACKEND_CHECKS_CLIENT_SECRET = "${tdr_backend_checks_secret}"
+        REALM_ADMIN_CLIENT_SECRET = "${tdr_realm_admin_client_secret}"
       }
       steps {
-        script {
-          //Hide the output of the python command to stop keycloak credentials appearing in console output
-          sh """
-            set +x
-            python3 update_env_realm.py ${params.STAGE} ${keycloak_user} ${keycloak_password} ${params.UPDATE_POLICY}
-          """
-        }
+        sh "python3 update_tdr_realm.py ${params.STAGE} ${params.UPDATE_POLICY}"
       }
     }
   }
