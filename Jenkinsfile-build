@@ -6,115 +6,125 @@ def repo = "tdr-auth-server"
 pipeline {
     agent none
 
-    stages {
-      stage('Check Docker image build') {
-        agent {
-          label 'master'
-        }
-        stages {
-          stage('Build artifacts') {
-            parallel {
-              stage('Build Theme') {
-                agent {
-                  ecs {
-                    inheritFrom 'npm'
-                  }
-                }
-                steps {
-                  script {
-                    tdr.reportStartOfBuildToGitHub(repo)
-                  }
-                  checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/UKHomeOffice/keycloak-theme-govuk.git']]])
-                  sh 'npm install'
-                  sh 'npm run build'
-                  stash includes: "govuk/**", name: "govuk"
-                }
-              }
-            }
-          }
-          stage('Build docker image') {
-            steps {
-              sh "rm -rf target"
-              unstash 'govuk'
-              sshagent(['github-jenkins']) {
-                sh("git clone --branch master git@github.com:nationalarchives/tdr-configurations.git")
-                sh("cp tdr-configurations/keycloak/tdr-realm-export.json .")
-              }
-              script {
-                docker.withRegistry('', 'docker') {
-                  docker.build("nationalarchives/tdr-auth-server:${versionTag}")
-                }
-              }
-            }
-            post {
-              always {
-                sh("rm -rf tdr-configurations")
-              }
-            }
-          }
-        }
+  stages {
+    stage('Check Docker image build') {
+      agent {
+        label 'master'
       }
-      stage('Post-build') {
-        agent {
-          label 'master'
-        }
-        when {
-          expression {
-            env.BRANCH_NAME == "master"
+      stages {
+        stage("Run git secrets") {
+          agent {
+            label "master"
+          }
+          steps {
+            script {
+              tdr.runGitSecrets(repo)
+            }
           }
         }
-        stages {
-          stage('Push docker image') {
-            steps {
-              sh "rm -rf target"
-              unstash 'govuk'
-              script {
-                docker.withRegistry('', 'docker') {
-                  docker.build("nationalarchives/tdr-auth-server:${versionTag}").push()
-                  tdr.postToDaTdrSlackChannel(
-                    colour: "good",
-                    message: "*Auth server* :whale: The Keycloak auth app has been pushed to Docker Hub"
-                  )
+        stage('Build artifacts') {
+          parallel {
+            stage('Build Theme') {
+              agent {
+                ecs {
+                  inheritFrom 'npm'
                 }
               }
-            }
-          }
-          stage('Deploy to integration') {
-            steps {
-              build(
-                job: "TDR Auth Server Deploy",
-                  parameters: [
-                    string(name: "STAGE", value: "intg"),
-                    string(name: "TO_DEPLOY", value: versionTag)
-                  ],
-                  wait: false)
-            }
-          }
-          stage('Tag Release') {
-            steps {
-              sh "git tag ${versionTag}"
-              sshagent(['github-jenkins']) {
-                sh("git push origin ${versionTag}")
+              steps {
+                script {
+                  tdr.reportStartOfBuildToGitHub(repo)
+                }
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/UKHomeOffice/keycloak-theme-govuk.git']]])
+                sh 'npm install'
+                sh 'npm run build'
+                stash includes: "govuk/**", name: "govuk"
               }
+            }
+          }
+        }
+        stage('Build docker image') {
+          steps {
+            sh "rm -rf target"
+            unstash 'govuk'
+            sshagent(['github-jenkins']) {
+              sh("git clone --branch master git@github.com:nationalarchives/tdr-configurations.git")
+              sh("cp tdr-configurations/keycloak/tdr-realm-export.json .")
+            }
+            script {
+              docker.withRegistry('', 'docker') {
+                docker.build("nationalarchives/tdr-auth-server:${versionTag}")
+              }
+            }
+          }
+          post {
+            always {
+              sh("rm -rf tdr-configurations")
             }
           }
         }
       }
     }
-    post {
-        failure {
-          node('master') {
+    stage('Post-build') {
+      agent {
+        label 'master'
+      }
+      when {
+        expression {
+          env.BRANCH_NAME == "master"
+        }
+      }
+      stages {
+        stage('Push docker image') {
+          steps {
+            sh "rm -rf target"
+            unstash 'govuk'
             script {
-              tdr.reportFailedBuildToGitHub(repo)
+              docker.withRegistry('', 'docker') {
+                docker.build("nationalarchives/tdr-auth-server:${versionTag}").push()
+                tdr.postToDaTdrSlackChannel(
+                  colour: "good",
+                  message: "*Auth server* :whale: The Keycloak auth app has been pushed to Docker Hub"
+                )
+              }
             }
           }
         }
-        success {
-          node('master') {
-            script {
-              tdr.reportSuccessfulBuildToGitHub(repo)
+        stage('Deploy to integration') {
+          steps {
+            build(
+              job: "TDR Auth Server Deploy",
+                parameters: [
+                  string(name: "STAGE", value: "intg"),
+                  string(name: "TO_DEPLOY", value: versionTag)
+                ],
+                wait: false)
+          }
+        }
+        stage('Tag Release') {
+          steps {
+            sh "git tag ${versionTag}"
+            sshagent(['github-jenkins']) {
+              sh("git push origin ${versionTag}")
             }
           }
         }
+      }
     }
+  }
+  post {
+      failure {
+        node('master') {
+          script {
+            tdr.reportFailedBuildToGitHub(repo)
+          }
+        }
+      }
+      success {
+        node('master') {
+          script {
+            tdr.reportSuccessfulBuildToGitHub(repo)
+          }
+        }
+      }
+  }
 }
