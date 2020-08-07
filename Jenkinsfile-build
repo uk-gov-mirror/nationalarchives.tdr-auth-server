@@ -4,24 +4,20 @@ def versionTag = "v${env.BUILD_NUMBER}"
 def repo = "tdr-auth-server"
 
 pipeline {
-    agent none
+    agent {
+      label "master"
+    }
 
   stages {
-    stage('Check Docker image build') {
-      agent {
-        label 'master'
-      }
-      stages {
-        stage("Run git secrets") {
-          agent {
-            label "master"
-          }
-          steps {
-            script {
-              tdr.runGitSecrets(repo)
-            }
-          }
+    stage("Run git secrets") {
+      steps {
+        script {
+          tdr.runGitSecrets(repo)
         }
+      }
+    }
+    stage('Check Docker image build') {
+      stages {
         stage('Build artifacts') {
           parallel {
             stage('Build Theme') {
@@ -65,9 +61,6 @@ pipeline {
       }
     }
     stage('Post-build') {
-      agent {
-        label 'master'
-      }
       when {
         expression {
           env.BRANCH_NAME == "master"
