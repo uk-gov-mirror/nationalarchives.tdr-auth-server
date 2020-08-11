@@ -28,7 +28,7 @@ pipeline {
               }
               steps {
                 script {
-                  tdr.reportStartOfBuildToGitHub(repo)
+                  tdr.reportStartOfBuildToGitHub(repo, env.GIT_COMMIT)
                 }
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/UKHomeOffice/keycloak-theme-govuk.git']]])
                 sh 'npm install'
@@ -108,14 +108,14 @@ pipeline {
       failure {
         node('master') {
           script {
-            tdr.reportFailedBuildToGitHub(repo)
+            tdr.reportFailedBuildToGitHub(repo, env.GIT_COMMIT)
           }
         }
       }
       success {
         node('master') {
           script {
-            tdr.reportSuccessfulBuildToGitHub(repo)
+            tdr.reportSuccessfulBuildToGitHub(repo, env.GIT_COMMIT)
           }
         }
       }
