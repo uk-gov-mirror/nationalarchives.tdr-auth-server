@@ -22,5 +22,10 @@
         "*"
       ]
     }
+  },
+  "tdr-realm-admin": {
+    "redirectUris": [
+      "https://tdr-staging.nationalarchives.gov.uk/*"
+    ]
   }
 }

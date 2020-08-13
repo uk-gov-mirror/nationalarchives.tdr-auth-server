@@ -18,5 +18,10 @@
         "http://localhost:9000"
       ]
     }
+  },
+  "tdr-realm-admin": {
+    "redirectUris": [
+      "http://localhost:9000/*"
+    ]
   }
 }
