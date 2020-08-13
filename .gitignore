@@ -3,4 +3,4 @@ target
 templates
 govuk
 *-realm-export.json
-realm.json
+*-realm.json
