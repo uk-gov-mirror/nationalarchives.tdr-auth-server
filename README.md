@@ -132,5 +132,5 @@ To update the realm configuration on the locally running Keycloak instances:
 4. Run the following python command:
 
 ```
-[location of repo] $ python update_env_realm.py local [update policy option: OVERWRITE/SKIP/FAIL]
+[location of repo] $ python update_tdr_realm.py local [update policy option: OVERWRITE/SKIP/FAIL]
 ```
