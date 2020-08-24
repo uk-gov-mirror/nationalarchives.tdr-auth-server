@@ -20,6 +20,11 @@
         "https://tdr-integration.nationalarchives.gov.uk",
         "http://localhost:9000"
       ]
+    },
+    "tdr-realm-admin": {
+      "redirectUris": [
+        "https://tdr-integration.nationalarchives.gov.uk/*"
+      ]
     }
   }
 }
