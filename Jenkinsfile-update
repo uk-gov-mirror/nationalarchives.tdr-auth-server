@@ -25,10 +25,11 @@ pipeline {
         }
       }
     }
-    stage("Get Keycloak administrative credentials") {
+    stage("Get SSM parameters values") {
       steps {
         script {
           account_number = tdr.getAccountNumberFromStage(params.STAGE)
+          tdr_configuration_properties = sh(script: "python3 /ssm_get_parameter.py ${account_number} ${params.STAGE} /${params.STAGE}/keycloak/configuration_properties", returnStdout: true).trim()
           tdr_client_secret = sh(script: "python3 /ssm_get_parameter.py ${account_number} ${params.STAGE} /${params.STAGE}/keycloak/client/secret", returnStdout: true).trim()
           tdr_backend_checks_secret = sh(script: "python3 /ssm_get_parameter.py ${account_number} ${params.STAGE} /${params.STAGE}/keycloak/backend_checks_client/secret", returnStdout: true).trim()
           tdr_realm_admin_client_secret = sh(script: "python3 /ssm_get_parameter.py ${account_number} ${params.STAGE} /${params.STAGE}/keycloak/realm_admin_client/secret", returnStdout: true).trim()
@@ -40,6 +41,7 @@ pipeline {
         CLIENT_SECRET = "${tdr_client_secret}"
         BACKEND_CHECKS_CLIENT_SECRET = "${tdr_backend_checks_secret}"
         REALM_ADMIN_CLIENT_SECRET = "${tdr_realm_admin_client_secret}"
+        KEYCLOAK_CONFIGURATION_PROPERTIES = "${tdr_configuration_properties}"
       }
       steps {
         sh "python3 update_tdr_realm.py ${params.STAGE} ${params.UPDATE_POLICY}"
