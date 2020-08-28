@@ -25,6 +25,11 @@
       "redirectUris": [
         "https://tdr-integration.nationalarchives.gov.uk/*"
       ]
+    },
+    "tdr-user-admin": {
+      "redirectUris": [
+        "https://tdr-integration.nationalarchives.gov.uk/*"
+      ]
     }
   }
 }

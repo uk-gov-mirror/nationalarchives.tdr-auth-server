@@ -17,6 +17,8 @@ def update_client_secrets(client, client_id):
         client['secret'] = os.environ['BACKEND_CHECKS_CLIENT_SECRET']
     if client_id == "tdr-realm-admin":
         client['secret'] = os.environ['REALM_ADMIN_CLIENT_SECRET']
+    if client_id == "tdr-user-admin":
+        client['secret'] = os.environ['USER_ADMIN_CLIENT_SECRET']
 
 def update_client(client, client_id, client_env_props):
     client_props = client_env_props[client_id]

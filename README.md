@@ -104,6 +104,7 @@ To run, build and test locally:
 [location of repo] $ docker run -d --name [some name] -p 8081:8080 \
   -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin -e KEYCLOAK_IMPORT=/tmp/tdr-realm.json \
   -e REALM_ADMIN_CLIENT_SECRET=[some value] -e CLIENT_SECRET=[some value] -e BACKEND_CHECKS_CLIENT_SECRET=[some value] \
+  -e USER_ADMIN_CLIENT_SECRET=[some value] \
   -e KEYCLOAK_CONFIGURATION_PROPERTIES=[env]_properties.json \
   nationalarchives/tdr-auth-server:[your build tag]
 ```
@@ -113,6 +114,7 @@ To run, build and test locally:
   * `REALM_ADMIN_CLIENT_SECRET`: tdr realm admin client secret value
   * `CLIENT_SECRET`: tdr client secret value
   * `BACKEND_CHECKS_CLIENT_SECRET`: tdr-backend-checks client secret value
+  * `USER_ADMIN_CLIENT_SECRET`: tdr user admin client secret value
   * `KEYCLOAK_CONFIGURATION_PROPERTIES`: json file containing specific Keycloak configuration to a TDR environment
 4. Navigate to http://http://localhost:8081/auth/admin
 5. Log on using the `KEYCLOAK_PASSWORD` and `KEYCLOAK_USER` defined in the docker run command
@@ -128,6 +130,7 @@ To update the realm configuration on the locally running Keycloak instances:
   * `REALM_ADMIN_CLIENT_SECRET`: tdr realm admin client secret value
   * `CLIENT_SECRET`: tdr client secret value
   * `BACKEND_CHECKS_CLIENT_SECRET`: tdr-backend-checks client secret value
+  * `USER_ADMIN_CLIENT_SECRET`: tdr user admin client secret value
   * `KEYCLOAK_CONFIGURATION_PROPERTIES`: json file containing specific Keycloak configuration to a TDR environment
 4. Run the following python command:
 
