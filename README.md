@@ -134,3 +134,7 @@ To update the realm configuration on the locally running Keycloak instances:
 ```
 [location of repo] $ python update_tdr_realm.py local [update policy option: OVERWRITE/SKIP/FAIL]
 ```
+
+## Databases
+
+Keycloak uses a different database depending on whether it's running locally or on ECS. Local development uses the internal H2 database on the docker image. When it's running on ECS, it uses a postgresql RDS instance defined [here](https://github.com/nationalarchives/tdr-terraform-environments/blob/master/modules/keycloak/database.tf)  

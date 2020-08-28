@@ -1,4 +1,4 @@
-FROM jboss/keycloak:9.0.0
+FROM jboss/keycloak:11.0.1
 USER root
 RUN microdnf update && microdnf install python3
 
