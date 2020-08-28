@@ -27,5 +27,10 @@
     "redirectUris": [
       "https://tdr-staging.nationalarchives.gov.uk/*"
     ]
+  },
+  "tdr-user-admin": {
+    "redirectUris": [
+      "https://tdr-staging.nationalarchives.gov.uk/*"
+    ]
   }
 }

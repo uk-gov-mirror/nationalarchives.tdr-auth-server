@@ -23,5 +23,10 @@
     "redirectUris": [
       "http://localhost:9000/*"
     ]
+  },
+  "tdr-user-admin": {
+    "redirectUris": [
+      "http://localhost:9000/*"
+    ]
   }
 }
