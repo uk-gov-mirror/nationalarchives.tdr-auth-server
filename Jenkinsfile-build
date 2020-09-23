@@ -72,13 +72,11 @@ pipeline {
             sh "rm -rf target"
             unstash 'govuk'
             script {
-              docker.withRegistry('', 'docker') {
-                docker.build("nationalarchives/tdr-auth-server:${versionTag}").push()
-                tdr.postToDaTdrSlackChannel(
+              tdr.buildAndPushImage("auth-server", versionTag)
+              tdr.postToDaTdrSlackChannel(
                   colour: "good",
-                  message: "*Auth server* :whale: The Keycloak auth app has been pushed to Docker Hub"
-                )
-              }
+                  message: "*Auth server* :whale: The Keycloak auth app has been pushed to AWS ECR"
+              )
             }
           }
         }
