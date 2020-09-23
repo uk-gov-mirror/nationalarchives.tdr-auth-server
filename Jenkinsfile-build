@@ -75,7 +75,7 @@ pipeline {
               tdr.buildAndPushImage("auth-server", versionTag)
               tdr.postToDaTdrSlackChannel(
                   colour: "good",
-                  message: "*Auth server* :whale: The Keycloak auth app has been pushed to Docker Hub"
+                  message: "*Auth server* :whale: The Keycloak auth app has been pushed to AWS ECR"
               )
             }
           }
