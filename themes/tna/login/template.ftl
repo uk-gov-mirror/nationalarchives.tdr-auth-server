@@ -35,7 +35,6 @@
         </#list>
     </#if>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/ico" href="${url.resourcesPath}/img/favicon.ico">
     <script src="https://code.iconify.design/1/1.0.3/iconify.min.js"></script>
 </head>
