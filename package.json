@@ -8,18 +8,12 @@
     "copy-govuk-font-assets": "copyfiles -f node_modules/govuk-frontend/govuk/assets/fonts/* ./themes/tna/$npm_config_theme/resources/fonts",
     "copy-govuk-js-assets": "copyfiles -f node_modules/govuk-frontend/govuk/all.js ./themes/tna/$npm_config_theme/resources/js",
     "copy-assets": "npm-run-all copy-govuk-image-assets copy-govuk-font-assets copy-govuk-js-assets",
-    "sass-watch": "node-sass ./themes/tna/css-src/sass/main.scss ./themes/tna/resources/css/main.css --watch",
     "sass-compile": "node-sass ./themes/tna/css-src/sass/main.scss ./themes/tna/css-src/main.css",
-    "add-stylesheet-dir": "mkdir -p ./themes/tna/login/resources/css",
+    "add-stylesheet-dir": "mkdir -p ./themes/tna/$npm_config_theme/resources/css",
     "compress-css": "minify ./themes/tna/css-src/main.css > ./themes/tna/$npm_config_theme/resources/css/main.css",
     "build-css": "npm-run-all add-stylesheet-dir sass-compile compress-css",
-    "build:local": "npm-run-all copy-assets build-css",
     "build-login": "npm-run-all copy-assets build-css --theme=login",
     "build-theme": "npm-run-all build-login"
-  },
-  "main": "index.js",
-  "directories": {
-    "test": "test"
   },
   "repository": {
     "type": "git",
@@ -60,7 +54,6 @@
     "stylelint-config-sass-guidelines": "^7.1.0"
   },
   "lint-staged": {
-    "./**/*.{ts,md}": "eslint",
     "css-src/sass/**/*.scss": "stylelint"
   }
 }

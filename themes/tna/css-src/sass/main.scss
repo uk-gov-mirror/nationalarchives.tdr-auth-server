@@ -1,3 +1,6 @@
+$govuk-images-path: '../img/';
+$govuk-fonts-path: '../fonts/';
+
 @import 'node_modules/govuk-frontend/govuk/all';
 
 @import 'node_modules/govuk_frontend_toolkit/stylesheets/_colours';
@@ -21,7 +24,6 @@
 @import 'node_modules/govuk-elements-sass/public/sass/elements/forms/_form-multiple-choice';
 @import 'overrides/all';
 @import 'header';
-@import 'footer';
 
 .green-tick-mark {
   fill: currentColor;
