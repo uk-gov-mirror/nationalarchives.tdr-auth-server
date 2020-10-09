@@ -1,6 +1,12 @@
 .idea
 target
 templates
-govuk
 *-realm-export.json
 *-realm.json
+node_modules
+venv
+themes/tna/*/resources/fonts/*
+themes/tna/*/resources/js/*
+themes/tna/*/resources/img/govuk-*
+themes/tna/*/resources/css/*
+themes/tna/css-src/*.css
