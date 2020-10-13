@@ -5,8 +5,8 @@ templates
 *-realm.json
 node_modules
 venv
-themes/tna/*/resources/fonts/*
-themes/tna/*/resources/js/*
-themes/tna/*/resources/img/govuk-*
-themes/tna/*/resources/css/*
-themes/tna/css-src/*.css
+themes/tdr/*/resources/fonts/*
+themes/tdr/*/resources/js/*
+themes/tdr/*/resources/img/govuk-*
+themes/tdr/*/resources/css/*
+themes/tdr/css-src/*.css
