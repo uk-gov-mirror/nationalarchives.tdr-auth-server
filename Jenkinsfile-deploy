@@ -7,4 +7,3 @@ ecsDeployJob(
   stage: params.STAGE,
   testDelaySeconds: 300
 )
-

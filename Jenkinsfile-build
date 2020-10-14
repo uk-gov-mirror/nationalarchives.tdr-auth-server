@@ -31,7 +31,7 @@ pipeline {
                 }
                 sh 'npm install'
                 sh 'npm run build-theme'
-                stash includes: "themes/tna/login/**", name: "tna-theme"
+                stash includes: "themes/tdr/login/**", name: "tdr-theme"
               }
             }
           }
@@ -39,7 +39,7 @@ pipeline {
         stage('Build docker image') {
           steps {
             sh "rm -rf target"
-            unstash 'tna-theme'
+            unstash 'tdr-theme'
             sshagent(['github-jenkins']) {
               sh("git clone --branch master git@github.com:nationalarchives/tdr-configurations.git")
               sh("cp tdr-configurations/keycloak/tdr-realm-export.json .")
@@ -68,7 +68,7 @@ pipeline {
         stage('Push docker image') {
           steps {
             sh "rm -rf target"
-            unstash 'govuk'
+            unstash 'tdr'
             script {
               tdr.buildAndPushImage("auth-server", versionTag)
               tdr.postToDaTdrSlackChannel(
