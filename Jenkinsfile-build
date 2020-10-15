@@ -47,9 +47,9 @@ pipeline {
               sh("cp tdr-configurations/keycloak/tdr-realm-export.json .")
             }
             script {
-              docker.withRegistry('', 'docker') {
-                docker.build("nationalarchives/tdr-auth-server:${versionTag}")
-              }
+              def imageTag = "${env.MANAGEMENT_ACCOUNT}.dkr.ecr.eu-west-2.amazonaws.com/auth-server:${versionTag}"
+                sh "aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin ${env.MANAGEMENT_ACCOUNT}.dkr.ecr.eu-west-2.amazonaws.com"
+                sh "docker build -t ${imageTag} ."
             }
           }
           post {
