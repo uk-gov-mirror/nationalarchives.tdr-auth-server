@@ -40,11 +40,11 @@
 </head>
 
 <body class="${properties.kcBodyClass!}">
-    <#-- Start TNA Template header -->
+    <#-- Start TDR Template header -->
     <header class="govuk-header " role="banner" data-module="header">
         <div class="govuk-header__container govuk-width-container">
             <div class="govuk-header__tna-logo">
-                <a href="/" class="govuk-header__tna_link govuk-header__tna_link--homepage">
+                <a href="${properties.tdrHomeUrl}" class="govuk-header__tna_link govuk-header__tna_link--homepage">
                     <img src="${url.resourcesPath}/img/tna-horizontal-white-logo.svg" class="govuk-header__tna-logo-image" alt="TNA horizontal logo" />
                 </a>
             </div>
@@ -56,7 +56,7 @@
             </div>
         </div>
     </header>
-    <#-- End TNA Template header -->
+    <#-- End TDR Template header -->
     <div class="govuk-width-container">
         <main class="govuk-main-wrapper " id="main-content" role="main">
             <div><#nested "back"></div>
@@ -131,7 +131,7 @@
     </main>
 </div>
 
-<#-- Start TNA Template footer -->
+<#-- Start TDR Template footer -->
 <footer class="govuk-footer " role="contentinfo">
     <div class="govuk-width-container ">
         <div class="govuk-footer__meta">
@@ -155,7 +155,7 @@
 <script>
         window.GOVUKFrontend.initAll()
 </script>
-<#-- End TNA Template footer -->
+<#-- End TDR Template footer -->
 
 </body>
 </html>

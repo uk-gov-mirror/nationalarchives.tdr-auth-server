@@ -56,6 +56,18 @@ It has specific TDR commands around realm import, and is copied from the default
 
 The standalone-ha.xml is mostly the standard configuration for keycloak with a few changes to get it to work with the load balancer. Some of these are discussed in the keycloak [documentation](https://www.keycloak.org/docs/latest/server_installation/#_setting-up-a-load-balancer-or-proxy)
 
+## TDR Theme
+
+TDR has its own Keycloak theme: `tdr`
+
+The TDR theme makes use of the standard Keycloak base theme, with specific overrides to the theme resources where required.
+
+The TDR theme styling is a combination of [Gov.UK Design System](https://github.com/UKHomeOffice/keycloak-theme-govuk), with TDR specific overrides. 
+
+It is based on the theme developed by the Home Office: https://github.com/UKHomeOffice/keycloak-theme-govuk 
+
+For full documentation on Keycloak themes see: https://www.keycloak.org/docs/latest/server_development/index.html#_themes
+
 ## Updating TDR Realm Configuration json
 
 A separate Jenkins job is used to update the TDR realm configuration: TDR Auth Server Update
@@ -95,14 +107,15 @@ To update Keycloak with, for example, a new client:
 ## Running Locally
 
 To run, build and test locally:
+
 1. Copy the tdr-realm-export.json from the tdr-configuration repository into the tdr-auth-server directory
-2. Build the TDR theme:
+2. Navigate to the cloned repository: `$ cd tdr-auth-server`
+3. Build the TDR theme:
   * If npm is not installed install [nvm](https://github.com/nvm-sh/nvm) in root directory
   * Once nvm is installed run: `[root directory] $ nvm install 14.9`     
-  * Run the following command in the root directory:  `[root directory] $ npm install` and `[root directory] $ npm run build-theme`
+  * Run the following commands in the root directory:  `[root directory] $ npm install` and `[root directory] $ npm run build-theme`
     * this will compile the theme sass and copy the static assets to the theme `resource` directory
-3. Build the docker image locally: 
-  * Navigate to the cloned repository: `$ cd tdr-auth-server`
+3. Build the docker image locally:   
   * Run the docker build command: `[location of repo] $ docker build -t nationalarchives/tdr-auth-server:[your build tag] .`
 4. Run the local docker image: 
 ```
@@ -111,6 +124,7 @@ To run, build and test locally:
   -e REALM_ADMIN_CLIENT_SECRET=[some value] -e CLIENT_SECRET=[some value] -e BACKEND_CHECKS_CLIENT_SECRET=[some value] \
   -e USER_ADMIN_CLIENT_SECRET=[some value] \
   -e KEYCLOAK_CONFIGURATION_PROPERTIES=[env]_properties.json \
+  -e FRONTEND_URL=[home page url]
   nationalarchives/tdr-auth-server:[your build tag]
 ```
   * `KEYCLOAK_USER`: root Keycloak user name
@@ -121,6 +135,7 @@ To run, build and test locally:
   * `BACKEND_CHECKS_CLIENT_SECRET`: tdr-backend-checks client secret value
   * `USER_ADMIN_CLIENT_SECRET`: tdr user admin client secret value
   * `KEYCLOAK_CONFIGURATION_PROPERTIES`: json file containing specific Keycloak configuration to a TDR environment
+  * `FRONTEND_URL`: TDR application home page URL
 4. Navigate to http://http://localhost:8081/auth/admin
 5. Log on using the `KEYCLOAK_PASSWORD` and `KEYCLOAK_USER` defined in the docker run command
 
