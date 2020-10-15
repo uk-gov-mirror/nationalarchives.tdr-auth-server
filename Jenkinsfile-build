@@ -68,7 +68,7 @@ pipeline {
         stage('Push docker image') {
           steps {
             sh "rm -rf target"
-            unstash 'tdr'
+            unstash 'tdr-theme'
             script {
               tdr.buildAndPushImage("auth-server", versionTag)
               tdr.postToDaTdrSlackChannel(
