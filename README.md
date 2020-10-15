@@ -96,10 +96,15 @@ To update Keycloak with, for example, a new client:
 
 To run, build and test locally:
 1. Copy the tdr-realm-export.json from the tdr-configuration repository into the tdr-auth-server directory
-2. Build the docker image locally: 
+2. Build the TDR theme:
+  * If npm is not installed install [nvm](https://github.com/nvm-sh/nvm) in root directory
+  * Once nvm is installed run: `[root directory] $ nvm install 14.9`     
+  * Run the following command in the root directory:  `[root directory] $ npm install` and `[root directory] $ npm run build-theme`
+    * this will compile the theme sass and copy the static assets to the theme `resource` directory
+3. Build the docker image locally: 
   * Navigate to the cloned repository: `$ cd tdr-auth-server`
   * Run the docker build command: `[location of repo] $ docker build -t nationalarchives/tdr-auth-server:[your build tag] .`
-3. Run the local docker image: 
+4. Run the local docker image: 
 ```
 [location of repo] $ docker run -d --name [some name] -p 8081:8080 \
   -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin -e KEYCLOAK_IMPORT=/tmp/tdr-realm.json \
@@ -122,6 +127,8 @@ To run, build and test locally:
 To log into the running docker container with a bash shell: `$ docker exec -it [your container name] bash`
 
 Make changes to the realm export json file as necessary to test new configurations.
+
+### Update Realm Configuration
 
 To update the realm configuration on the locally running Keycloak instances:
 1. Add the Keycloak configuration json file to the root of the project: tdr-realm-export.json
