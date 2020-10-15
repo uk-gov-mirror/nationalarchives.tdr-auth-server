@@ -1,8 +1,10 @@
+//Keycloak theme structure places assets in different structure to standard Gov.UK
 $govuk-images-path: '../img/';
 $govuk-fonts-path: '../fonts/';
 
 @import 'node_modules/govuk-frontend/govuk/all';
 
+//govuk-elements-sass requires govuk_frontend_toolkit
 @import 'node_modules/govuk_frontend_toolkit/stylesheets/_colours';
 @import 'node_modules/govuk_frontend_toolkit/stylesheets/_measurements';
 @import 'node_modules/govuk_frontend_toolkit/stylesheets/_conditionals';
@@ -11,6 +13,7 @@ $govuk-fonts-path: '../fonts/';
 @import 'node_modules/govuk_frontend_toolkit/stylesheets/design-patterns/_buttons';
 @import 'node_modules/govuk_frontend_toolkit/stylesheets/design-patterns/_alpha-beta';
 
+//Keycloak standard theme HTML structure requires govuk-elements-sass to render in Gov.UK style
 @import 'node_modules/govuk-elements-sass/public/sass/elements/_helpers';
 @import 'node_modules/govuk-elements-sass/public/sass/elements/_lists';
 @import 'node_modules/govuk-elements-sass/public/sass/elements/_buttons';
