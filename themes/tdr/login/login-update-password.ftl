@@ -1,5 +1,5 @@
 <#import "template.ftl" as layout>
-<@layout.registrationLayout displayInfo=true; section>
+<@layout.registrationLayout pageTitle="Set new password" displayInfo=true; section>
     <#if section = "header">
         ${msg("updatePasswordTitle")}
     <#elseif section = "form">
@@ -9,14 +9,17 @@
 
             <div class="govuk-form-group">
                 <h1 class="govuk-label-wrapper">
-                    <label for="password-new" class="${properties.kcLabelClass!}">${msg("passwordNew")}</label>
+                    <label for="password-new" class="govuk-label govuk-label--l">${msg("passwordNew")}</label>
                 </h1>
+                <div id="password-new-hint" class="govuk-hint">
+                    ${msg("passwordRestrictions")}
+                </div>
                 <input type="password" id="password-new" name="password-new" class="govuk-input govuk-!-width-one-half" autofocus autocomplete="new-password" />
             </div>
 
             <div class="govuk-form-group">
                 <h1 class="govuk-label-wrapper">
-                    <label for="password-confirm" class="${properties.kcLabelClass!}">${msg("passwordConfirm")}</label>
+                    <label for="password-confirm" class="govuk-label govuk-label--l">${msg("passwordConfirm")}</label>
                 </h1>
                 <input type="password" id="password-confirm" name="password-confirm" class="govuk-input govuk-!-width-one-half" autocomplete="new-password" />
             </div>

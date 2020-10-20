@@ -1,4 +1,4 @@
-<#macro registrationLayout bodyClass="" displayInfo=false displayMessage=true displayRequiredFields=false displayWide=false showAnotherWayIfPresent=true>
+<#macro registrationLayout bodyClass="" pageTitle="Sign in" displayInfo=false displayMessage=true displayRequiredFields=false displayWide=false showAnotherWayIfPresent=true>
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
         <head>
@@ -58,7 +58,7 @@
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-two-thirds">
                             <a href="${properties.tdrHomeUrl}" class="govuk-back-link">Back</a>
-                            <h1 class="govuk-heading-xl">${msg("loginTitle")}</h1>
+                            <h1 class="govuk-heading-xl">${pageTitle}</h1>
 
                             <#-- Start TDR Error Messages -->
                             <#if displayMessage && message?has_content>
