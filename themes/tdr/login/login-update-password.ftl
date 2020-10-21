@@ -1,7 +1,9 @@
 <#import "template.ftl" as layout>
-<@layout.registrationLayout pageTitle="Set new password" displayInfo=true; section>
+<#assign updatePasswordPageTitle = msg("updatePasswordTitle")>
+
+<@layout.registrationLayout pageTitle=updatePasswordPageTitle displayInfo=true; section>
     <#if section = "header">
-        ${msg("updatePasswordTitle")}
+        ${updatePasswordPageTitle}
     <#elseif section = "form">
         <form id="kc-passwd-update-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
             <input type="text" id="username" name="username" value="${username}" autocomplete="username" readonly="readonly" style="display:none;"/>
@@ -24,19 +26,9 @@
                 <input type="password" id="password-confirm" name="password-confirm" class="govuk-input govuk-!-width-one-half" autocomplete="new-password" />
             </div>
 
-            <#if isAppInitiatedAction??>
-                <button class="govuk-button" type="submit" data-module="govuk-button" role="button">
-                    ${msg("doSubmit")}
-                </button>
-
-                <button class="govuk-button" type="submit" name="cancel-aia" value="true" data-module="govuk-button" role="button">
-                    ${msg("doCancel")}
-                </button>
-            <#else>
-                <button class="govuk-button" type="submit" data-module="govuk-button" role="button">
-                    ${msg("doSubmit")}
-                </button>
-            </#if>
+            <button class="govuk-button" type="submit" data-module="govuk-button" role="button">
+                ${msg("doSubmit")}
+            </button>
         </form>
     </#if>
 </@layout.registrationLayout>
