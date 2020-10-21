@@ -1,7 +1,7 @@
 <#import "template.ftl" as layout>
 <#assign updatePasswordPageTitle = msg("updatePasswordTitle")>
 
-<@layout.registrationLayout pageTitle=updatePasswordPageTitle displayInfo=true; section>
+<@layout.registrationLayout pageTitle=updatePasswordPageTitle; section>
     <#if section = "header">
         ${updatePasswordPageTitle}
     <#elseif section = "form">
