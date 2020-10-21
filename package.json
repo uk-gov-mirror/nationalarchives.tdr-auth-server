@@ -47,6 +47,6 @@
     "stylelint-config-sass-guidelines": "^7.1.0"
   },
   "lint-staged": {
-    "css-src/sass/**/*.scss": "stylelint"
+    "themes/tdr/css-src/sass/*.scss": "stylelint"
   }
 }

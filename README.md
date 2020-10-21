@@ -143,7 +143,7 @@ To log into the running docker container with a bash shell: `$ docker exec -it [
 
 Make changes to the realm export json file as necessary to test new configurations.
 
-### Update Realm Configuration
+### Update Realm Configuration Locally
 
 To update the realm configuration on the locally running Keycloak instances:
 1. Add the Keycloak configuration json file to the root of the project: tdr-realm-export.json
@@ -159,6 +159,17 @@ To update the realm configuration on the locally running Keycloak instances:
 ```
 [location of repo] $ python update_tdr_realm.py local [update policy option: OVERWRITE/SKIP/FAIL]
 ```
+
+### Update TDR Theme Locally
+
+**Note:** The TDR theme sass is used by the TDR Transfer Frontend. When updating the sass for the theme, ensure that any changes are also implemented in the tdr-transfer-frontend repo: https://github.com/nationalarchives/tdr-transfer-frontend/tree/master/npm/css-src/sass
+* This includes any changes to the `.stylelintrc.json`
+
+1. Make necessary changes to the TDR theme (freemarker templates/sass/static resources)
+2. Run following command from the root directory: `[root directory] $ npm run build-theme`
+3. Rebuild the image locally
+4. Run the local docker image
+5. Login into the locally running Keycloak instance to see the changes to the TDR theme
 
 ## Databases
 

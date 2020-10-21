@@ -30,6 +30,7 @@ pipeline {
                   tdr.reportStartOfBuildToGitHub(repo, env.GIT_COMMIT)
                 }
                 sh 'npm install'
+                sh "npx stylelint themes/tdr/css-src/sass/*.scss"
                 sh 'npm run build-theme'
                 stash includes: "themes/tdr/login/**", name: "tdr-theme"
               }
