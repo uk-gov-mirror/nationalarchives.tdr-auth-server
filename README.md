@@ -62,7 +62,7 @@ TDR has its own Keycloak theme: `tdr`
 
 The TDR theme makes use of the standard Keycloak base theme, with specific overrides to the theme resources where required.
 
-The TDR theme styling is a combination of [Gov.UK Design System](https://github.com/UKHomeOffice/keycloak-theme-govuk), with TDR specific overrides. 
+The TDR theme styling is a combination of [Gov.UK Design System](https://design-system.service.gov.uk/), with TDR specific overrides. 
 
 It is based on the theme developed by the Home Office: https://github.com/UKHomeOffice/keycloak-theme-govuk 
 
