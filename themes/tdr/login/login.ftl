@@ -7,7 +7,12 @@
             <form id="kc-form-login" onsubmit="login.disabled = true; return true;" action="${url.loginAction}" method="post">
                 <div class="govuk-form-group">
                     <h1 class="govuk-label-wrapper">
-                        <label for="username" class="govuk-label govuk-label--l">${msg("username")}</label>
+                        <label for="username" class="govuk-label govuk-label--l">
+                            <#if !realm.loginWithEmailAllowed>${msg("username")}
+                            <#elseif !realm.registrationEmailAsUsername>${msg("usernameOrEmail")}
+                            <#else>${msg("email")}
+                            </#if>
+                        </label>
                     </h1>
                     <#if usernameEditDisabled??>
                         <input tabindex="1" id="username" class="govuk-input govuk-!-width-one-half" name="username" value="${(login.username!'')}" type="text" disabled />
