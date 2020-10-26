@@ -8,17 +8,10 @@
                 <div class="govuk-form-group">
                     <h1 class="govuk-label-wrapper">
                         <label for="username" class="govuk-label govuk-label--l">
-                            <#if !realm.loginWithEmailAllowed>${msg("username")}
-                            <#elseif !realm.registrationEmailAsUsername>${msg("usernameOrEmail")}
-                            <#else>${msg("email")}
-                            </#if>
+                            ${msg("email")}
                         </label>
                     </h1>
-                    <#if usernameEditDisabled??>
-                        <input tabindex="1" id="username" class="govuk-input govuk-!-width-one-half" name="username" value="${(login.username!'')}" type="text" disabled />
-                    <#else>
-                        <input tabindex="1" id="username" class="govuk-input govuk-!-width-one-half" name="username" value="${(login.username!'')}"  type="text" autofocus autocomplete="off" />
-                    </#if>
+                    <input tabindex="1" id="username" class="govuk-input govuk-!-width-one-half" name="username" value="${(login.username!'')}"  type="text" autofocus autocomplete="off" />
                 </div>
 
                 <div class="govuk-form-group">

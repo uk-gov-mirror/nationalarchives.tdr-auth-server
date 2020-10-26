@@ -165,12 +165,29 @@ To update the realm configuration on the locally running Keycloak instances:
 **Note:** The TDR theme sass is used by the TDR Transfer Frontend. When updating the sass for the theme, ensure that any changes are also implemented in the tdr-transfer-frontend repo: https://github.com/nationalarchives/tdr-transfer-frontend/tree/master/npm/css-src/sass
 * This includes any changes to the `.stylelintrc.json`
 
-1. Make necessary changes to the TDR theme (freemarker templates/sass/static resources)
-2. Run following command from the root directory: `[root directory] $ npm run build-theme`
-3. Rebuild the image locally
-4. Run the local docker image
-5. Login into the locally running Keycloak instance to see the changes to the TDR theme
+1. Disable the Theme cache by changing the following in the `standalone-ha.xml` (**Note: do not merge these changes**):
+  * staticMaxAge: -1
+  * cacheThemes: false
+  * cacheTemplates: false
+   
+   ```
+   <theme>
+       <staticMaxAge>-1</staticMaxAge>
+       <cacheThemes>false</cacheThemes>
+       <cacheTemplates>false</cacheTemplates>
+       <welcomeTheme>${env.KEYCLOAK_WELCOME_THEME:keycloak}</welcomeTheme>
+       <default>${env.KEYCLOAK_DEFAULT_THEME:keycloak}</default>
+       <dir>${jboss.home.dir}/themes</dir>
+   </theme>
+   ```
+
+2. Rebuild the image locally and run.
+3. Make necessary changes to the TDR theme (freemarker templates/sass/static resources)
+4. Run following command from the root directory: `[root directory] $ npm run build-local --theme=login --container_name=[name of running container]`
+5. Refresh the locally running Keycloak pages to see the changes.
+6. Repeat steps 3 to 5 as necessary.
 
 ## Databases
 
-Keycloak uses a different database depending on whether it's running locally or on ECS. Local development uses the internal H2 database on the docker image. When it's running on ECS, it uses a postgresql RDS instance defined [here](https://github.com/nationalarchives/tdr-terraform-environments/blob/master/modules/keycloak/database.tf)  
+Keycloak uses a different database depending on whether it's running locally or on ECS. Local development uses the internal H2 database on the docker image. When it's running on ECS, it uses a postgresql RDS instance defined [here](https://github.com/nationalarchives/tdr-terraform-environments/blob/master/modules/keycloak/database.tf) 
+ 
