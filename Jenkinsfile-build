@@ -4,10 +4,9 @@ def versionTag = "v${env.BUILD_NUMBER}"
 def repo = "tdr-auth-server"
 
 pipeline {
-    agent {
-      label "master"
-    }
-
+  agent {
+    label "master"
+  }
   stages {
     stage("Run git secrets") {
       steps {
@@ -30,10 +29,10 @@ pipeline {
                 script {
                   tdr.reportStartOfBuildToGitHub(repo, env.GIT_COMMIT)
                 }
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/UKHomeOffice/keycloak-theme-govuk.git']]])
                 sh 'npm install'
-                sh 'npm run build'
-                stash includes: "govuk/**", name: "govuk"
+                sh "npx stylelint 'themes/tdr/css-src/**/*.scss'"
+                sh 'npm run build-theme'
+                stash includes: "themes/tdr/login/**", name: "tdr-theme"
               }
             }
           }
@@ -41,7 +40,7 @@ pipeline {
         stage('Build docker image') {
           steps {
             sh "rm -rf target"
-            unstash 'govuk'
+            unstash 'tdr-theme'
             sshagent(['github-jenkins']) {
               sh("git clone --branch master git@github.com:nationalarchives/tdr-configurations.git")
               sh("cp tdr-configurations/keycloak/tdr-realm-export.json .")
@@ -70,7 +69,7 @@ pipeline {
         stage('Push docker image') {
           steps {
             sh "rm -rf target"
-            unstash 'govuk'
+            unstash 'tdr-theme'
             script {
               tdr.buildAndPushImage("auth-server", versionTag)
               tdr.postToDaTdrSlackChannel(
@@ -103,19 +102,15 @@ pipeline {
     }
   }
   post {
-      failure {
-        node('master') {
-          script {
-            tdr.reportFailedBuildToGitHub(repo, env.GIT_COMMIT)
-          }
-        }
+    failure {
+      script {
+        tdr.reportFailedBuildToGitHub(repo, env.GIT_COMMIT)
       }
-      success {
-        node('master') {
-          script {
-            tdr.reportSuccessfulBuildToGitHub(repo, env.GIT_COMMIT)
-          }
-        }
+    }
+    success {
+      script {
+        tdr.reportSuccessfulBuildToGitHub(repo, env.GIT_COMMIT)
       }
+    }
   }
 }

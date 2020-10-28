@@ -56,6 +56,18 @@ It has specific TDR commands around realm import, and is copied from the default
 
 The standalone-ha.xml is mostly the standard configuration for keycloak with a few changes to get it to work with the load balancer. Some of these are discussed in the keycloak [documentation](https://www.keycloak.org/docs/latest/server_installation/#_setting-up-a-load-balancer-or-proxy)
 
+## TDR Theme
+
+TDR has its own Keycloak theme: `tdr`
+
+The TDR theme makes use of the standard Keycloak base theme, with specific overrides to the theme resources where required.
+
+The TDR theme styling is a combination of [Gov.UK Design System](https://design-system.service.gov.uk/), with TDR specific overrides. 
+
+It is based on the theme developed by the Home Office: https://github.com/UKHomeOffice/keycloak-theme-govuk 
+
+For full documentation on Keycloak themes see: https://www.keycloak.org/docs/latest/server_development/index.html#_themes
+
 ## Updating TDR Realm Configuration json
 
 A separate Jenkins job is used to update the TDR realm configuration: TDR Auth Server Update
@@ -95,17 +107,24 @@ To update Keycloak with, for example, a new client:
 ## Running Locally
 
 To run, build and test locally:
+
 1. Copy the tdr-realm-export.json from the tdr-configuration repository into the tdr-auth-server directory
-2. Build the docker image locally: 
-  * Navigate to the cloned repository: `$ cd tdr-auth-server`
+2. Navigate to the cloned repository: `$ cd tdr-auth-server`
+3. Build the TDR theme:
+  * If npm is not installed install [nvm](https://github.com/nvm-sh/nvm) in root directory
+  * Once nvm is installed run: `[root directory] $ nvm install 14.9`     
+  * Run the following commands in the root directory:  `[root directory] $ npm install` and `[root directory] $ npm run build-theme`
+    * this will compile the theme sass and copy the static assets to the theme `resource` directory
+3. Build the docker image locally:   
   * Run the docker build command: `[location of repo] $ docker build -t nationalarchives/tdr-auth-server:[your build tag] .`
-3. Run the local docker image: 
+4. Run the local docker image: 
 ```
 [location of repo] $ docker run -d --name [some name] -p 8081:8080 \
   -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin -e KEYCLOAK_IMPORT=/tmp/tdr-realm.json \
   -e REALM_ADMIN_CLIENT_SECRET=[some value] -e CLIENT_SECRET=[some value] -e BACKEND_CHECKS_CLIENT_SECRET=[some value] \
   -e USER_ADMIN_CLIENT_SECRET=[some value] \
   -e KEYCLOAK_CONFIGURATION_PROPERTIES=[env]_properties.json \
+  -e FRONTEND_URL=[home page url]
   nationalarchives/tdr-auth-server:[your build tag]
 ```
   * `KEYCLOAK_USER`: root Keycloak user name
@@ -116,12 +135,15 @@ To run, build and test locally:
   * `BACKEND_CHECKS_CLIENT_SECRET`: tdr-backend-checks client secret value
   * `USER_ADMIN_CLIENT_SECRET`: tdr user admin client secret value
   * `KEYCLOAK_CONFIGURATION_PROPERTIES`: json file containing specific Keycloak configuration to a TDR environment
+  * `FRONTEND_URL`: TDR application home page URL
 4. Navigate to http://http://localhost:8081/auth/admin
 5. Log on using the `KEYCLOAK_PASSWORD` and `KEYCLOAK_USER` defined in the docker run command
 
 To log into the running docker container with a bash shell: `$ docker exec -it [your container name] bash`
 
 Make changes to the realm export json file as necessary to test new configurations.
+
+### Update Realm Configuration Locally
 
 To update the realm configuration on the locally running Keycloak instances:
 1. Add the Keycloak configuration json file to the root of the project: tdr-realm-export.json
@@ -138,6 +160,34 @@ To update the realm configuration on the locally running Keycloak instances:
 [location of repo] $ python update_tdr_realm.py local [update policy option: OVERWRITE/SKIP/FAIL]
 ```
 
+### Update TDR Theme Locally
+
+**Note:** The TDR theme sass is used by the TDR Transfer Frontend. When updating the sass for the theme, ensure that any changes are also implemented in the tdr-transfer-frontend repo: https://github.com/nationalarchives/tdr-transfer-frontend/tree/master/npm/css-src/sass
+* This includes any changes to the `.stylelintrc.json`
+
+1. Disable the Theme cache by changing the following in the `standalone-ha.xml` (**Note: do not merge these changes**):
+  * staticMaxAge: -1
+  * cacheThemes: false
+  * cacheTemplates: false
+   
+   ```
+   <theme>
+       <staticMaxAge>-1</staticMaxAge>
+       <cacheThemes>false</cacheThemes>
+       <cacheTemplates>false</cacheTemplates>
+       <welcomeTheme>${env.KEYCLOAK_WELCOME_THEME:keycloak}</welcomeTheme>
+       <default>${env.KEYCLOAK_DEFAULT_THEME:keycloak}</default>
+       <dir>${jboss.home.dir}/themes</dir>
+   </theme>
+   ```
+
+2. Rebuild the image locally and run.
+3. Make necessary changes to the TDR theme (freemarker templates/sass/static resources)
+4. Run following command from the root directory: `[root directory] $ npm run build-local --theme=login --container_name=[name of running container]`
+5. Refresh the locally running Keycloak pages to see the changes.
+6. Repeat steps 3 to 5 as necessary.
+
 ## Databases
 
-Keycloak uses a different database depending on whether it's running locally or on ECS. Local development uses the internal H2 database on the docker image. When it's running on ECS, it uses a postgresql RDS instance defined [here](https://github.com/nationalarchives/tdr-terraform-environments/blob/master/modules/keycloak/database.tf)  
+Keycloak uses a different database depending on whether it's running locally or on ECS. Local development uses the internal H2 database on the docker image. When it's running on ECS, it uses a postgresql RDS instance defined [here](https://github.com/nationalarchives/tdr-terraform-environments/blob/master/modules/keycloak/database.tf) 
+ 

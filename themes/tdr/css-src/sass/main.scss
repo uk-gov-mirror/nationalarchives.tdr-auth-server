@@ -1,0 +1,8 @@
+//Keycloak theme structure places assets in different structure to standard Gov.UK
+$govuk-images-path: '../img/';
+$govuk-fonts-path: '../fonts/';
+
+@import 'node_modules/govuk-frontend/govuk/all';
+
+@import 'overrides/all';
+@import 'header';
