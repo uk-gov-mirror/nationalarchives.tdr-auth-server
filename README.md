@@ -11,15 +11,14 @@ When updating Keycloak version the **tdr-entrypoint.sh** script needs to be upda
 2. Copy the new version of the Keycloak provided entry point script into the *tdr-entrypoint.sh* script
 3. Add the following commands to the updated *tdr-entrypoint.sh*:
 
-```
-if [[ -n ${TDR_KEYCLOAK_IMPORT:-} ]]; then
-  SYS_PROPS+=" -Dkeycloak.migration.action=import"
-  SYS_PROPS+=" -Dkeycloak.migration.provider=singleFile"
-  SYS_PROPS+=" -Dkeycloak.migration.file=$TDR_KEYCLOAK_IMPORT"
-  SYS_PROPS+=" -Dkeycloak.migration.strategy=OVERWRITE_EXISTING"
-fi
-
-```
+    ```
+    if [[ -n ${TDR_KEYCLOAK_IMPORT:-} ]]; then
+      SYS_PROPS+=" -Dkeycloak.migration.action=import"
+      SYS_PROPS+=" -Dkeycloak.migration.provider=singleFile"
+      SYS_PROPS+=" -Dkeycloak.migration.file=$TDR_KEYCLOAK_IMPORT"
+      SYS_PROPS+=" -Dkeycloak.migration.strategy=OVERWRITE_EXISTING"
+    fi
+    ```
 
 ## Dockerfile
 This repository holds the Dockerfile used to build our keycloak server which we will be using for authentication and authorisation. 
@@ -94,14 +93,14 @@ Two REST endpoints are used to update a Keycloak realm:
 To update Keycloak with, for example, a new client:
 1. Update the relevant Keycloak json configuration file (tdr-realm-export.json). See README for the tdr-configuration private repository on how to do this.
 2. If the change to Keycloak makes use of a new secret value, for example a new client secret:
-  * Add the new secret value to the parameter store using Terraform: https://github.com/nationalarchives/tdr-terraform-environments
+    * Add the new secret value to the parameter store using Terraform: https://github.com/nationalarchives/tdr-terraform-environments
     
     This ensures that the secret value is stored securely and is not exposed in the code.
-  
-  * Update the update_env_client_configuration.py script to replace the placeholder secret value in the relevant realm json configuration file, with the new secret value set in the Terraform.
+
+    * Update the update_env_client_configuration.py script to replace the placeholder secret value in the relevant realm json configuration file, with the new secret value set in the Terraform.
 3. Run the Jenkins build, selecting the relevant parameter options:
-  * `STAGE`: the TDR environment to be updated
-  * `UPDATE_POLICY`: what behaviour to apply if a resource already exists. See notes above regarding the possible options.
+    * `STAGE`: the TDR environment to be updated
+    * `UPDATE_POLICY`: what behaviour to apply if a resource already exists. See notes above regarding the possible options.
 4. Once the Jenkins job has been completed log into the Keycloak instance that has been updated as an administrator, and check the expected changes have been made.
 
 ## Running Locally
@@ -111,33 +110,32 @@ To run, build and test locally:
 1. Copy the tdr-realm-export.json from the tdr-configuration repository into the tdr-auth-server directory
 2. Navigate to the cloned repository: `$ cd tdr-auth-server`
 3. Build the TDR theme:
-  * If npm is not installed install [nvm](https://github.com/nvm-sh/nvm) in root directory
-  * Once nvm is installed run: `[root directory] $ nvm install 14.9`     
-  * Run the following commands in the root directory:  `[root directory] $ npm install` and `[root directory] $ npm run build-theme`
-    * this will compile the theme sass and copy the static assets to the theme `resource` directory
-3. Build the docker image locally:   
-  * Run the docker build command: `[location of repo] $ docker build -t nationalarchives/tdr-auth-server:[your build tag] .`
-4. Run the local docker image: 
-```
-[location of repo] $ docker run -d --name [some name] -p 8081:8080 \
-  -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin -e KEYCLOAK_IMPORT=/tmp/tdr-realm.json \
-  -e REALM_ADMIN_CLIENT_SECRET=[some value] -e CLIENT_SECRET=[some value] -e BACKEND_CHECKS_CLIENT_SECRET=[some value] \
-  -e USER_ADMIN_CLIENT_SECRET=[some value] \
-  -e KEYCLOAK_CONFIGURATION_PROPERTIES=[env]_properties.json \
-  -e FRONTEND_URL=[home page url]
-  nationalarchives/tdr-auth-server:[your build tag]
-```
-  * `KEYCLOAK_USER`: root Keycloak user name
-  * `KEYCLOAK_PASSWORD`: password for the root Keycloak user
-  * `KEYCLOAK_IMPORT`: Location of the generated Keycloak TDR realm json file that contains the configuration for the TDR realm
-  * `REALM_ADMIN_CLIENT_SECRET`: tdr realm admin client secret value
-  * `CLIENT_SECRET`: tdr client secret value
-  * `BACKEND_CHECKS_CLIENT_SECRET`: tdr-backend-checks client secret value
-  * `USER_ADMIN_CLIENT_SECRET`: tdr user admin client secret value
-  * `KEYCLOAK_CONFIGURATION_PROPERTIES`: json file containing specific Keycloak configuration to a TDR environment
-  * `FRONTEND_URL`: TDR application home page URL
-4. Navigate to http://http://localhost:8081/auth/admin
-5. Log on using the `KEYCLOAK_PASSWORD` and `KEYCLOAK_USER` defined in the docker run command
+    * If npm is not installed install [nvm](https://github.com/nvm-sh/nvm) in root directory
+    * Once nvm is installed run: `[root directory] $ nvm install 14.9`
+    * Run the following commands in the root directory:  `[root directory] $ npm install` and `[root directory] $ npm run build-theme`
+        * this will compile the theme sass and copy the static assets to the theme `resource` directory
+4. Build the docker image locally:
+    * Run the docker build command: `[location of repo] $ docker build -t nationalarchives/tdr-auth-server:[your build tag] .`
+5. Run the local docker image:
+    ```
+    [location of repo] $ docker run -d --name [some name] -p 8081:8080 \
+    -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin -e KEYCLOAK_IMPORT=/tmp/tdr-realm.json \
+    -e REALM_ADMIN_CLIENT_SECRET=[some value] -e CLIENT_SECRET=[some value] -e BACKEND_CHECKS_CLIENT_SECRET=[some value] \
+    -e USER_ADMIN_CLIENT_SECRET=[some value] \
+    -e KEYCLOAK_CONFIGURATION_PROPERTIES=[env]_properties.json \
+    -e FRONTEND_URL=[home page url] nationalarchives/tdr-auth-server:[your build tag]
+    ```
+    * `KEYCLOAK_USER`: root Keycloak user name
+    * `KEYCLOAK_PASSWORD`: password for the root Keycloak user
+    * `KEYCLOAK_IMPORT`: Location of the generated Keycloak TDR realm json file that contains the configuration for the TDR realm
+    * `REALM_ADMIN_CLIENT_SECRET`: tdr realm admin client secret value
+    * `CLIENT_SECRET`: tdr client secret value
+    * `BACKEND_CHECKS_CLIENT_SECRET`: tdr-backend-checks client secret value
+    * `USER_ADMIN_CLIENT_SECRET`: tdr user admin client secret value
+    * `KEYCLOAK_CONFIGURATION_PROPERTIES`: json file containing specific Keycloak configuration to a TDR environment
+    * `FRONTEND_URL`: TDR application home page URL
+6. Navigate to http://localhost:8081/auth/admin
+7. Log on using the `KEYCLOAK_PASSWORD` and `KEYCLOAK_USER` defined in the docker run command
 
 To log into the running docker container with a bash shell: `$ docker exec -it [your container name] bash`
 
@@ -149,11 +147,11 @@ To update the realm configuration on the locally running Keycloak instances:
 1. Add the Keycloak configuration json file to the root of the project: tdr-realm-export.json
 2. Make necessary changes to the configuration json
 3. Add the following environment variables:
-  * `REALM_ADMIN_CLIENT_SECRET`: tdr realm admin client secret value
-  * `CLIENT_SECRET`: tdr client secret value
-  * `BACKEND_CHECKS_CLIENT_SECRET`: tdr-backend-checks client secret value
-  * `USER_ADMIN_CLIENT_SECRET`: tdr user admin client secret value
-  * `KEYCLOAK_CONFIGURATION_PROPERTIES`: json file containing specific Keycloak configuration to a TDR environment
+    * `REALM_ADMIN_CLIENT_SECRET`: tdr realm admin client secret value
+    * `CLIENT_SECRET`: tdr client secret value
+    * `BACKEND_CHECKS_CLIENT_SECRET`: tdr-backend-checks client secret value
+    * `USER_ADMIN_CLIENT_SECRET`: tdr user admin client secret value
+    * `KEYCLOAK_CONFIGURATION_PROPERTIES`: json file containing specific Keycloak configuration to a TDR environment
 4. Run the following python command:
 
 ```
@@ -166,20 +164,19 @@ To update the realm configuration on the locally running Keycloak instances:
 * This includes any changes to the `.stylelintrc.json`
 
 1. Disable the Theme cache by changing the following in the `standalone-ha.xml` (**Note: do not merge these changes**):
-  * staticMaxAge: -1
-  * cacheThemes: false
-  * cacheTemplates: false
-   
-   ```
-   <theme>
-       <staticMaxAge>-1</staticMaxAge>
-       <cacheThemes>false</cacheThemes>
-       <cacheTemplates>false</cacheTemplates>
-       <welcomeTheme>${env.KEYCLOAK_WELCOME_THEME:keycloak}</welcomeTheme>
-       <default>${env.KEYCLOAK_DEFAULT_THEME:keycloak}</default>
-       <dir>${jboss.home.dir}/themes</dir>
-   </theme>
-   ```
+    * staticMaxAge: -1
+    * cacheThemes: false
+    * cacheTemplates: false
+    ```
+    <theme>
+        <staticMaxAge>-1</staticMaxAge>
+        <cacheThemes>false</cacheThemes>
+        <cacheTemplates>false</cacheTemplates>
+        <welcomeTheme>${env.KEYCLOAK_WELCOME_THEME:keycloak}</welcomeTheme>
+        <default>${env.KEYCLOAK_DEFAULT_THEME:keycloak}</default>
+        <dir>${jboss.home.dir}/themes</dir>
+    </theme>
+    ```
 
 2. Rebuild the image locally and run.
 3. Make necessary changes to the TDR theme (freemarker templates/sass/static resources)
