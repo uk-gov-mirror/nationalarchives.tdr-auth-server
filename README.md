@@ -23,6 +23,12 @@ When updating Keycloak version the **tdr-entrypoint.sh** script needs to be upda
 ## Dockerfile
 This repository holds the Dockerfile used to build our keycloak server which we will be using for authentication and authorisation. 
 
+## Docker Container
+
+The docker container runs with the pre-defined `keycloak` user.
+
+This user is part of the `root` group, but *does not* have root user permissions.
+
 ## Jenkinsfile
 There is a Jenkinsfile build and push this to docker hub. The Jenkinsfile has three stages.
 The first two are run in parallel. 
