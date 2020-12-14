@@ -58,7 +58,7 @@ pipeline {
           message: "*Auth server* :arrow_up: The Keycloak auth app has been updated with latest configuration in the *${params.STAGE}* environment"
         )
         if (params.STAGE == "intg") {
-          tdr.runEndToEndTests(300, params.STAGE, BUILD_URL)
+          tdr.runEndToEndTests(0, params.STAGE, BUILD_URL)
         }
       }
     }
