@@ -59,7 +59,6 @@
                 <main class="govuk-main-wrapper " id="main-content" role="main">
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-two-thirds">
-                            <a href="${properties.tdrHomeUrl}" class="govuk-back-link">Back</a>
                             <h1 class="govuk-heading-xl">${pageTitle}</h1>
 
                             <#-- Start TDR Error Messages -->
