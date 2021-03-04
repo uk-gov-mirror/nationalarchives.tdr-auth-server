@@ -1,0 +1,36 @@
+{
+  "clients": {
+    "tdr": {
+      "redirectUris": [
+        "https://tdr.nationalarchives.gov.uk/*"
+      ],
+      "webOrigins": [
+        "*"
+      ]
+    },
+    "tdr-backend-checks": {
+      "redirectUris": [
+        "https://tdr.nationalarchives.gov.uk/*"
+      ]
+    },
+    "tdr-fe": {
+      "redirectUris": [
+        "https://tdr.nationalarchives.gov.uk/*"
+      ],
+      "webOrigins": [
+        "https://tdr.nationalarchives.gov.uk",
+        "*"
+      ]
+    }
+  },
+  "tdr-realm-admin": {
+    "redirectUris": [
+      "https://tdr.nationalarchives.gov.uk/*"
+    ]
+  },
+  "tdr-user-admin": {
+    "redirectUris": [
+      "https://tdr.nationalarchives.gov.uk/*"
+    ]
+  }
+}
