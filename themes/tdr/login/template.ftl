@@ -56,6 +56,16 @@
 
             <#-- Start TDR Content -->
             <div class="govuk-width-container">
+
+                <div class="govuk-phase-banner">
+                    <p class="govuk-phase-banner__content">
+                        <strong class="govuk-tag govuk-phase-banner__content__tag">BETA</strong>
+                        <span class="govuk-phase-banner__text">This is a new service – your feedback will help us to improve it. Please
+                <a class="govuk-link" target="_blank" rel="noreferrer noopener" href="#"> get in touch (opens in new tab).</a>
+                </span>
+                    </p>
+                </div>
+
                 <main class="govuk-main-wrapper " id="main-content" role="main">
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-two-thirds">
