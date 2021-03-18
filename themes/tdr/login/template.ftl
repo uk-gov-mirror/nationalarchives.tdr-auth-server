@@ -1,7 +1,7 @@
 <#assign signInPageTitle = msg("loginTitle")>
 
 <#macro registrationLayout pageTitle=signInPageTitle displayMessage=true>
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <!DOCTYPE html>
     <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
         <head>
             <meta charset="utf-8">
@@ -59,19 +59,20 @@
                 <main class="govuk-main-wrapper " id="main-content" role="main">
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-two-thirds">
-                            <a href="${properties.tdrHomeUrl}" class="govuk-back-link">Back</a>
                             <h1 class="govuk-heading-xl">${pageTitle}</h1>
 
                             <#-- Start TDR Error Messages -->
                             <#if displayMessage && message?has_content>
                                 <#if message.type = 'error'>
-                                    <div class="govuk-error-summary" role="group" aria-labelledby="error-summary-heading" role="alert" tabindex="-1" data-module="govuk-error-summary">
+                                    <div class="govuk-error-summary" aria-labelledby="error-summary-heading" role="alert" tabindex="-1" data-module="govuk-error-summary">
                                         <h2 class="govuk-error-summary__title" id="error-summary-title">
                                             There is a problem with this form
                                         </h2>
                                         <div class="govuk-error-summary__body">
                                             <ul class="govuk-list govuk-error-summary__list">
-                                                <li>${message.summary}</li>
+                                                <li>
+                                                    <a href="#error-kc-form-login">${message.summary}</a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
