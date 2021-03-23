@@ -23,7 +23,8 @@ public class NotifyEmailSenderProvider implements EmailSenderProvider {
                      String htmlBody) {
 
         Map<String, ?> personalisation = Stream.of(
-                new AbstractMap.SimpleImmutableEntry<>("keycloakMessage", textBody))
+                new AbstractMap.SimpleImmutableEntry<>("keycloakMessage", textBody),
+                new AbstractMap.SimpleImmutableEntry<>("keycloakSubject", subject))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         try {
