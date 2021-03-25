@@ -35,12 +35,24 @@ pipeline {
                 stash includes: "themes/tdr/login/**", name: "tdr-theme"
               }
             }
+            stage('Build GovUk Notify client jar') {
+              agent {
+                ecs {
+                  inheritFrom "transfer-frontend"
+                }
+              }
+              steps {
+                sh 'sbt -no-colors test scalastyle assembly'
+                stash includes: "govuk-notify-spi/target/scala-2.13/govuk-notify-spi.jar", name: "govuk-notify-spi"
+              }
+            }
           }
         }
         stage('Build docker image') {
           steps {
             sh "rm -rf target"
             unstash 'tdr-theme'
+            unstash 'govuk-notify-spi'
             sshagent(['github-jenkins']) {
               sh("git clone --branch master git@github.com:nationalarchives/tdr-configurations.git")
               sh("cp tdr-configurations/keycloak/tdr-realm-export.json .")

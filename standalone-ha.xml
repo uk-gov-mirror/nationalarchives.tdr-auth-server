@@ -532,6 +532,12 @@
                     </properties>
                 </provider>
             </spi>
+            <spi name="emailSender">
+                <default-provider>govuknotify</default-provider>
+                <provider name="govuknotify" enabled="true">
+                    <properties />
+                </provider>
+            </spi>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:mail:3.0">
             <mail-session name="default" jndi-name="java:jboss/mail/Default">
