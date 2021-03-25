@@ -42,7 +42,7 @@ pipeline {
                 }
               }
               steps {
-                sh 'sbt -no-colors test scalastyle assembly'
+                sh 'sbt -no-colors test scalastyle notifySpi/assembly'
                 stash includes: "govuk-notify-spi/target/scala-2.13/govuk-notify-spi.jar", name: "govuk-notify-spi"
               }
             }
