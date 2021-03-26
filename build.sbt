@@ -17,8 +17,20 @@ lazy val notifySpi = (project in file("govuk-notify-spi"))
       keycloakCore,
       keycloakModelJpa,
       keycloakServerSpi,
+      mockito % Test,
       notifyJavaClient,
+      scalaTest % Test,
       typeSafeConfig
     ),
-    assemblyJarName in assembly := "govuk-notify-spi.jar"
+    assemblyJarName in assembly := "govuk-notify-spi.jar",
+    fork in Test := true,
+    envVars in Test := Map(
+      "GOVUK_NOTIFY_API_KEY" -> "testApiKey",
+      "GOVUK_NOTIFY_TEMPLATE_ID" -> "testTemplateId"
+    )
   )
+
+envVars in Test := Map(
+  "GOVUK_NOTIFY_API_KEY" -> "testApiKey",
+  "GOVUK_NOTIFY_TEMPLATE_ID" -> "testTemplateId"
+)
