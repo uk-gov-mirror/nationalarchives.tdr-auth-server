@@ -41,9 +41,11 @@ pipeline {
                   inheritFrom "transfer-frontend"
                 }
               }
-              steps dir("./govuk-notify-spi") {
-                sh 'sbt -no-colors test scalastyle assembly'
-                stash includes: "target/scala-2.13/govuk-notify-spi.jar", name: "govuk-notify-spi"
+              steps {
+                dir("./govuk-notify-spi") {
+                  sh 'sbt -no-colors test scalastyle assembly'
+                  stash includes: "target/scala-2.13/govuk-notify-spi.jar", name: "govuk-notify-spi"
+                }
               }
             }
           }
