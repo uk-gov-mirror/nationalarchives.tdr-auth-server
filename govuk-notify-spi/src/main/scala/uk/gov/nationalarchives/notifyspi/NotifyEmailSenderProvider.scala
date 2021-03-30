@@ -7,6 +7,7 @@ import org.keycloak.models.UserModel
 import uk.gov.service.notify.{NotificationClient, NotificationClientException}
 
 import scala.jdk.CollectionConverters._
+import scala.util.{Failure, Success, Try}
 
 class NotifyEmailSenderProvider(notifyClient: NotificationClient) extends EmailSenderProvider {
 
@@ -27,14 +28,15 @@ class NotifyEmailSenderProvider(notifyClient: NotificationClient) extends EmailS
       "keycloakMessage" -> textBody,
       "keycloakSubject" -> subject)
 
-    try {
+    Try {
       notifyClient.sendEmail(
         templateId,
         user.getEmail,
         personalisation.asJava,
         user.getId)
-    } catch {
-      case e: NotificationClientException => e.printStackTrace()
+    } match {
+      case Failure(exception) => exception.printStackTrace
+      case Success(_) => ()
     }
   }
 

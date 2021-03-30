@@ -29,8 +29,3 @@ lazy val notifySpi = (project in file("govuk-notify-spi"))
       "GOVUK_NOTIFY_TEMPLATE_ID" -> "testTemplateId"
     )
   )
-
-envVars in Test := Map(
-  "GOVUK_NOTIFY_API_KEY" -> "testApiKey",
-  "GOVUK_NOTIFY_TEMPLATE_ID" -> "testTemplateId"
-)
