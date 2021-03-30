@@ -8,7 +8,7 @@ lazy val commonSettings = Seq(
   )
 )
 
-lazy val notifySpi = (project in file("govuk-notify-spi"))
+lazy val root = (project in file("."))
   .settings(
     name := "govuk-notify-spi",
     commonSettings,

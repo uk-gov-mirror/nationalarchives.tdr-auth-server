@@ -1,5 +1,6 @@
 .bsp
 .idea
+*.iml
 target
 templates
 *-realm-export.json
