@@ -15,9 +15,6 @@ curl https://stedolan.github.io/jq/download/linux64/jq > jq
 chmod +x jq
 USER_ID=$(./kcadm.sh get users -r master -q email=$1 --fields id | ./jq -r '.[0]'.id)
 
-# This next line is for demo purposes and shouldn't be included in the final script
-./kcadm.sh update realms/master -f /tmp/realm.json
-
 ./kcadm.sh update users/$USER_ID/execute-actions-email --body '["UPDATE_PASSWORD", "CONFIGURE_TOTP"]'
 
 # We can configure which roles are needed for users
