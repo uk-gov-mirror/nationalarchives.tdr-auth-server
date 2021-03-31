@@ -39,7 +39,7 @@
                 ${msg("signInButton")}
             </button>
               <p class="govuk-body-s">
-                  <a href="mailto:tdr@nationalarchives.gov.uk" data-hsupport="email" class="govuk-link">I need to reset my password</a>
+                  <a class="govuk-link" href="${properties.tdrHomeUrl}/contact">${msg("resetPassword")}</a>
               </p>
           </form>
         </#if>
