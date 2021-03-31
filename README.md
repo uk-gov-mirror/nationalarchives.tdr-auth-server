@@ -73,6 +73,39 @@ It is based on the theme developed by the Home Office: https://github.com/UKHome
 
 For full documentation on Keycloak themes see: https://www.keycloak.org/docs/latest/server_development/index.html#_themes
 
+## GovUK Notify Service
+
+TDR Keycloak uses GovUK Notify as its default email sender provider.
+
+Each TDR environment has a separate GovUK Notify service defined:
+* TDR Intg - service for the integration environment
+* TDR Staging - service for the staging environment
+* TDR - service for the production environment
+
+The GovUK Notify Services require two secret values that are stored as AWS SSM pararmeters:
+* API Key: this is the key to access the GovUK Notify service
+* Template ID: this is the id of the GovUK Notify service email template
+
+Both these AWS SSM parameter *values* need to set manually as it is not programmatically possible to retrieve these from GovUK Notify
+
+See here for full details about the GovUK Notify service: https://www.notifications.service.gov.uk/
+
+### Keycloak Email Sender Configuration
+
+GovUK Notify is defined as the default email sender in the `standalone-ha.xml`:
+
+  ```
+  <spi name="emailSender">
+    <default-provider>govuknotify</default-provider>
+      <provider name="govuknotify" enabled="true">
+        <properties />                        
+      </provider>
+  </spi>
+  ```
+### Requesting access to GovUK Notify Services
+
+Contact a member of the TDR team to request access to the TDR GovUK Notify Services
+
 ## Updating TDR Realm Configuration json
 
 A separate Jenkins job is used to update the TDR realm configuration: TDR Auth Server Update
@@ -120,16 +153,29 @@ To run, build and test locally:
     * Once nvm is installed run: `[root directory] $ nvm install 14.9`
     * Run the following commands in the root directory:  `[root directory] $ npm install` and `[root directory] $ npm run build-theme`
         * this will compile the theme sass and copy the static assets to the theme `resource` directory
-4. Build the docker image locally:
+4. Build the GovUk Notify spi jar:
+    * Navigate to the `govuk-notify-spi` directory: `[root directory] $ cd govuk-notify-spi`
+    * In the `govuk-notify-spi` directory run the following command: `sbt assembly`
+    * This will generate the jar for the GovUK Notify service here: `govuk-notify-spi/target/scala-2.13/govuk-notify-spi.jar`
+5. Change the Docker `COPY` command in the `Dockerfile` which copies the `govuk-notify-spi.jar` to the `deployments` directory, to copy the locally built jar:
+  ```
+  COPY govuk-notify-spi/target/scala-2.13/govuk-notify-spi.jar /opt/jboss/keycloak/standalone/deployments/
+  ```
+   * Do not commit this change to the `Dockerfile`
+    
+6. Build the docker image locally:
     * Run the docker build command: `[location of repo] $ docker build -t nationalarchives/tdr-auth-server:[your build tag] .`
-5. Run the local docker image:
+6. Run the local docker image:
     ```
     [location of repo] $ docker run -d --name [some name] -p 8081:8080 \
     -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin -e KEYCLOAK_IMPORT=/tmp/tdr-realm.json \
     -e REALM_ADMIN_CLIENT_SECRET=[some value] -e CLIENT_SECRET=[some value] -e BACKEND_CHECKS_CLIENT_SECRET=[some value] \
     -e USER_ADMIN_CLIENT_SECRET=[some value] \
     -e KEYCLOAK_CONFIGURATION_PROPERTIES=[env]_properties.json \
-    -e FRONTEND_URL=[home page url] nationalarchives/tdr-auth-server:[your build tag]
+    -e FRONTEND_URL=[home page url] \
+    -e GOVUK_NOTIFY_TEMPLATE_ID=[govuk notify service template id] \
+    -e GOVUK_NOTIFY_API_KEY=[govuk notify service api key] \   
+    nationalarchives/tdr-auth-server:[your build tag]
     ```
     * `KEYCLOAK_USER`: root Keycloak user name
     * `KEYCLOAK_PASSWORD`: password for the root Keycloak user
@@ -140,6 +186,8 @@ To run, build and test locally:
     * `USER_ADMIN_CLIENT_SECRET`: tdr user admin client secret value
     * `KEYCLOAK_CONFIGURATION_PROPERTIES`: json file containing specific Keycloak configuration to a TDR environment
     * `FRONTEND_URL`: TDR application home page URL
+    * `GOVUK_NOTIFY_TEMPLATE_ID`: the GovUK Notify service template id secret value to be used
+    * `GOVUK_NOTIFY_API_KEY`: the GovUK Notify service api key secret value to be used
 6. Navigate to http://localhost:8081/auth/admin
 7. Log on using the `KEYCLOAK_PASSWORD` and `KEYCLOAK_USER` defined in the docker run command
 
@@ -189,6 +237,25 @@ To update the realm configuration on the locally running Keycloak instances:
 4. Run following command from the root directory: `[root directory] $ npm run build-local --theme=login --container_name=[name of running container]`
 5. Refresh the locally running Keycloak pages to see the changes.
 6. Repeat steps 3 to 5 as necessary.
+
+### Updating Emails
+
+There are two components to consider when making changes to emails that Keycloak sends to users:
+* the GovUK Notify Spi contained in the govuk-notify-spi directory
+* the GovUK Notify template contained within the GovUK Notify service
+
+Parameters from Keycloak to the GovUK template are passed using the personalisation Map in the NotifyEmailSenderProvider 
+
+The key in the personalisation Map correspond to the name of the personalisation variable defined in the template, for example: `((keycloakMessage))`
+
+1. Make the necessary changes locally and build and run the Keycloak docker image locally
+2. Make any necessary changes to the GovUKNotify TDR Intg service
+ * this can be done by making changes to the existing keycloak template, or by creating a new test template and passing the test template's id in the docker `run` command environment variable: `GOVUK_NOTIFY_TEMPLATE_ID`
+3. Deploy the new changes to Intg environment
+4. Before deploying to each environment ensure any GovUK Notify template changes are made to the template in GovUK Notify service for the TDR environment:
+ * TDR Intg
+ * TDR Staging
+ * TDR
 
 ## Databases
 
