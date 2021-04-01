@@ -4,7 +4,8 @@ import java.util
 
 import org.keycloak.email.EmailSenderProvider
 import org.keycloak.models.UserModel
-import uk.gov.service.notify.{NotificationClient, NotificationClientException}
+import org.keycloak.email.EmailException
+import uk.gov.service.notify.NotificationClient
 
 import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
@@ -21,7 +22,7 @@ class NotifyEmailSenderProvider(notifyClient: NotificationClient) extends EmailS
 
     val templateId: String = sys.env.get(templateIdKey) match {
       case Some(id) => id
-      case _ => throw new NotificationClientException("Missing GovUk Notify templated id")
+      case _ => throw new EmailException("Missing GovUk Notify templated id")
     }
 
     val personalisation: Map[String, String] = Map(
@@ -35,7 +36,7 @@ class NotifyEmailSenderProvider(notifyClient: NotificationClient) extends EmailS
         personalisation.asJava,
         user.getId)
     } match {
-      case Failure(exception) => exception.printStackTrace
+      case Failure(exception) => new EmailException(exception)
       case Success(_) => ()
     }
   }
