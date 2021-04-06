@@ -36,7 +36,7 @@ class NotifyEmailSenderProvider(notifyClient: NotificationClient) extends EmailS
         personalisation.asJava,
         user.getId)
     } match {
-      case Failure(exception) => new EmailException(exception)
+      case Failure(exception) => throw new EmailException(exception)
       case Success(_) => ()
     }
   }
