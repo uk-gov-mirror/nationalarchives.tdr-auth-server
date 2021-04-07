@@ -246,7 +246,7 @@ There are two components to consider when making changes to emails that Keycloak
 
 Parameters from Keycloak to the GovUK template are passed using the personalisation Map in the NotifyEmailSenderProvider 
 
-The key in the personalisation Map correspond to the name of the personalisation variable defined in the template, for example: `((keycloakMessage))`
+The key in the personalisation Map corresponds to the name of the personalisation variable defined in the template, for example: `((keycloakMessage))`
 
 1. Make the necessary changes locally and build and run the Keycloak docker image locally
 2. Make any necessary changes to the GovUKNotify TDR Intg service
@@ -256,6 +256,10 @@ The key in the personalisation Map correspond to the name of the personalisation
  * TDR Intg
  * TDR Staging
  * TDR
+ 
+#### Testing from the command line with sbt
+
+The tests should be run in the `govuk-notify-spi` directory when using sbt on the command line 
 
 ## Databases
 

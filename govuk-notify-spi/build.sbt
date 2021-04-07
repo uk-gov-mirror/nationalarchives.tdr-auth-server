@@ -23,9 +23,5 @@ lazy val root = (project in file("."))
       typeSafeConfig
     ),
     assemblyJarName in assembly := "govuk-notify-spi.jar",
-    fork in Test := true,
-    envVars in Test := Map(
-      "GOVUK_NOTIFY_API_KEY" -> "testApiKey",
-      "GOVUK_NOTIFY_TEMPLATE_ID" -> "testTemplateId"
-    )
+    fork in Test := true
   )

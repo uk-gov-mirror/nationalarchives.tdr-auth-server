@@ -10,8 +10,8 @@ class NotifyEmailSenderProviderFactorySpec extends AnyFlatSpec with Matchers {
   "the create function" should "return a Notify email provider" in {
     val factory = new NotifyEmailSenderProviderFactory
     val keycloakSession = mock[KeycloakSession]
-    val emailSenderProvider = factory.create(keycloakSession)
 
+    val emailSenderProvider = factory.create(keycloakSession)
     emailSenderProvider.isInstanceOf[NotifyEmailSenderProvider] should be(true)
   }
 
