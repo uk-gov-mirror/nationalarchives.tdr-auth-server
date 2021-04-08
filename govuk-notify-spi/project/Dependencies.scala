@@ -9,5 +9,4 @@ object Dependencies {
   lazy val mockito           = "org.mockito" %% "mockito-scala" % "1.14.1"
   lazy val notifyJavaClient  = "uk.gov.service.notify" % "notifications-java-client" % "3.17.0-RELEASE"
   lazy val scalaTest         = "org.scalatest" %% "scalatest" % "3.2.2"
-  lazy val typeSafeConfig    = "com.typesafe" % "config" % "1.4.1"
 }
