@@ -33,7 +33,7 @@ class NotifyEmailSenderProviderSpec extends AnyFlatSpec with Matchers {
     }
 
     ex.isInstanceOf[EmailException] should be(true)
-    ex.getMessage should be("Missing GovUk Notify api key")
+    ex.getMessage should be("Missing 'GOVUK_NOTIFY_API_KEY' value")
   }
 
   "the send function" should "throw an exception if the template id is missing" in {
@@ -46,7 +46,7 @@ class NotifyEmailSenderProviderSpec extends AnyFlatSpec with Matchers {
     }
 
     ex.isInstanceOf[EmailException] should be(true)
-    ex.getMessage should be("Missing GovUk Notify template id")
+    ex.getMessage should be("Missing 'GOVUK_NOTIFY_TEMPLATE_ID' value")
   }
 
   "the sendNotifyEmail function" should "call the notification client sendEmail function with the correct arguments" in {
