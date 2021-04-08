@@ -19,8 +19,7 @@ lazy val root = (project in file("."))
       keycloakServerSpi,
       mockito % Test,
       notifyJavaClient,
-      scalaTest % Test,
-      typeSafeConfig
+      scalaTest % Test
     ),
     assemblyJarName in assembly := "govuk-notify-spi.jar",
     fork in Test := true

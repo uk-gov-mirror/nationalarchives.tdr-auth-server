@@ -80,13 +80,13 @@ TDR Keycloak uses GovUK Notify as its default email sender provider.
 Each TDR environment has a separate GovUK Notify service defined:
 * TDR Intg - service for the integration environment
 * TDR Staging - service for the staging environment
-* TDR - service for the production environment
+* Transfer Digital Records - service for the production environment
 
 The GovUK Notify Services require two secret values that are stored as AWS SSM pararmeters:
 * API Key: this is the key to access the GovUK Notify service
 * Template ID: this is the id of the GovUK Notify service email template
 
-Both these AWS SSM parameter *values* need to set manually as it is not programmatically possible to retrieve these from GovUK Notify
+Both these AWS SSM parameter *values* need to set manually in the AWS SSM parameter store, as it is not programmatically possible to retrieve these from GovUK Notify
 
 See here for full details about the GovUK Notify service: https://www.notifications.service.gov.uk/
 
@@ -255,7 +255,7 @@ The key in the personalisation Map corresponds to the name of the personalisatio
 4. Before deploying to each environment ensure any GovUK Notify template changes are made to the template in GovUK Notify service for the TDR environment:
  * TDR Intg
  * TDR Staging
- * TDR
+ * Transfer Digital Records
  
 #### Testing from the command line with sbt
 
