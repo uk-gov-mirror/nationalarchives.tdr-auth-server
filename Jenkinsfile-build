@@ -84,6 +84,7 @@ pipeline {
           steps {
             sh "rm -rf target"
             unstash 'tdr-theme'
+            unstash 'govuk-notify-spi'
             script {
               tdr.buildAndPushImage("auth-server", versionTag)
               tdr.postToDaTdrSlackChannel(
