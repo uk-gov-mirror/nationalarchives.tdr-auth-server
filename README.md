@@ -80,13 +80,13 @@ TDR Keycloak uses GovUK Notify as its default email sender provider.
 Each TDR environment has a separate GovUK Notify service defined:
 * TDR Intg - service for the integration environment
 * TDR Staging - service for the staging environment
-* TDR - service for the production environment
+* Transfer Digital Records - service for the production environment
 
-The GovUK Notify Services require two secret values that are stored as AWS SSM parameters:
+The GovUK Notify Services require two secret values that are stored as AWS SSM pararmeters:
 * API Key: this is the key to access the GovUK Notify service
 * Template ID: this is the id of the GovUK Notify service email template
 
-Both these AWS SSM parameter *values* need to set manually in the AWS SSM parameter store, as it is not programmatically possible to retrieve these from GovUK Notify.
+Both these AWS SSM parameter *values* need to set manually in the AWS SSM parameter store, as it is not programmatically possible to retrieve these from GovUK Notify
 
 See here for full details about the GovUK Notify service: https://www.notifications.service.gov.uk/
 
@@ -175,6 +175,7 @@ To run, build and test locally:
     -e FRONTEND_URL=[home page url] \
     -e GOVUK_NOTIFY_TEMPLATE_ID=[govuk notify service template id] \
     -e GOVUK_NOTIFY_API_KEY=[govuk notify service api key] \   
+    -e DB_VENDOR=h2
     nationalarchives/tdr-auth-server:[your build tag]
     ```
     * `KEYCLOAK_USER`: root Keycloak user name
@@ -188,6 +189,7 @@ To run, build and test locally:
     * `FRONTEND_URL`: TDR application home page URL
     * `GOVUK_NOTIFY_TEMPLATE_ID`: the GovUK Notify service template id secret value to be used
     * `GOVUK_NOTIFY_API_KEY`: the GovUK Notify service api key secret value to be used
+    * `DB_VENDOR`: the type of database to use. In the dev environment, we use Keycloak's embedded H2 database
 6. Navigate to http://localhost:8081/auth/admin
 7. Log on using the `KEYCLOAK_PASSWORD` and `KEYCLOAK_USER` defined in the docker run command
 
