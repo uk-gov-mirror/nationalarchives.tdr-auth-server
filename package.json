@@ -5,9 +5,8 @@
   "private": true,
   "scripts": {
     "copy-govuk-image-assets": "copyfiles -f node_modules/govuk-frontend/govuk/assets/images/* ./themes/tdr/$npm_config_theme/resources/img -e node_modules/govuk-frontend/govuk/assets/images/favicon*",
-    "copy-govuk-font-assets": "copyfiles -f node_modules/govuk-frontend/govuk/assets/fonts/* ./themes/tdr/$npm_config_theme/resources/fonts",
     "copy-govuk-js-assets": "copyfiles -f node_modules/govuk-frontend/govuk/all.js ./themes/tdr/$npm_config_theme/resources/js",
-    "copy-assets": "npm-run-all copy-govuk-image-assets copy-govuk-font-assets copy-govuk-js-assets",
+    "copy-assets": "npm-run-all copy-govuk-image-assets copy-govuk-js-assets",
     "sass-compile": "node-sass ./themes/tdr/css-src/sass/main.scss ./themes/tdr/css-src/main.css",
     "add-stylesheet-dir": "mkdir -p ./themes/tdr/$npm_config_theme/resources/css",
     "compress-css": "minify ./themes/tdr/css-src/main.css > ./themes/tdr/$npm_config_theme/resources/css/main.css",
