@@ -236,7 +236,7 @@ To update the realm configuration on the locally running Keycloak instances:
 
 2. Rebuild the image locally and run.
 3. Make necessary changes to the TDR theme (freemarker templates/sass/static resources)
-4. Run following command from the root directory: `[root directory] $ npm run build-local --theme=login --container_name=[name of running container]`
+4. Run following command from the root directory: `[root directory] $ npm run build-local --container_name=[name of running container]`
 5. Refresh the locally running Keycloak pages to see the changes.
 6. Repeat steps 3 to 5 as necessary.
 
