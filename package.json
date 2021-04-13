@@ -13,9 +13,10 @@
     "compress-css": "minify ./themes/tdr/css-src/main.css > ./themes/tdr/$npm_config_theme/resources/css/main.css",
     "build-css": "npm-run-all add-stylesheet-dir sass-compile compress-css",
     "build-login": "npm-run-all copy-assets build-css --theme=login",
+    "build-email": "npm-run-all --theme=email",
     "update-local-resources": "docker cp themes/tdr/$npm_config_theme/. $npm_config_container_name:/opt/jboss/keycloak/themes/tdr/$npm_config_theme",
-    "build-local": "npm-run-all build-login update-local-resources",
-    "build-theme": "npm-run-all build-login"
+    "build-local": "npm-run-all build-login build-email update-local-resources",
+    "build-theme": "npm-run-all build-login build-email"
   },
   "repository": {
     "type": "git",
