@@ -1,6 +1,5 @@
 <#import "template.ftl" as layout>
 <@layout.registrationLayout; section>
-    <p class="govuk-body">${msg("loginDescription")}</p>
     <#if section = "header">
         ${msg("doLogIn")}
     <#elseif section = "form">
