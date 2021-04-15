@@ -8,19 +8,17 @@
                 method="post">
             <div class="govuk-form-group<#if message?has_content>--error</#if>">
               <div class="govuk-form-group">
-                <h1 class="govuk-label-wrapper">
-                  <label for="username" class="govuk-label govuk-label--l">
+                  <label class="govuk-label" for="username">
                       ${msg("email")}
                   </label>
-                </h1>
-                <input id="username" class="govuk-input govuk-!-width-one-half" name="username"
+                <input id="username" class="govuk-input govuk-!-width-two-thirds" name="username"
                        value="${(login.username!'')}" type="text" autofocus autocomplete="off"/>
               </div>
               <div class="govuk-form-group">
-                <h1 class="govuk-label-wrapper">
-                  <label for="password" class="govuk-label govuk-label--l">${msg("password")}</label>
-                </h1>
-                <input id="password" class="govuk-input govuk-!-width-one-half" name="password" type="password"
+                  <label class="govuk-label" for="password">
+                  ${msg("password")}
+                  </label>
+                <input id="password" class="govuk-input govuk-!-width-two-thirds" name="password" type="password"
                        autocomplete="off"/>
               </div>
             </div>
@@ -37,8 +35,11 @@
 
 
             <button class="govuk-button" type="submit" data-module="govuk-button" role="button" name="login">
-                ${msg("continueButton")}
+                ${msg("signInButton")}
             </button>
+              <p class="govuk-body-s">
+                  <a class="govuk-link" href="${properties.tdrHomeUrl}/contact">${msg("resetPassword")}</a>
+              </p>
           </form>
         </#if>
     </#if>
