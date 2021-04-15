@@ -2,7 +2,7 @@
 $govuk-images-path: '../img/';
 $govuk-fonts-path: '../fonts/';
 
-@import 'node_modules/govuk-frontend/govuk/all';
-
 @import 'overrides/all';
+
+@import 'node_modules/govuk-frontend/govuk/all';
 @import 'header';
