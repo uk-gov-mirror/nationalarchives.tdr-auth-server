@@ -12,11 +12,11 @@
             <#if skipLink??>
             <#else>
                 <#if pageRedirectUri?has_content>
-                    <p><a href="${pageRedirectUri}">${kcSanitize(msg("backToApplication"))?no_esc}</a></p>
+                    <p><a class="govuk-link" href="${pageRedirectUri}">${kcSanitize(msg("backToApplication"))?no_esc}</a></p>
                 <#elseif actionUri?has_content>
-                    <p><a href="${actionUri}">${kcSanitize(msg("proceedWithAction"))?no_esc}</a></p>
+                    <p><a class="govuk-link" href="${actionUri}">${kcSanitize(msg("proceedWithAction"))?no_esc}</a></p>
                 <#elseif (client.baseUrl)?has_content>
-                    <p><a href="${client.baseUrl}">${kcSanitize(msg("backToApplication"))?no_esc}</a></p>
+                    <p><a class="govuk-link" href="${client.baseUrl}">${kcSanitize(msg("backToApplication"))?no_esc}</a></p>
                 </#if>
             </#if>
         </div>
