@@ -1,4 +1,7 @@
 <#assign signInPageTitle = msg("loginTitle")>
+<#assign betaBanner = msg("betaBanner")>
+<#assign betaBannerInfo = msg("betaBannerInfo")>
+<#assign betaBannerLink = msg("betaBannerLink")>
 
 <#macro registrationLayout pageTitle=signInPageTitle displayMessage=true>
     <!DOCTYPE html>
@@ -56,6 +59,16 @@
 
             <#-- Start TDR Content -->
             <div class="govuk-width-container">
+
+                <div class="govuk-phase-banner">
+                    <p class="govuk-phase-banner__content">
+                        <strong class="govuk-tag govuk-phase-banner__content__tag">${msg("betaBanner")}</strong>
+                        <span class="govuk-phase-banner__text">${msg("betaBannerInfo")}
+                <a class="govuk-link" target="_blank" rel="noreferrer noopener" href="${properties.tdrHomeUrl}/contact">${msg("betaBannerLink")}</a>
+                </span>
+                    </p>
+                </div>
+
                 <main class="govuk-main-wrapper " id="main-content" role="main">
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-two-thirds">
