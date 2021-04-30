@@ -6,27 +6,29 @@
 
     <#elseif section = "form">
 
-        <ol id="kc-totp-settings">
+        <ul id="kc-totp-settings" class="govuk-list--number">
             <li>
-                <p>${msg("loginTotpStep1")}</p>
+                <label class="govuk-label" for="supported-apps">
+                    ${msg("loginTotpStep1")}
+                </label>
 
-                <ul id="kc-totp-supported-apps">
-                    <#list totp.policy.supportedApplications as app>
-                        <li>${app}</li>
-                    </#list>
+                <ul id="supported-apps" class="govuk-list govuk-list--bullet">
+                    <li>Microsoft Authenticator</li>
+                    <li>Free OTP</li>
+                    <li>Google Authenticator</li>
                 </ul>
             </li>
 
             <#if mode?? && mode = "manual">
                 <li>
-                    <p>${msg("loginTotpManualStep2")}</p>
-                    <p><span id="kc-totp-secret-key">${totp.totpSecretEncoded}</span></p>
-                    <p><a href="${totp.qrUrl}" id="mode-barcode">${msg("loginTotpScanBarcode")}</a></p>
+                    <p class="govuk-body" >${msg("loginTotpManualStep2")}</p>
+                    <p class="govuk-body"><span id="totp-secret-key">${totp.totpSecretEncoded}</span></p>
+                    <p><a class="govuk-link" href="${totp.qrUrl}" id="mode-barcode">${msg("loginTotpScanBarcode")}</a></p>
                 </li>
                 <li>
-                    <p>${msg("loginTotpManualStep3")}</p>
+                    <p class="govuk-body">${msg("loginTotpManualStep3")}</p>
                     <p>
-                    <ul>
+                    <ul class="govuk-list govuk-list--bullet">
                         <li id="kc-totp-type">${msg("loginTotpType")}: ${msg("loginTotp." + totp.policy.type)}</li>
                         <li id="kc-totp-algorithm">${msg("loginTotpAlgorithm")}: ${totp.policy.getAlgorithmKey()}</li>
                         <li id="kc-totp-digits">${msg("loginTotpDigits")}: ${totp.policy.digits}</li>
@@ -40,54 +42,37 @@
                 </li>
             <#else>
                 <li>
-                    <p>${msg("loginTotpStep2")}</p>
-                    <img id="kc-totp-secret-qr-code" src="data:image/png;base64, ${totp.totpSecretQrCode}" alt="Figure: Barcode"><br/>
-                    <p><a href="${totp.manualUrl}" id="mode-manual">${msg("loginTotpUnableToScan")}</a></p>
+                    <div class="govuk-form-group">
+                        <p class="govuk-body">${msg("loginTotpStep2")}</p>
+                        <img id="totp-secret-qr-code" src="data:image/png;base64, ${totp.totpSecretQrCode}" alt="Figure: Barcode"><br/>
+                        <a class="govuk-link" href="${totp.manualUrl}" id="mode-manual">${msg("loginTotpUnableToScan")}</a>
+                    </div>
+
                 </li>
             </#if>
             <li>
-                <p>${msg("loginTotpStep3")}</p>
-                <p>${msg("loginTotpStep3DeviceName")}</p>
+                <p class="govuk-body">${msg("loginTotpStep3")}</p>
+                <p class="govuk-body">${msg("loginTotpStep3DeviceName")}</p>
+                <form action="${url.loginAction}" id="kc-totp-settings-form" method="post">
+                    <div class="govuk-form-group<#if message?has_content && message.type = 'error'>--error</#if>">
+                        <label for="totp" class="govuk-label">${msg("authenticatorCode")}</label>
+                        <input type="text" id="totp" name="totp" autocomplete="off" class="govuk-input govuk-!-width-two-thirds" />
+                        <input type="hidden" id="totpSecret" name="totpSecret" value="${totp.totpSecret}" />
+                        <label for="userLabel" class="govuk-label">${msg("loginTotpDeviceName")}</label>
+                        <input type="text" class="govuk-input govuk-!-width-two-thirds" id="userLabel" name="userLabel" autocomplete="off">
+                        <#if mode??><input type="hidden" id="mode" name="mode" value="${mode}"/></#if>
+                    </div>
+                    <#if message?has_content && message.type = 'error'>
+                      <span class="govuk-error-message" id="error-kc-form-login">
+                        <span class="govuk-visually-hidden">${msg("screenReaderError")}</span>
+                        ${message.summary}
+                      </span>
+                    </#if>
+                    <button class="govuk-button" type="submit" data-module="govuk-button" role="button" name="login">
+                        ${msg("doSubmit")}
+                    </button>
+                </form>
             </li>
-        </ol>
-
-        <form action="${url.loginAction}" class="${properties.kcFormClass!}" id="kc-totp-settings-form" method="post">
-            <div class="${properties.kcFormGroupClass!}">
-                <div class="${properties.kcInputWrapperClass!}">
-                    <label for="totp" class="control-label">${msg("authenticatorCode")}</label> <span class="required">*</span>
-                </div>
-                <div class="${properties.kcInputWrapperClass!}">
-                    <input type="text" id="totp" name="totp" autocomplete="off" class="${properties.kcInputClass!}" />
-                </div>
-                <input type="hidden" id="totpSecret" name="totpSecret" value="${totp.totpSecret}" />
-                <#if mode??><input type="hidden" id="mode" name="mode" value="${mode}"/></#if>
-            </div>
-
-            <div class="${properties.kcFormGroupClass!}" ${messagesPerField.printIfExists('userLabel',properties.kcFormGroupErrorClass!)}">
-            <div class="${properties.kcInputWrapperClass!}">
-                <label for="userLabel" class="control-label">${msg("loginTotpDeviceName")}</label> <#if totp.otpCredentials?size gte 1><span class="required">*</span></#if>
-            </div>
-
-            <div class="${properties.kcInputWrapperClass!}">
-                <input type="text" class="form-control" id="userLabel" name="userLabel" autocomplete="off">
-            </div>
-            </div>
-
-            <#if isAppInitiatedAction??>
-                <input type="submit"
-                       class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonLargeClass!}"
-                       id="saveTOTPBtn" value="${msg("doSubmit")}"
-                />
-                <button type="submit"
-                        class="${properties.kcButtonClass!} ${properties.kcButtonDefaultClass!} ${properties.kcButtonLargeClass!} ${properties.kcButtonLargeClass!}"
-                        id="cancelTOTPBtn" name="cancel-aia" value="true" />${msg("doCancel")}
-                </button>
-            <#else>
-                <input type="submit"
-                       class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}"
-                       id="saveTOTPBtn" value="${msg("doSubmit")}"
-                />
-            </#if>
-        </form>
+        </ul>
     </#if>
 </@layout.registrationLayout>
