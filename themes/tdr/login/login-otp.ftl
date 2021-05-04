@@ -3,8 +3,7 @@
     <#if section="header">
         ${msg("doLogIn")}
     <#elseif section="form">
-        <form id="otp-login-form" class="${properties.kcFormClass!}" action="${url.loginAction}"
-              method="post">
+        <form id="otp-login-form" action="${url.loginAction}" method="post">
             <div class="govuk-form-group<#if message?has_content>--error</#if>">
                 <div class="govuk-form-group">
                     <label class="govuk-label" for="otp">
