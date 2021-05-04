@@ -3,7 +3,7 @@
     <#if section="header">
         ${msg("doLogIn")}
     <#elseif section="form">
-        <form id="kc-otp-login-form" class="${properties.kcFormClass!}" action="${url.loginAction}"
+        <form id="otp-login-form" class="${properties.kcFormClass!}" action="${url.loginAction}"
               method="post">
             <div class="govuk-form-group<#if message?has_content>--error</#if>">
                 <div class="govuk-form-group">
@@ -15,17 +15,9 @@
                 </div>
             </div>
 
-            <div class="${properties.kcFormGroupClass!}">
-                <div id="kc-form-options" class="${properties.kcFormOptionsClass!}">
-                    <div class="${properties.kcFormOptionsWrapperClass!}">
-                    </div>
-                </div>
-                <div id="kc-form-buttons" class="${properties.kcFormButtonsClass!}">
-                    <button class="govuk-button" type="submit" data-module="govuk-button" role="button" name="login">
-                        ${msg("signInButton")}
-                    </button>
-                </div>
-            </div>
+            <button class="govuk-button" type="submit" data-module="govuk-button" role="button" name="login">
+                ${msg("signInButton")}
+            </button>
         </form>
     </#if>
 </@layout.registrationLayout>

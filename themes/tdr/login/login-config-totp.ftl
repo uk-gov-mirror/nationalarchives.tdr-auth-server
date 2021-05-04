@@ -6,7 +6,7 @@
 
     <#elseif section = "form">
 
-        <ul id="kc-totp-settings" class="govuk-list--number">
+        <ul id="totp-settings" class="govuk-list--number">
             <li>
                 <label class="govuk-label" for="supported-apps">
                     ${msg("loginTotpStep1")}
@@ -29,13 +29,13 @@
                     <p class="govuk-body">${msg("loginTotpManualStep3")}</p>
                     <p>
                     <ul class="govuk-list govuk-list--bullet">
-                        <li id="kc-totp-type">${msg("loginTotpType")}: ${msg("loginTotp." + totp.policy.type)}</li>
-                        <li id="kc-totp-algorithm">${msg("loginTotpAlgorithm")}: ${totp.policy.getAlgorithmKey()}</li>
-                        <li id="kc-totp-digits">${msg("loginTotpDigits")}: ${totp.policy.digits}</li>
+                        <li id="totp-type">${msg("loginTotpType")}: ${msg("loginTotp." + totp.policy.type)}</li>
+                        <li id="totp-algorithm">${msg("loginTotpAlgorithm")}: ${totp.policy.getAlgorithmKey()}</li>
+                        <li id="totp-digits">${msg("loginTotpDigits")}: ${totp.policy.digits}</li>
                         <#if totp.policy.type = "totp">
-                            <li id="kc-totp-period">${msg("loginTotpInterval")}: ${totp.policy.period}</li>
+                            <li id="totp-period">${msg("loginTotpInterval")}: ${totp.policy.period}</li>
                         <#elseif totp.policy.type = "hotp">
-                            <li id="kc-totp-counter">${msg("loginTotpCounter")}: ${totp.policy.initialCounter}</li>
+                            <li id="totp-counter">${msg("loginTotpCounter")}: ${totp.policy.initialCounter}</li>
                         </#if>
                     </ul>
                     </p>
@@ -53,7 +53,7 @@
             <li>
                 <p class="govuk-body">${msg("loginTotpStep3")}</p>
                 <p class="govuk-body">${msg("loginTotpStep3DeviceName")}</p>
-                <form action="${url.loginAction}" id="kc-totp-settings-form" method="post">
+                <form action="${url.loginAction}" id="totp-settings-form" method="post">
                     <div class="govuk-form-group<#if message?has_content && message.type = 'error'>--error</#if>">
                         <label for="totp" class="govuk-label">${msg("authenticatorCode")}</label>
                         <input type="text" id="totp" name="totp" autocomplete="off" class="govuk-input govuk-!-width-two-thirds" />
@@ -63,7 +63,7 @@
                         <#if mode??><input type="hidden" id="mode" name="mode" value="${mode}"/></#if>
                     </div>
                     <#if message?has_content && message.type = 'error'>
-                      <span class="govuk-error-message" id="error-kc-form-login">
+                      <span class="govuk-error-message" id="error-form-login">
                         <span class="govuk-visually-hidden">${msg("screenReaderError")}</span>
                         ${message.summary}
                       </span>
