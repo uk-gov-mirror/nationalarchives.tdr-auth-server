@@ -3,7 +3,7 @@
 <#assign betaBannerInfo = msg("betaBannerInfo")>
 <#assign betaBannerLink = msg("betaBannerLink")>
 
-<#macro registrationLayout pageTitle=signInPageTitle displayMessage=true>
+<#macro registrationLayout pageTitle=signInPageTitle displayInfo=false displayMessage=true displayRequiredFields=false showAnotherWayIfPresent=true>
     <!DOCTYPE html>
     <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
         <head>
