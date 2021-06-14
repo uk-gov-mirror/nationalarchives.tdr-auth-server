@@ -28,5 +28,10 @@
     "redirectUris": [
       "http://localhost:9000/*"
     ]
+  },
+  "tdr-reporting": {
+    "redirectUris": [
+      "http://localhost:9000/*"
+    ]
   }
 }
