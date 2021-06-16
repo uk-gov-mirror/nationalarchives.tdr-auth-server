@@ -170,6 +170,7 @@ To run, build and test locally:
     [location of repo] $ docker run -d --name [some name] -p 8081:8080 \
     -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin -e KEYCLOAK_IMPORT=/tmp/tdr-realm.json \
     -e REALM_ADMIN_CLIENT_SECRET=[some value] -e CLIENT_SECRET=[some value] -e BACKEND_CHECKS_CLIENT_SECRET=[some value] \
+    -e REPORTING_CLIENT_SECRET=[some value] \
     -e USER_ADMIN_CLIENT_SECRET=[some value] \
     -e KEYCLOAK_CONFIGURATION_PROPERTIES=[env]_properties.json \
     -e FRONTEND_URL=[home page url] \

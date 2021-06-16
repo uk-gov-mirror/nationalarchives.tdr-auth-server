@@ -30,6 +30,11 @@
       "redirectUris": [
         "https://tdr-integration.nationalarchives.gov.uk/*"
       ]
+    },
+    "tdr-reporting": {
+      "redirectUris": [
+        "https://tdr-integration.nationalarchives.gov.uk/*"
+      ]
     }
   }
 }
