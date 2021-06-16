@@ -34,6 +34,7 @@ pipeline {
           tdr_backend_checks_secret = sh(script: "python3 /ssm_get_parameter.py ${account_number} ${params.STAGE} /${params.STAGE}/keycloak/backend_checks_client/secret", returnStdout: true).trim()
           tdr_realm_admin_client_secret = sh(script: "python3 /ssm_get_parameter.py ${account_number} ${params.STAGE} /${params.STAGE}/keycloak/realm_admin_client/secret", returnStdout: true).trim()
           tdr_user_admin_client_secret = sh(script: "python3 /ssm_get_parameter.py ${account_number} ${params.STAGE} /${params.STAGE}/keycloak/user_admin_client/secret", returnStdout: true).trim()
+          tdr_reporting_client_secret = sh(script: "python3 /ssm_get_parameter.py ${account_number} ${params.STAGE} /${params.STAGE}/keycloak/reporting_client/secret", returnStdout: true).trim()
         }
       }
     }
@@ -44,6 +45,7 @@ pipeline {
         REALM_ADMIN_CLIENT_SECRET = "${tdr_realm_admin_client_secret}"
         KEYCLOAK_CONFIGURATION_PROPERTIES = "${tdr_configuration_properties}"
         USER_ADMIN_CLIENT_SECRET = "${tdr_user_admin_client_secret}"
+        REPORTING_CLIENT_SECRET = "${tdr_reporting_client_secret}"
       }
       steps {
         sh "python3 update_tdr_realm.py ${params.STAGE} ${params.UPDATE_POLICY}"
