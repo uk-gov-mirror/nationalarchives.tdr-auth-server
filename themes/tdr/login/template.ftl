@@ -119,6 +119,22 @@
         <div class="govuk-width-container ">
             <div class="govuk-footer__meta">
                 <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+
+                    <h2 class="govuk-visually-hidden">Support links</h2>
+                    <ul class="govuk-footer__inline-list">
+                        <li class="govuk-footer__inline-list-item">
+                            <a class="govuk-footer__link" href="${properties.tdrHomeUrl}/faq">
+                                FAQ
+                            </a>
+                        </li>
+
+                        <li class="govuk-footer__inline-list-item">
+                            <a class="govuk-footer__link" href="${properties.tdrHomeUrl}/contact">
+                                Contact
+                            </a>
+                        </li>
+                    </ul>
+
                     <svg role="presentation" focusable="false" class="govuk-footer__licence-logo"
                          xmlns="http://www.w3.org/2000/svg" viewbox="0 0 483.2 195.7" height="17" width="41">
                         <path fill="currentColor"
