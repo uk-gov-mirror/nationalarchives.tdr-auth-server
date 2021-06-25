@@ -133,6 +133,12 @@
                                 Contact
                             </a>
                         </li>
+
+                        <li class="govuk-footer__inline-list-item">
+                            <a class="govuk-footer__link" href="${properties.tdrHomeUrl}/cookies">
+                                Cookies
+                            </a>
+                        </li>
                     </ul>
 
                     <svg role="presentation" focusable="false" class="govuk-footer__licence-logo"
