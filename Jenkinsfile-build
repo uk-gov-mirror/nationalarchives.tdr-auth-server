@@ -48,6 +48,19 @@ pipeline {
                 }
               }
             }
+            stage('Build event publisher jar') {
+              agent {
+                ecs {
+                  inheritFrom "transfer-frontent"
+                }
+                steps {
+                  dir("./event-publisher-spi") {
+                    sh 'sbt -no-colors test scalastyle assembly'
+                    stash includes: "target/scala-2.13/event-publisher-spi.jar", name: "event-publsiher-spi"
+                  }
+                }
+              }
+            }
           }
         }
         stage('Build docker image') {
@@ -55,6 +68,7 @@ pipeline {
             sh "rm -rf target"
             unstash 'tdr-theme'
             unstash 'govuk-notify-spi'
+            unstash 'event-publisher-spi'
             sshagent(['github-jenkins']) {
               sh("git clone --branch master git@github.com:nationalarchives/tdr-configurations.git")
               sh("cp tdr-configurations/keycloak/tdr-realm-export.json .")
