@@ -51,12 +51,12 @@ pipeline {
             stage('Build event publisher jar') {
               agent {
                 ecs {
-                  inheritFrom "transfer-frontent"
+                  inheritFrom "transfer-frontend"
                 }
                 steps {
                   dir("./event-publisher-spi") {
                     sh 'sbt -no-colors test scalastyle assembly'
-                    stash includes: "target/scala-2.13/event-publisher-spi.jar", name: "event-publsiher-spi"
+                    stash includes: "target/scala-2.13/event-publisher-spi.jar", name: "event-publisher-spi"
                   }
                 }
               }
@@ -99,6 +99,7 @@ pipeline {
             sh "rm -rf target"
             unstash 'tdr-theme'
             unstash 'govuk-notify-spi'
+            unstash 'event-publisher-spi'
             script {
               tdr.buildAndPushImage("auth-server", versionTag)
               tdr.postToDaTdrSlackChannel(
