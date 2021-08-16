@@ -17,7 +17,8 @@ class EventPublisherProviderFactory extends EventListenerProviderFactory {
   override def init(config: Config.Scope): Unit = {
     val snsUrl = config.get("snsUrl")
     val snsTopicArn = config.get("snsTopicArn")
-    eventPublisherConfig = Option(EventPublisherConfig(snsUrl, snsTopicArn))
+    val tdrEnvironment = config.get("tdrEnvironment")
+    eventPublisherConfig = Option(EventPublisherConfig(snsUrl, snsTopicArn, tdrEnvironment))
   }
 
   override def postInit(factory: KeycloakSessionFactory): Unit = { }

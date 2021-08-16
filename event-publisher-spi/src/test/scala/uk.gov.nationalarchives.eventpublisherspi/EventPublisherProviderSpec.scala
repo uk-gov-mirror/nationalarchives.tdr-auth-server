@@ -7,6 +7,7 @@ import org.mockito.MockitoSugar.{mock, times, verify, when}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import uk.gov.nationalarchives.aws.utils.SNSUtils
+import uk.gov.nationalarchives.eventpublisherspi.EventPublisherProvider.EventPublisherConfig
 
 class EventPublisherProviderSpec extends AnyFlatSpec with Matchers {
 
@@ -45,9 +46,9 @@ class EventPublisherProviderSpec extends AnyFlatSpec with Matchers {
     )
     adminEvent.setAuthDetails(authDetails)
 
-    val eventPublisher = new EventPublisherProvider("snsTopicArn", mockSession, mockSnsUtils)
+    val eventPublisher = new EventPublisherProvider(EventPublisherConfig("http://snsUrl.com", "snsTopicArn", "tdrEnv"), mockSession, mockSnsUtils)
     eventPublisher.onEvent(adminEvent)
-    val expectedMessage = "User Calling Username has assigned role 'admin' to user Affected Username from ip 172.17.0.1"
+    val expectedMessage = "User Calling Username has assigned role 'admin' to user Affected Username from ip 172.17.0.1 on tdrEnv"
     verify(mockSnsUtils, times(1)).publish(expectedMessage, "snsTopicArn")
   }
 
@@ -64,7 +65,7 @@ class EventPublisherProviderSpec extends AnyFlatSpec with Matchers {
         "\"clientRole\": false, \"containerId\": \"master\"}]"
     )
 
-    val eventPublisher = new EventPublisherProvider("snsTopicArn", mockSession, mockSnsUtils)
+    val eventPublisher = new EventPublisherProvider(EventPublisherConfig("http://snsUrl.com", "snsTopicArn", "tdrEnv"), mockSession, mockSnsUtils)
     eventPublisher.onEvent(adminEvent)
     verify(mockSnsUtils, times(0)).publish(any[String], any[String])
   }
@@ -82,7 +83,7 @@ class EventPublisherProviderSpec extends AnyFlatSpec with Matchers {
         "\"clientRole\": false, \"containerId\": \"master\"}]"
     )
 
-    val eventPublisher = new EventPublisherProvider("snsTopicArn", mockSession, mockSnsUtils)
+    val eventPublisher = new EventPublisherProvider(EventPublisherConfig("http://snsUrl.com", "snsTopicArn", "tdrEnv"), mockSession, mockSnsUtils)
     eventPublisher.onEvent(adminEvent)
     verify(mockSnsUtils, times(0)).publish(any[String], any[String])
   }
@@ -101,7 +102,7 @@ class EventPublisherProviderSpec extends AnyFlatSpec with Matchers {
         "\"clientRole\": false, \"containerId\": \"master\"}]"
     )
 
-    val eventPublisher = new EventPublisherProvider("snsTopicArn", mockSession, mockSnsUtils)
+    val eventPublisher = new EventPublisherProvider(EventPublisherConfig("http://snsUrl.com", "snsTopicArn", "tdrEnv"), mockSession, mockSnsUtils)
     eventPublisher.onEvent(adminEvent)
     verify(mockSnsUtils, times(0)).publish(any[String], any[String])
   }

@@ -11,7 +11,7 @@ class EventPublisherProviderFactorySpec extends AnyFlatSpec with Matchers {
   "the create function" should "return a event Publisher provider" in {
     val factory = new EventPublisherProviderFactory
     val mockKeycloakSession = mock[KeycloakSession]
-    factory.eventPublisherConfig = Some(EventPublisherConfig("http://snsUrl.com", "snsTopicArn"))
+    factory.eventPublisherConfig = Some(EventPublisherConfig("http://snsUrl.com", "snsTopicArn", "tdrEnv"))
 
     val eventPublisherProvider = factory.create(mockKeycloakSession)
     eventPublisherProvider.isInstanceOf[EventPublisherProvider] should be(true)

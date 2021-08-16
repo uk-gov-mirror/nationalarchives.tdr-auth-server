@@ -2,6 +2,7 @@ package uk.gov.nationalarchives.eventpublisherspi
 
 import java.net.URI
 
+import org.jboss.logging.Logger
 import org.keycloak.events.admin.{AdminEvent, OperationType, ResourceType}
 import org.keycloak.events.{Event, EventListenerProvider}
 import org.keycloak.models.KeycloakSession
@@ -9,8 +10,11 @@ import software.amazon.awssdk.http.apache.ApacheHttpClient
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.sns.SnsClient
 import uk.gov.nationalarchives.aws.utils.SNSUtils
+import uk.gov.nationalarchives.eventpublisherspi.EventPublisherProvider.EventPublisherConfig
 
-class EventPublisherProvider(topicArn: String, session: KeycloakSession, snsUtils: SNSUtils) extends EventListenerProvider {
+class EventPublisherProvider(config: EventPublisherConfig, session: KeycloakSession, snsUtils: SNSUtils) extends EventListenerProvider {
+  val logger = Logger.getLogger(classOf[EventPublisherProvider])
+
   implicit class AdminEventUtils(event: AdminEvent) {
 
     def isAdminRoleAssignment(): Boolean = event.getResourceType == ResourceType.REALM_ROLE_MAPPING &&
@@ -26,7 +30,7 @@ class EventPublisherProvider(topicArn: String, session: KeycloakSession, snsUtil
   override def close(): Unit = { }
 
   def publishAdminEvent(f: AdminEvent => String, event: AdminEvent): Unit = {
-    snsUtils.publish(f(event), topicArn)
+    snsUtils.publish(f(event), config.snsTopicArn)
   }
 
   private def adminRoleAssignmentMessage(event: AdminEvent): String = {
@@ -36,7 +40,7 @@ class EventPublisherProvider(topicArn: String, session: KeycloakSession, snsUtil
     val callingUser = session.users().getUserById(userId, realm)
     val affectedUser = session.users().getUserById(affectedUserId, realm)
     s"User ${callingUser.getUsername}" +
-      s" has assigned role 'admin' to user ${affectedUser.getUsername} from ip ${event.getAuthDetails.getIpAddress}"
+      s" has assigned role 'admin' to user ${affectedUser.getUsername} from ip ${event.getAuthDetails.getIpAddress} on ${config.tdrEnvironment}"
   }
 }
 
@@ -50,8 +54,8 @@ object EventPublisherProvider {
       .httpClient(httpClient)
       .build())
 
-    new EventPublisherProvider(config.snsTopicArn, session, snsUtils)
+    new EventPublisherProvider(config, session, snsUtils)
   }
 
-  case class EventPublisherConfig(sqsUrl: String, snsTopicArn: String)
+  case class EventPublisherConfig(sqsUrl: String, snsTopicArn: String, tdrEnvironment: String)
 }
