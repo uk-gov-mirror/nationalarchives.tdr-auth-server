@@ -2,6 +2,9 @@ package uk.gov.nationalarchives.eventpublisherspi
 
 import java.net.URI
 
+import io.circe.Encoder
+import io.circe.generic.semiauto.deriveEncoder
+import io.circe.syntax.EncoderOps
 import org.jboss.logging.Logger
 import org.keycloak.events.admin.{AdminEvent, OperationType, ResourceType}
 import org.keycloak.events.{Event, EventListenerProvider}
@@ -10,7 +13,7 @@ import software.amazon.awssdk.http.apache.ApacheHttpClient
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.sns.SnsClient
 import uk.gov.nationalarchives.aws.utils.SNSUtils
-import uk.gov.nationalarchives.eventpublisherspi.EventPublisherProvider.EventPublisherConfig
+import uk.gov.nationalarchives.eventpublisherspi.EventPublisherProvider.{EventDetails, EventPublisherConfig}
 
 class EventPublisherProvider(config: EventPublisherConfig, session: KeycloakSession, snsUtils: SNSUtils) extends EventListenerProvider {
   val logger = Logger.getLogger(classOf[EventPublisherProvider])
@@ -20,6 +23,8 @@ class EventPublisherProvider(config: EventPublisherConfig, session: KeycloakSess
     def isAdminRoleAssignment(): Boolean = event.getResourceType == ResourceType.REALM_ROLE_MAPPING &&
       event.getOperationType == OperationType.CREATE && event.getRepresentation.contains("admin")
   }
+
+  implicit val eventDetailsEncoder: Encoder[EventDetails] = deriveEncoder
 
   override def onEvent(event: Event): Unit = { }
 
@@ -39,8 +44,9 @@ class EventPublisherProvider(config: EventPublisherConfig, session: KeycloakSess
     val affectedUserId = event.getResourcePath.split("/").tail.head
     val callingUser = session.users().getUserById(userId, realm)
     val affectedUser = session.users().getUserById(affectedUserId, realm)
-    s"User ${callingUser.getUsername}" +
-      s" has assigned role 'admin' to user ${affectedUser.getUsername} from ip ${event.getAuthDetails.getIpAddress} on ${config.tdrEnvironment}"
+    val message = s"User ${callingUser.getUsername}" +
+      s" has assigned role 'admin' to user ${affectedUser.getUsername} from ip ${event.getAuthDetails.getIpAddress}"
+    EventDetails(config.tdrEnvironment, message).asJson.toString()
   }
 }
 
@@ -58,4 +64,5 @@ object EventPublisherProvider {
   }
 
   case class EventPublisherConfig(sqsUrl: String, snsTopicArn: String, tdrEnvironment: String)
+  case class EventDetails(tdrEnv: String, message: String)
 }

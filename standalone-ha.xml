@@ -467,7 +467,7 @@
                 </provider>
                 <provider name="event-publisher" enabled="true">
                     <properties>
-                        <property name="tdrEnvironment" value="${tdr_env}"/>
+                        <property name="tdrEnvironment" value="${env.TDR_ENV}"/>
                         <property name="snsUrl" value="https://sns.eu-west-2.amazonaws.com"/>
                         <property name="snsTopicArn" value="${env.SNS_TOPIC_ARN}"/>
                     </properties>

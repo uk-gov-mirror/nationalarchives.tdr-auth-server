@@ -1,13 +1,15 @@
 package uk.gov.nationalarchives.eventpublisherspi
 
+import io.circe.syntax.EncoderOps
 import org.keycloak.events.admin.{AdminEvent, AuthDetails, OperationType, ResourceType}
 import org.keycloak.models._
+import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchersSugar.any
-import org.mockito.MockitoSugar.{mock, times, verify, when}
+import org.mockito.MockitoSugar.{doAnswer, mock, times, verify, when}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import uk.gov.nationalarchives.aws.utils.SNSUtils
-import uk.gov.nationalarchives.eventpublisherspi.EventPublisherProvider.EventPublisherConfig
+import uk.gov.nationalarchives.eventpublisherspi.EventPublisherProvider.{EventDetails, EventPublisherConfig}
 
 class EventPublisherProviderSpec extends AnyFlatSpec with Matchers {
 
@@ -21,6 +23,9 @@ class EventPublisherProviderSpec extends AnyFlatSpec with Matchers {
     val callingUserId = "2bfdc4b4-bebb-48db-8648-04e787b686a9"
     val affectedUser = mock[UserModel]
     val affectedUserId = "76254946-dfb2-4434-9c64-bf0d0c671abd"
+
+    val eventDetailsCaptor: ArgumentCaptor[String] = ArgumentCaptor.forClass(classOf[String])
+    val snsTopicCaptor: ArgumentCaptor[String] = ArgumentCaptor.forClass(classOf[String])
 
     when(callingUser.getUsername).thenReturn("Calling Username")
     when(affectedUser.getUsername).thenReturn("Affected Username")
@@ -46,9 +51,15 @@ class EventPublisherProviderSpec extends AnyFlatSpec with Matchers {
     )
     adminEvent.setAuthDetails(authDetails)
 
+    val expectedMessage =
+      s"""{
+         |  "tdrEnv" : "tdrEnv",
+         |  "message" : "User Calling Username has assigned role 'admin' to user Affected Username from ip 172.17.0.1"
+         |}""".stripMargin
+
     val eventPublisher = new EventPublisherProvider(EventPublisherConfig("http://snsUrl.com", "snsTopicArn", "tdrEnv"), mockSession, mockSnsUtils)
     eventPublisher.onEvent(adminEvent)
-    val expectedMessage = "User Calling Username has assigned role 'admin' to user Affected Username from ip 172.17.0.1 on tdrEnv"
+
     verify(mockSnsUtils, times(1)).publish(expectedMessage, "snsTopicArn")
   }
 
