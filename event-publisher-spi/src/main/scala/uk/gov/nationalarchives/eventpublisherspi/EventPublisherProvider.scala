@@ -2,11 +2,8 @@ package uk.gov.nationalarchives.eventpublisherspi
 
 import java.net.URI
 
-import io.circe.Encoder
-import io.circe.generic.semiauto.deriveEncoder
 import io.circe.syntax.EncoderOps
-import org.jboss.logging.Logger
-import org.keycloak.events.admin.{AdminEvent, OperationType, ResourceType}
+import org.keycloak.events.admin.AdminEvent
 import org.keycloak.events.{Event, EventListenerProvider}
 import org.keycloak.models.KeycloakSession
 import software.amazon.awssdk.http.apache.ApacheHttpClient
@@ -14,19 +11,13 @@ import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.sns.SnsClient
 import uk.gov.nationalarchives.aws.utils.SNSUtils
 import uk.gov.nationalarchives.eventpublisherspi.EventPublisherProvider.{EventDetails, EventPublisherConfig}
+import uk.gov.nationalarchives.eventpublisherspi.helpers.EventUtils.{AdminEventUtils, eventDetailsEncoder}
 
 class EventPublisherProvider(config: EventPublisherConfig, session: KeycloakSession, snsUtils: SNSUtils) extends EventListenerProvider {
-  val logger = Logger.getLogger(classOf[EventPublisherProvider])
 
-  implicit class AdminEventUtils(event: AdminEvent) {
-
-    def isAdminRoleAssignment(): Boolean = event.getResourceType == ResourceType.REALM_ROLE_MAPPING &&
-      event.getOperationType == OperationType.CREATE && event.getRepresentation.contains("admin")
+  override def onEvent(event: Event): Unit = {
+    //Currently no events published
   }
-
-  implicit val eventDetailsEncoder: Encoder[EventDetails] = deriveEncoder
-
-  override def onEvent(event: Event): Unit = { }
 
   override def onEvent(event: AdminEvent, includeRepresentation: Boolean = true): Unit = {
     if (event.isAdminRoleAssignment()) { publishAdminEvent(adminRoleAssignmentMessage, event) }
@@ -45,7 +36,9 @@ class EventPublisherProvider(config: EventPublisherConfig, session: KeycloakSess
     val callingUser = session.users().getUserById(userId, realm)
     val affectedUser = session.users().getUserById(affectedUserId, realm)
     val message = s"User ${callingUser.getUsername}" +
-      s" has assigned role 'admin' to user ${affectedUser.getUsername} from ip ${event.getAuthDetails.getIpAddress}"
+      s" has assigned role 'admin' to user ${affectedUser.getUsername}" +
+      s" from ip ${event.getAuthDetails.getIpAddress}" +
+      s" in the ${event.roleMappingRepresentation().containerId.getOrElse("")} realm"
     EventDetails(config.tdrEnvironment, message).asJson.toString()
   }
 }
@@ -65,4 +58,10 @@ object EventPublisherProvider {
 
   case class EventPublisherConfig(sqsUrl: String, snsTopicArn: String, tdrEnvironment: String)
   case class EventDetails(tdrEnv: String, message: String)
+  case class RoleMappingRepresentation(id: Option[String] = None,
+                                       name: Option[String] = None,
+                                       description: Option[String] = None,
+                                       composite: Option[Boolean] = None,
+                                       clientRole: Option[Boolean] = None,
+                                       containerId: Option[String] = None)
 }

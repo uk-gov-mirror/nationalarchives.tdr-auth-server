@@ -73,7 +73,7 @@ It is based on the theme developed by the Home Office: https://github.com/UKHome
 
 For full documentation on Keycloak themes see: https://www.keycloak.org/docs/latest/server_development/index.html#_themes
 
-## GovUK Notify Service
+## GovUK Notify Service (SPI)
 
 TDR Keycloak uses GovUK Notify as its default email sender provider.
 
@@ -82,7 +82,7 @@ Each TDR environment has a separate GovUK Notify service defined:
 * TDR Staging - service for the staging environment
 * Transfer Digital Records - service for the production environment
 
-The GovUK Notify Services require two secret values that are stored as AWS SSM pararmeters:
+The GovUK Notify Services require two secret values that are stored as AWS SSM parameters:
 * API Key: this is the key to access the GovUK Notify service
 * Template ID: this is the id of the GovUK Notify service email template
 
@@ -105,6 +105,31 @@ GovUK Notify is defined as the default email sender in the `standalone-ha.xml`:
 ### Requesting access to GovUK Notify Services
 
 Contact a member of the TDR team to request access to the TDR GovUK Notify Services
+
+## Event Publishing Service (SPI)
+
+This is an SPI (Service Provider Interface) that publishes Keycloak events to the notifications SNS topic (`tdr-notifications-{environment}`).
+
+The SNS message is picked up by the `tdr-notification-{environment}` lambda which sends a Slack alert about the triggering Keycloak event. See [TDR notification lambda](https://github.com/nationalarchives/tdr-notifications)
+
+The following events trigger the publishing service:
+* When a user is assigned the 'admin' role
+
+### Event Publishing Configuration
+
+The event publishing SPI is defined as an event listener in the `standalone-ha.xml`:
+  ```
+  <spi name="eventsListener">
+    ...
+    <provider name="event-publisher" enabled="true">
+      <properties>
+        <property name="tdrEnvironment" value="${env.TDR_ENV}"/>
+        <property name="snsUrl" value="https://sns.eu-west-2.amazonaws.com"/>
+        <property name="snsTopicArn" value="${env.SNS_TOPIC_ARN}"/>
+      </properties>
+    </provider>
+  </spi>
+  ```
 
 ## Updating TDR Realm Configuration json
 
@@ -162,10 +187,19 @@ To run, build and test locally:
   COPY govuk-notify-spi/target/scala-2.13/govuk-notify-spi.jar /opt/jboss/keycloak/standalone/deployments/
   ```
    * Do not commit this change to the `Dockerfile`
-    
-6. Build the docker image locally:
+   
+6. Build the Event Publisher spi jar:
+    * Navigate to the `event-publisher-spi` directory: `[root directory] $ cd event-publisher-spi`
+    * In the `event-publsiher-spi` directory run the following command: `sbt assembly`
+    * This will generate the jar for the Event Publisher service here: `event-publisher-spi/target/scala-2.13/event-publisher-spi.jar`
+7. Change the Docker `COPY` command in the `Dockerfile` which copies the `event-publisher-spi.jar` to the `deployments` directory, to copy the locally built jar:
+  ```
+   COPY govuk-notify-spi/target/scala-2.13/govuk-notify-spi.jar /opt/jboss/keycloak/standalone/deployments/
+  ```
+   * Do not commit this change to the `Dockerfile`
+8. Build the docker image locally:
     * Run the docker build command: `[location of repo] $ docker build -t nationalarchives/tdr-auth-server:[your build tag] .`
-6. Run the local docker image:
+9. Run the local docker image:
     ```
     [location of repo] $ docker run -d --name [some name] -p 8081:8080 \
     -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin -e KEYCLOAK_IMPORT=/tmp/tdr-realm.json \
@@ -176,7 +210,9 @@ To run, build and test locally:
     -e FRONTEND_URL=[home page url] \
     -e GOVUK_NOTIFY_TEMPLATE_ID=[govuk notify service template id] \
     -e GOVUK_NOTIFY_API_KEY=[govuk notify service api key] \   
-    -e DB_VENDOR=h2
+    -e DB_VENDOR=h2 \
+    -e SNS_TOPIC_ARN=[Tsr notifications topic arn] \
+    -e TDR_ENV=[Tdr environment] \
     nationalarchives/tdr-auth-server:[your build tag]
     ```
     * `KEYCLOAK_USER`: root Keycloak user name
@@ -191,12 +227,48 @@ To run, build and test locally:
     * `GOVUK_NOTIFY_TEMPLATE_ID`: the GovUK Notify service template id secret value to be used
     * `GOVUK_NOTIFY_API_KEY`: the GovUK Notify service api key secret value to be used
     * `DB_VENDOR`: the type of database to use. In the dev environment, we use Keycloak's embedded H2 database
+    * `SNS_TOPIC_ARN`: the AWS topic arn to publish event messages to
+    * `TDR_ENV`: the name of the TDR environment where Keycloak is running
 6. Navigate to http://localhost:8081/auth/admin
 7. Log on using the `KEYCLOAK_PASSWORD` and `KEYCLOAK_USER` defined in the docker run command
 
 To log into the running docker container with a bash shell: `$ docker exec -it [your container name] bash`
 
 Make changes to the realm export json file as necessary to test new configurations.
+
+### Optionally Run Event Publishing to AWS SNS Topic
+
+If you are working on the event publishing you can optionally send messages to an AWS SNS topic.
+
+To run the event publishing:
+
+1. When setting the environment variables for running the local docker image ensure the `SNS_TOPIC_ARN` value is the ARN of the topic you wish to publish to.
+2. Once the local Keycloak container is running log into it: `$ docker exec -it [your container name] bash`
+3. In the container run the following commands:
+   * Navigate to the home directory: `[docker container] $ cd ~/`
+   * Create AWS credential directory: `[docker container ~/] $ mkdir .aws`
+   * Navigate to the created `./aws` directory: `[docker container ~/] $ cd /.aws`
+   * Retrieve credentials from AWS SSO for the environment that will give access to the SNS topic
+   * Add AWS credentials file to the AWS credential directory. Replace `placeholder value` with the retrieved credentials:
+  ```
+    [docker container ~/.aws directory] $ cat << EOF > credentials
+    [default]
+    aws_access_key_id=placeholder value
+    aws_secret_access_key=placeholder value
+    aws_session_token=placeholder value
+    EOF
+  ```
+   * Check the `./aws/credentials` file has been created and contains the correct credentials.
+   * Note as with all AWS SSO credentials these credentials are time limited and will need to be reset periodically, by repeating the last two commands.
+4. Log into the locally running Keycloak (http://localhost:8081)
+5. Go to the realm where you want to publish the event from.
+6. Navigate to the events config tab: "Events" > "Config". Ensure the following configuration:
+   * *Event Listeners*: includes the `event-publisher`
+   * *Login Events Settings* > *Save Events*: `ON`
+   * *Admin Events Settings* > *Save Events*: `ON`
+   * *Admin Events Settings* > *Include Representation*: `ON`
+7. Trigger the required event in Keycloak
+8. Check the relevant SNS topic / cloudwatch logs that message has been sent.
 
 ### Update Realm Configuration Locally
 
