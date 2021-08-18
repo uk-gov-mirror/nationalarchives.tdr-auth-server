@@ -35,7 +35,7 @@ pipeline {
                 stash includes: "themes/tdr/login/**", name: "tdr-theme"
               }
             }
-            stage('Build GovUk Notify client jar') {
+            stage('Build service provider interface jars') {
               agent {
                 ecs {
                   inheritFrom "transfer-frontend"
@@ -46,18 +46,9 @@ pipeline {
                   sh 'sbt -no-colors test scalastyle assembly'
                   stash includes: "target/scala-2.13/govuk-notify-spi.jar", name: "govuk-notify-spi"
                 }
-              }
-            }
-            stage('Build event publisher jar') {
-              agent {
-                ecs {
-                  inheritFrom "transfer-frontend"
-                }
-                steps {
-                  dir("./event-publisher-spi") {
-                    sh 'sbt -no-colors test scalastyle assembly'
-                    stash includes: "target/scala-2.13/event-publisher-spi.jar", name: "event-publisher-spi"
-                  }
+                dir("./event-publisher-spi") {
+                  sh 'sbt -no-colors test scalastyle assembly'
+                  stash includes: "target/scala-2.13/event-publisher-spi.jar", name: "event-publisher-spi"
                 }
               }
             }
