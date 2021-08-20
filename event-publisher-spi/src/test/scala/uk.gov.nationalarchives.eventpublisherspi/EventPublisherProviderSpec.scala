@@ -38,7 +38,7 @@ class EventPublisherProviderSpec extends AnyFlatSpec with Matchers {
     adminEvent.setRealmId("master")
     adminEvent.setResourceType(ResourceType.REALM_ROLE_MAPPING)
     adminEvent.setOperationType(OperationType.CREATE)
-    adminEvent.setResourcePath(s"users/${affectedUserId}/role-mappings/realm")
+    adminEvent.setResourcePath(s"users/$affectedUserId/role-mappings/realm")
     adminEvent.setRepresentation(
       "[{ \"id\": \"47194376-d36c-4c1e-b480-0c782052beda\"," +
         "\"name\": \"admin\",\"description\": \"${role_admin}\",\"composite\": true," +

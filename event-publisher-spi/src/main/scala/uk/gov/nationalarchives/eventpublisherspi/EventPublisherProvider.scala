@@ -2,6 +2,7 @@ package uk.gov.nationalarchives.eventpublisherspi
 
 import java.net.URI
 
+import io.circe.generic.auto._
 import io.circe.syntax.EncoderOps
 import org.keycloak.events.admin.AdminEvent
 import org.keycloak.events.{Event, EventListenerProvider}
@@ -11,7 +12,7 @@ import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.sns.SnsClient
 import uk.gov.nationalarchives.aws.utils.SNSUtils
 import uk.gov.nationalarchives.eventpublisherspi.EventPublisherProvider.{EventDetails, EventPublisherConfig}
-import uk.gov.nationalarchives.eventpublisherspi.helpers.EventUtils.{AdminEventUtils, eventDetailsEncoder}
+import uk.gov.nationalarchives.eventpublisherspi.helpers.EventUtils.AdminEventUtils
 
 class EventPublisherProvider(config: EventPublisherConfig, session: KeycloakSession, snsUtils: SNSUtils) extends EventListenerProvider {
 

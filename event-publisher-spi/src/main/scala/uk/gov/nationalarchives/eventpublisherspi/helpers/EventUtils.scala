@@ -1,13 +1,11 @@
 package uk.gov.nationalarchives.eventpublisherspi.helpers
 
-import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
-import io.circe.{Decoder, Encoder, parser}
+import io.circe.generic.auto._
+import io.circe.parser
 import org.keycloak.events.admin.{AdminEvent, OperationType, ResourceType}
-import uk.gov.nationalarchives.eventpublisherspi.EventPublisherProvider.{EventDetails, RoleMappingRepresentation}
+import uk.gov.nationalarchives.eventpublisherspi.EventPublisherProvider.RoleMappingRepresentation
 
 object EventUtils {
-  implicit val roleMappingRepresentationDecoder: Decoder[RoleMappingRepresentation] = deriveDecoder[RoleMappingRepresentation]
-  implicit val eventDetailsEncoder: Encoder[EventDetails] = deriveEncoder
 
   implicit class AdminEventUtils(event: AdminEvent) {
     def roleMappingRepresentation(): RoleMappingRepresentation = parser.decode[List[RoleMappingRepresentation]](event.getRepresentation)

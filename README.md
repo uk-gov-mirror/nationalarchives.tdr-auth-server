@@ -211,7 +211,7 @@ To run, build and test locally:
     -e GOVUK_NOTIFY_TEMPLATE_ID=[govuk notify service template id] \
     -e GOVUK_NOTIFY_API_KEY=[govuk notify service api key] \   
     -e DB_VENDOR=h2 \
-    -e SNS_TOPIC_ARN=[Tsr notifications topic arn] \
+    -e SNS_TOPIC_ARN=[Tdr notifications topic arn] \
     -e TDR_ENV=[Tdr environment] \
     nationalarchives/tdr-auth-server:[your build tag]
     ```
@@ -260,6 +260,15 @@ To run the event publishing:
   ```
    * Check the `./aws/credentials` file has been created and contains the correct credentials.
    * Note as with all AWS SSO credentials these credentials are time limited and will need to be reset periodically, by repeating the last two commands.
+   
+   Alternatively you can add the necessary permissions to access the SNS topic arn by adding them as environment variables when starting the Keycloak container:
+   * Make sure you have the permission variables set locally
+   * Add the following environment variables to the Keycloak container start command:
+   ```
+    -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+    -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+    -e AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN
+   ```
 4. Log into the locally running Keycloak (http://localhost:8081)
 5. Go to the realm where you want to publish the event from.
 6. Navigate to the events config tab: "Events" > "Config". Ensure the following configuration:
