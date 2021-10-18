@@ -34,8 +34,8 @@ class EventPublisherProvider(config: EventPublisherConfig, session: KeycloakSess
     val userId = event.getAuthDetails.getUserId()
     val realm = session.realms().getRealm(event.getRealmId())
     val affectedUserId = event.getResourcePath.split("/").tail.head
-    val callingUser = session.users().getUserById(userId, realm)
-    val affectedUser = session.users().getUserById(affectedUserId, realm)
+    val callingUser = session.users().getUserById(realm, userId)
+    val affectedUser = session.users().getUserById(realm, affectedUserId)
     val message = s"User ${callingUser.getUsername}" +
       s" has assigned role 'admin' to user ${affectedUser.getUsername}" +
       s" from ip ${event.getAuthDetails.getIpAddress}" +
