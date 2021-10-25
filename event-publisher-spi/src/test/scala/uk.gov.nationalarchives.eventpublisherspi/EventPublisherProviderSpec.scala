@@ -27,8 +27,8 @@ class EventPublisherProviderSpec extends AnyFlatSpec with Matchers {
     when(mockSession.realms()).thenReturn(mockRealmProvider)
     when(mockRealmProvider.getRealm(any[String])).thenReturn(mockRealm)
     when(mockSession.users()).thenReturn(mockUserProvider)
-    when(mockUserProvider.getUserById(callingUserId, mockRealm)).thenReturn(callingUser)
-    when(mockUserProvider.getUserById(affectedUserId, mockRealm)).thenReturn(affectedUser)
+    when(mockUserProvider.getUserById(mockRealm, callingUserId)).thenReturn(callingUser)
+    when(mockUserProvider.getUserById(mockRealm, affectedUserId)).thenReturn(affectedUser)
 
     val authDetails = new AuthDetails()
     authDetails.setUserId(callingUserId)

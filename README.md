@@ -190,11 +190,11 @@ To run, build and test locally:
    
 6. Build the Event Publisher spi jar:
     * Navigate to the `event-publisher-spi` directory: `[root directory] $ cd event-publisher-spi`
-    * In the `event-publsiher-spi` directory run the following command: `sbt assembly`
+    * In the `event-publisher-spi` directory run the following command: `sbt assembly`
     * This will generate the jar for the Event Publisher service here: `event-publisher-spi/target/scala-2.13/event-publisher-spi.jar`
 7. Change the Docker `COPY` command in the `Dockerfile` which copies the `event-publisher-spi.jar` to the `deployments` directory, to copy the locally built jar:
   ```
-   COPY govuk-notify-spi/target/scala-2.13/govuk-notify-spi.jar /opt/jboss/keycloak/standalone/deployments/
+   COPY event-publisher-spi/target/scala-2.13/event-publisher-spi.jar /opt/jboss/keycloak/standalone/deployments/
   ```
    * Do not commit this change to the `Dockerfile`
 8. Build the docker image locally:
@@ -343,7 +343,7 @@ The key in the personalisation Map corresponds to the name of the personalisatio
  
 #### Testing from the command line with sbt
 
-The tests should be run in the `govuk-notify-spi` directory when using sbt on the command line 
+The tests should be run in the `govuk-notify-spi` and `event-publisher-spi` directories when using sbt on the command line, depending on which spi is being worked on. 
 
 ## Databases
 
