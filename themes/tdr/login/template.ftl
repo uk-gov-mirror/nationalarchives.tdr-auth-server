@@ -79,7 +79,7 @@
                     <#-- Start TDR Error Messages -->
                     <#if displayMessage && message?has_content>
                         <#if message.type = 'error'>
-                            <div class="govuk-error-summary" aria-labelledby="error-summary-heading" role="alert"
+                            <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert"
                                  tabindex="-1" data-module="govuk-error-summary">
                                 <h2 class="govuk-error-summary__title" id="error-summary-title">
                                     There is a problem with this form
