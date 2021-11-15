@@ -90,6 +90,9 @@
                                             <a href="#error-kc-form-login">${message.summary}</a>
                                         </li>
                                     </ul>
+                                    <#if message.summary = msg("invalidTotpMessage")>
+                                        <p>${msg("totpErrorContact")?no_esc}</p>
+                                    </#if>
                                 </div>
                             </div>
                         <#else>
