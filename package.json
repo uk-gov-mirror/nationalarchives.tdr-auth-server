@@ -39,13 +39,13 @@
   "devDependencies": {
     "copyfiles": "^2.4.1",
     "husky": "^7.0.4",
-    "lint-staged": "^11.2.6",
+    "lint-staged": "^12.0.2",
     "minify": "^8.0.3",
     "npm-run-all": "^4.1.5",
     "pre-commit": "^1.2.2",
     "prettier": "2.4.1",
     "sass": "^1.43.4",
-    "stylelint": "^14.0.1",
+    "stylelint": "^14.1.0",
     "stylelint-config-sass-guidelines": "^9.0.1"
   },
   "lint-staged": {
