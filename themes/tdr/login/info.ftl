@@ -7,7 +7,12 @@
             ${message.summary}
         </#if>
     <#elseif section = "form">
-        <p class="govuk-body">${message.summary}<#if requiredActions??>:</#if></p>
+        <p class="govuk-body">
+            ${message.summary}<#t>
+            <#if message.summary == "To begin a transfer">, <a id="backToApplication" class="govuk-link" href="${properties.tdrHomeUrl}/homepage">${kcSanitize(msg("backToApplication"))?lower_case?no_esc}</a><#t>
+            <#elseif requiredActions??>:<#t>
+            </#if>
+        </p>
         <#if skipLink??>
         <#else>
             <#if pageRedirectUri?has_content>
