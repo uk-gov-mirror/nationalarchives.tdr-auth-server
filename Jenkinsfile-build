@@ -81,7 +81,7 @@ pipeline {
     stage('Post-build') {
       when {
         expression {
-          env.BRANCH_NAME == "TDR-1586-upgrade-keycloak-v16"
+          env.BRANCH_NAME == "master"
         }
       }
       stages {
