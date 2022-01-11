@@ -25,10 +25,10 @@
               </div>
             </div>
             <#if message?has_content && message.type = 'error'>
-                <span class="govuk-error-message" id="error-kc-form-login">
+                <p class="govuk-error-message" id="error-kc-form-login">
                   <span class="govuk-visually-hidden">${msg("screenReaderError")}</span>
                   ${message.summary}
-                </span>
+                </p>
             </#if>
 
             <button class="govuk-button" type="submit" data-module="govuk-button" role="button">

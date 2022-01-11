@@ -24,10 +24,10 @@
             </div>
 
               <#if message?has_content>
-                <span class="govuk-error-message" id="error-kc-form-login">
+                <p class="govuk-error-message" id="error-kc-form-login">
                   <span class="govuk-visually-hidden">${msg("screenReaderError")}</span>
                   ${message.summary}
-                </span>
+                </p>
               </#if>
 
             <input type="hidden" id="id-hidden-input" name="credentialId"

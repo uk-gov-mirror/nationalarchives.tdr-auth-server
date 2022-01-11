@@ -15,10 +15,10 @@
                     <input id="otp" name="otp" autocomplete="off" type="text" class="govuk-input govuk-!-width-two-thirds"
                            autofocus/>
                     <#if message?has_content>
-                      <span class="govuk-error-message" id="error-kc-form-login">
+                      <p class="govuk-error-message" id="error-kc-form-login">
                         <span class="govuk-visually-hidden">${msg("screenReaderError")}</span>
                         ${message.summary}
-                      </span>
+                      </p>
                     </#if>
                 </div>
             </div>

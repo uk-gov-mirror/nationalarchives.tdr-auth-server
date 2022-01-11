@@ -63,10 +63,10 @@
                         <#if mode??><input type="hidden" id="mode" name="mode" value="${mode}"/></#if>
                     </div>
                     <#if message?has_content && message.type = 'error'>
-                      <span class="govuk-error-message" id="error-form-login">
+                      <p class="govuk-error-message" id="error-form-login">
                         <span class="govuk-visually-hidden">${msg("screenReaderError")}</span>
                         ${message.summary}
-                      </span>
+                      </p>
                     </#if>
                     <button class="govuk-button" type="submit" data-module="govuk-button" role="button" name="login">
                         ${msg("doSubmit")}
