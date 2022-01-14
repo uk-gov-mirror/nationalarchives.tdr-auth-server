@@ -41,7 +41,7 @@
     <body class="govuk-template__body">
     <#-- Start TDR Template header -->
     <header class="govuk-header " role="banner" data-module="header">
-        <div class="govuk-header__container govuk-width-container">
+        <div class="govuk-header__container govuk-width-container tna-header">
             <div class="govuk-header__tna-logo">
                 <a href="${properties.tdrHomeUrl}" class="govuk-header__tna_link govuk-header__tna_link--homepage">
                     <img src="${url.resourcesPath}/img/tna-horizontal-white-logo.svg"
