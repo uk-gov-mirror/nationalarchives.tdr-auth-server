@@ -155,7 +155,7 @@ Two REST endpoints are used to update a Keycloak realm:
 **Note**: The `OVERWRITE` option is not available in the Jenkins job as it causes undesirable behaviours, such as users existing group mappings to be removed.
 
 To update Keycloak with, for example, a new client:
-1. Update the relevant Keycloak json configuration file (tdr-realm-export.json). See README for the tdr-configuration private repository on how to do this.
+1. Update the relevant Keycloak json configuration file (tdr-realm-export.json). See README for the [tdr-configurations](https://github.com/nationalarchives/tdr-configurations#keycloak-configurations-usage) private repository on how to do this.
 2. If the change to Keycloak makes use of a new secret value, for example a new client secret:
     * Add the new secret value to the parameter store using Terraform: https://github.com/nationalarchives/tdr-terraform-environments
     
@@ -171,10 +171,10 @@ To update Keycloak with, for example, a new client:
 
 To run, build and test locally:
 
-1. Copy the tdr-realm-export.json from the tdr-configuration repository into the tdr-auth-server directory
+1. Copy the [tdr-realm-export.json](https://github.com/nationalarchives/tdr-configurations/blob/master/keycloak/tdr-realm-export.json) from the tdr-configurations repository into the tdr-auth-server directory
 2. Navigate to the cloned repository: `$ cd tdr-auth-server`
 3. Build the TDR theme:
-    * If npm is not installed install [nvm](https://github.com/nvm-sh/nvm) in root directory
+    * If npm is not installed install [nvm](https://github.com/nvm-sh/nvm#intro) in root directory
     * Once nvm is installed run: `[root directory] $ nvm install 14.9`
     * Run the following commands in the root directory:  `[root directory] $ npm install` and `[root directory] $ npm run build-theme`
         * this will compile the theme sass and copy the static assets to the theme `resource` directory
@@ -198,7 +198,7 @@ To run, build and test locally:
   ```
    * Do not commit this change to the `Dockerfile`
 8. Build the docker image locally:
-    * Run the docker build command: `[location of repo] $ docker build -t nationalarchives/tdr-auth-server:[your build tag] .`
+    * Run the docker build command: `[location of repo] $ docker build -t [account id].dkr.ecr.[region].amazonaws.com/tdr-auth-server:[your build tag] .`
 9. Run the local docker image:
     ```
     [location of repo] $ docker run -d --name [some name] -p 8081:8080 \
@@ -213,7 +213,7 @@ To run, build and test locally:
     -e DB_VENDOR=h2 \
     -e SNS_TOPIC_ARN=[Tdr notifications topic arn] \
     -e TDR_ENV=[Tdr environment] \
-    nationalarchives/tdr-auth-server:[your build tag]
+    [account id].dkr.ecr.[region].amazonaws.com/tdr-auth-server:[your build tag]
     ```
     * `KEYCLOAK_USER`: root Keycloak user name
     * `KEYCLOAK_PASSWORD`: password for the root Keycloak user
@@ -316,7 +316,7 @@ To update the realm configuration on the locally running Keycloak instances:
     </theme>
     ```
 
-2. Rebuild the image locally and run.
+2. Rebuild the image locally and run. `docker build -t [account id].dkr.ecr.[region].amazonaws.com/tdr-auth-server:[your build tag] .`
 3. Make necessary changes to the TDR theme (freemarker templates/sass/static resources)
 4. Run following command from the root directory: `[root directory] $ npm run build-local --container_name=[name of running container]`
 5. Refresh the locally running Keycloak pages to see the changes.
