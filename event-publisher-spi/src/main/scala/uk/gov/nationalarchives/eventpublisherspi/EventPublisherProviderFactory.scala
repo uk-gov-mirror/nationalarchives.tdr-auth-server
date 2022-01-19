@@ -2,7 +2,9 @@ package uk.gov.nationalarchives.eventpublisherspi
 
 import org.keycloak.Config
 import org.keycloak.events.{EventListenerProvider, EventListenerProviderFactory}
+import org.keycloak.models.utils.PostMigrationEvent
 import org.keycloak.models.{KeycloakSession, KeycloakSessionFactory}
+import org.keycloak.timer.TimerProvider
 import uk.gov.nationalarchives.eventpublisherspi.EventPublisherProvider.EventPublisherConfig
 
 class EventPublisherProviderFactory extends EventListenerProviderFactory {
@@ -21,7 +23,16 @@ class EventPublisherProviderFactory extends EventListenerProviderFactory {
     eventPublisherConfig = Option(EventPublisherConfig(snsUrl, snsTopicArn, tdrEnvironment))
   }
 
-  override def postInit(factory: KeycloakSessionFactory): Unit = { }
+  override def postInit(factory: KeycloakSessionFactory): Unit = {
+    factory.register(event => {
+      if(event.isInstanceOf[PostMigrationEvent]) {
+         val session = factory.create()
+        val provider: TimerProvider = session.getProvider(classOf[TimerProvider])
+        val task = UserMonitoringTask(eventPublisherConfig.get)
+        provider.scheduleTask(task, 24 * 60 * 60 * 1000, "test")
+      }
+    })
+  }
 
   override def close(): Unit = { }
 
