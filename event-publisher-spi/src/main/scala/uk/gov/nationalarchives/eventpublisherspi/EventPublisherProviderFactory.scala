@@ -12,6 +12,8 @@ class EventPublisherProviderFactory extends EventListenerProviderFactory {
 
   var eventPublisherConfig: Option[EventPublisherConfig] = None
 
+  var oneDayIntervalMillis: Long = 24 * 60 * 60 * 1000
+
   override def create(session: KeycloakSession): EventListenerProvider = {
     EventPublisherProvider(eventPublisherConfig.get, session);
   }
@@ -26,10 +28,10 @@ class EventPublisherProviderFactory extends EventListenerProviderFactory {
   override def postInit(factory: KeycloakSessionFactory): Unit = {
     factory.register(event => {
       if(event.isInstanceOf[PostMigrationEvent]) {
-         val session = factory.create()
+        val session = factory.create()
         val provider: TimerProvider = session.getProvider(classOf[TimerProvider])
-        val task = UserMonitoringTask(eventPublisherConfig.get)
-        provider.scheduleTask(task, 24 * 60 * 60 * 1000, "test")
+        val userMonitoringTask = UserMonitoringTask(eventPublisherConfig.get)
+        provider.scheduleTask(userMonitoringTask, oneDayIntervalMillis, "userMonitoringTask")
       }
     })
   }

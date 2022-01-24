@@ -48,8 +48,11 @@ class UserMonitoringTask(snsUtils: SNSUtils, config: EventPublisherConfig, crede
     })
   }
 }
+
 object UserMonitoringTask {
   private val httpClient = ApacheHttpClient.builder.build
+
+  private val credentialType = "otp"
 
   def apply(config: EventPublisherConfig): UserMonitoringTask = {
     val snsUtils: SNSUtils = SNSUtils(SnsClient.builder()
@@ -57,6 +60,6 @@ object UserMonitoringTask {
       .endpointOverride(URI.create(config.sqsUrl))
       .httpClient(httpClient)
       .build())
-    new UserMonitoringTask(snsUtils, config, "otp")
+    new UserMonitoringTask(snsUtils, config, credentialType)
   }
 }

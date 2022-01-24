@@ -8,6 +8,12 @@ import uk.gov.nationalarchives.aws.utils.SNSUtils
 import uk.gov.nationalarchives.eventpublisherspi.EventPublisherProvider.EventPublisherConfig
 
 class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar {
+
+  val credentialType = "otp"
+  val userId = "dfd7356c-e6e0-40dd-affd-de04e29ad359"
+  val userId2 = "4b3c3e89-775a-4c69-974e-bdc194a04d2d"
+  val topicArn = "snsTopicArn"
+
   "The run method" should "not send a message if there are no users missing MFA" in {
     val mockSession = mock[KeycloakSession]
     val mockRealmProvider = mock[RealmProvider]
@@ -16,7 +22,6 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     val mockUserModel = mock[UserModel]
     val mockUserProvider = mock[UserProvider]
     val mockSnsUtils = mock[SNSUtils]
-    val credentialType = "otp"
 
     when(mockRealmModel.getName).thenReturn("testRealm")
     when(mockUserProvider.getUsersStream(mockRealmModel)).thenReturn(java.util.stream.Stream.of(mockUserModel))
@@ -39,9 +44,6 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     val mockUserModelWithoutMFA = mock[UserModel]
     val mockUserProvider = mock[UserProvider]
     val mockSnsUtils = mock[SNSUtils]
-    val userId = "dfd7356c-e6e0-40dd-affd-de04e29ad359"
-    val topicArn = "snsTopicArn"
-    val credentialType = "otp"
 
     when(mockRealmModel.getName).thenReturn("testRealm")
     when(mockUserModelWithoutMFA.getId).thenReturn(userId)
@@ -71,13 +73,9 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     val mockUserModelWithoutMFA2 = mock[UserModel]
     val mockUserProvider = mock[UserProvider]
     val mockSnsUtils = mock[SNSUtils]
-    val userId1 = "dfd7356c-e6e0-40dd-affd-de04e29ad359"
-    val userId2 = "4b3c3e89-775a-4c69-974e-bdc194a04d2d"
-    val topicArn = "snsTopicArn"
-    val credentialType = "otp"
 
     when(mockRealmModel.getName).thenReturn("testRealm")
-    when(mockUserModelWithoutMFA1.getId).thenReturn(userId1)
+    when(mockUserModelWithoutMFA1.getId).thenReturn(userId)
     when(mockUserModelWithoutMFA2.getId).thenReturn(userId2)
     when(mockUserProvider.getUsersStream(mockRealmModel)).thenReturn(java.util.stream.Stream.of(mockUserModelWithoutMFA1, mockUserModelWithoutMFA2))
     when(mockUserCredentialManager.isConfiguredFor(mockRealmModel, mockUserModelWithoutMFA1, credentialType)).thenReturn(false)
@@ -106,14 +104,10 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     val mockUserModelWithoutMFA2 = mock[UserModel]
     val mockUserProvider = mock[UserProvider]
     val mockSnsUtils = mock[SNSUtils]
-    val userId1 = "dfd7356c-e6e0-40dd-affd-de04e29ad359"
-    val userId2 = "4b3c3e89-775a-4c69-974e-bdc194a04d2d"
-    val topicArn = "snsTopicArn"
-    val credentialType = "otp"
 
     when(mockRealmModel1.getName).thenReturn("testRealm1")
     when(mockRealmModel2.getName).thenReturn("testRealm2")
-    when(mockUserModelWithoutMFA1.getId).thenReturn(userId1)
+    when(mockUserModelWithoutMFA1.getId).thenReturn(userId)
     when(mockUserModelWithoutMFA2.getId).thenReturn(userId2)
     when(mockUserProvider.getUsersStream(mockRealmModel1)).thenReturn(java.util.stream.Stream.of(mockUserModelWithoutMFA1))
     when(mockUserProvider.getUsersStream(mockRealmModel2)).thenReturn(java.util.stream.Stream.of(mockUserModelWithoutMFA2))
