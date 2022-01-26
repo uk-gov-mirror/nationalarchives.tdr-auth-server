@@ -13,7 +13,7 @@ import io.circe.syntax.EncoderOps
 import java.net.URI
 import scala.jdk.CollectionConverters._
 
-class UserMonitoringTask(snsUtils: SNSUtils, config: EventPublisherConfig, credentialTypes: List[String]) extends ScheduledTask {
+class UserMonitoringTask(snsUtils: SNSUtils, config: EventPublisherConfig, validConfiguredCredentialTypes: List[String]) extends ScheduledTask {
   val logger: Logger = Logger.getLogger(classOf[UserMonitoringTask])
 
   override def run(session: KeycloakSession): Unit = {
@@ -25,7 +25,7 @@ class UserMonitoringTask(snsUtils: SNSUtils, config: EventPublisherConfig, crede
       val users: List[UserModel] = userProvider.getUsersStream(realm).iterator().asScala.toList
       val usersNoMFA = users
         .filter(u => {
-          credentialTypes.forall(credentialType => !credentialManager.isConfiguredFor(realm, u, credentialType))
+          validConfiguredCredentialTypes.forall(credentialType => !credentialManager.isConfiguredFor(realm, u, credentialType))
 
         })
       val userIds = usersNoMFA.map(_.getId)
@@ -53,7 +53,7 @@ class UserMonitoringTask(snsUtils: SNSUtils, config: EventPublisherConfig, crede
 object UserMonitoringTask {
   private val httpClient = ApacheHttpClient.builder.build
 
-  private val credentialTypes = List("otp", "webauthn")
+  private val validConfiguredCredentialTypes = List("otp", "webauthn")
 
   def apply(config: EventPublisherConfig): UserMonitoringTask = {
     val snsUtils: SNSUtils = SNSUtils(SnsClient.builder()
@@ -61,6 +61,6 @@ object UserMonitoringTask {
       .endpointOverride(URI.create(config.sqsUrl))
       .httpClient(httpClient)
       .build())
-    new UserMonitoringTask(snsUtils, config, credentialTypes)
+    new UserMonitoringTask(snsUtils, config, validConfiguredCredentialTypes)
   }
 }

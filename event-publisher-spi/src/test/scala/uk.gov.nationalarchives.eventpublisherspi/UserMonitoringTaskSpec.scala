@@ -9,9 +9,9 @@ import uk.gov.nationalarchives.eventpublisherspi.EventPublisherProvider.EventPub
 
 class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar {
 
-  val credentialTypes = List("otp", "webauthn")
-  val otpCredentialType: String = credentialTypes.head
-  val webauthnCredentialType: String = credentialTypes.last
+  val validConfiguredCredentialTypes = List("otp", "webauthn")
+  val otpCredentialType: String = validConfiguredCredentialTypes.head
+  val webauthnCredentialType: String = validConfiguredCredentialTypes.last
   val userId = "dfd7356c-e6e0-40dd-affd-de04e29ad359"
   val userId2 = "4b3c3e89-775a-4c69-974e-bdc194a04d2d"
   val topicArn = "snsTopicArn"
@@ -33,7 +33,7 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     when(mockSession.users()).thenReturn(mockUserProvider)
     when(mockSession.realms()).thenReturn(mockRealmProvider)
     when(mockSession.userCredentialManager()).thenReturn(mockUserCredentialManager)
-    new UserMonitoringTask(mockSnsUtils, EventPublisherConfig("https://example.com", "", "test"), credentialTypes).run(mockSession)
+    new UserMonitoringTask(mockSnsUtils, EventPublisherConfig("https://example.com", "", "test"), validConfiguredCredentialTypes).run(mockSession)
 
     verifyZeroInteractions(mockSnsUtils)
   }
@@ -59,7 +59,7 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     when(mockSession.users()).thenReturn(mockUserProvider)
     when(mockSession.realms()).thenReturn(mockRealmProvider)
     when(mockSession.userCredentialManager()).thenReturn(mockUserCredentialManager)
-    new UserMonitoringTask(mockSnsUtils, EventPublisherConfig("https://example.com", topicArn, "test"), credentialTypes).run(mockSession)
+    new UserMonitoringTask(mockSnsUtils, EventPublisherConfig("https://example.com", topicArn, "test"), validConfiguredCredentialTypes).run(mockSession)
 
     val expectedMessage = """{
                              |  "tdrEnv" : "test",
@@ -91,7 +91,7 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     when(mockSession.users()).thenReturn(mockUserProvider)
     when(mockSession.realms()).thenReturn(mockRealmProvider)
     when(mockSession.userCredentialManager()).thenReturn(mockUserCredentialManager)
-    new UserMonitoringTask(mockSnsUtils, EventPublisherConfig("https://example.com", topicArn, "test"), credentialTypes).run(mockSession)
+    new UserMonitoringTask(mockSnsUtils, EventPublisherConfig("https://example.com", topicArn, "test"), validConfiguredCredentialTypes).run(mockSession)
 
     val expectedMessage = """{
                             |  "tdrEnv" : "test",
@@ -126,7 +126,7 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     when(mockSession.users()).thenReturn(mockUserProvider)
     when(mockSession.realms()).thenReturn(mockRealmProvider)
     when(mockSession.userCredentialManager()).thenReturn(mockUserCredentialManager)
-    new UserMonitoringTask(mockSnsUtils, EventPublisherConfig("https://example.com", topicArn, "test"), credentialTypes).run(mockSession)
+    new UserMonitoringTask(mockSnsUtils, EventPublisherConfig("https://example.com", topicArn, "test"), validConfiguredCredentialTypes).run(mockSession)
 
     val expectedMessage1 = """{
                             |  "tdrEnv" : "test",
@@ -159,7 +159,7 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     when(mockSession.users()).thenReturn(mockUserProvider)
     when(mockSession.realms()).thenReturn(mockRealmProvider)
     when(mockSession.userCredentialManager()).thenReturn(mockUserCredentialManager)
-    new UserMonitoringTask(mockSnsUtils, EventPublisherConfig("https://example.com", "", "test"), credentialTypes).run(mockSession)
+    new UserMonitoringTask(mockSnsUtils, EventPublisherConfig("https://example.com", "", "test"), validConfiguredCredentialTypes).run(mockSession)
 
     verifyZeroInteractions(mockSnsUtils)
   }
