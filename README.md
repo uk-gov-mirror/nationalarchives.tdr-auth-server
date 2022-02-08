@@ -198,10 +198,10 @@ To run, build and test locally:
   ```
    * Do not commit this change to the `Dockerfile`
 8. Build the docker image locally:
-    * Run the docker build command: `[location of repo] $ docker build -t [account id].dkr.ecr.[region].amazonaws.com/tdr-auth-server:[your build tag] .`
+    * Run the docker build command: `[root directory] $ docker build -t [account id].dkr.ecr.[region].amazonaws.com/tdr-auth-server:[your build tag] .`
 9. Run the local docker image:
     ```
-    [location of repo] $ docker run -d --name [some name] -p 8081:8080 \
+    [root directory] $ docker run -d --name [some name] -p 8081:8080 \
     -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin -e KEYCLOAK_IMPORT=/tmp/tdr-realm.json \
     -e REALM_ADMIN_CLIENT_SECRET=[some value] -e CLIENT_SECRET=[some value] -e BACKEND_CHECKS_CLIENT_SECRET=[some value] \
     -e REPORTING_CLIENT_SECRET=[some value] \
@@ -229,12 +229,19 @@ To run, build and test locally:
     * `DB_VENDOR`: the type of database to use. In the dev environment, we use Keycloak's embedded H2 database
     * `SNS_TOPIC_ARN`: the AWS topic arn to publish event messages to
     * `TDR_ENV`: the name of the TDR environment where Keycloak is running
-6. Navigate to http://localhost:8081/auth/admin
-7. Log on using the `KEYCLOAK_PASSWORD` and `KEYCLOAK_USER` defined in the docker run command
+10. Navigate to http://localhost:8081/auth/admin
+11. Log on using the `KEYCLOAK_PASSWORD` and `KEYCLOAK_USER` defined in the docker run command
 
 To log into the running docker container with a bash shell: `$ docker exec -it [your container name] bash`
 
 Make changes to the realm export json file as necessary to test new configurations.
+
+Tip: the quickest way to view the TDR login theme (that is displayed to TDR users) is to (while logged into the console):
+1. move your cursor to the top left (below the keycloak logo), Until it reveals the "Master" realm
+2. select the "Master" Realm
+3. go to the "Themes" tab
+4. under "login theme", select "tdr" from the dropdown menu
+5. sign out (click "Admin" on the top right and select "Sign out")
 
 ### Optionally Run Event Publishing to AWS SNS Topic
 
