@@ -138,6 +138,12 @@
                         </li>
 
                         <li class="govuk-footer__inline-list-item">
+                            <a class="govuk-footer__link" href="${properties.tdrHomeUrl}/help">
+                              Help
+                            </a>
+                        </li>
+
+                        <li class="govuk-footer__inline-list-item">
                             <a class="govuk-footer__link" href="${properties.tdrHomeUrl}/cookies">
                                 Cookies
                             </a>
