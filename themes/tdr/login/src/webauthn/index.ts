@@ -263,13 +263,4 @@ export default class WebAuthn {
       id: base64url.toBuffer(id)
     }))
   }
-
-  public refreshPage() {
-    this.setInputValue("isSetRetry", "retry")
-    this.setInputValue("executionValue", this.getValueFromInput("execution"))
-    const credentialForm: HTMLFormElement | null = document.querySelector('#kc-error-credential-form')
-    if (credentialForm) {
-      credentialForm.submit()
-    }
-  }
 }
