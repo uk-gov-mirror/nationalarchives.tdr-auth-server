@@ -8,7 +8,7 @@ templates
 node_modules
 venv
 themes/tdr/*/resources/fonts/*
-themes/tdr/*/resources/js/*
+themes/tdr/*/resources/js/all.js
 themes/tdr/*/resources/img/govuk-*
 themes/tdr/*/resources/css/*
 themes/tdr/css-src/*.css
