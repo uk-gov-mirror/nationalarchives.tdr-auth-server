@@ -10,11 +10,14 @@
     "sass-compile": "sass --no-source-map ./themes/tdr/css-src/sass/main.scss ./themes/tdr/css-src/main.css",
     "add-stylesheet-dir": "mkdir -p ./themes/tdr/$npm_config_theme/resources/css",
     "compress-css": "minify ./themes/tdr/css-src/main.css > ./themes/tdr/$npm_config_theme/resources/css/main.css",
+    "compile": "webpack --mode production",
+    "compile-local": "webpack --mode development",
     "build-css": "npm-run-all add-stylesheet-dir sass-compile compress-css",
-    "build-login": "npm-run-all copy-assets build-css --theme=login",
+    "build-login": "npm-run-all copy-assets build-css compile --theme=login",
+    "build-login-local": "npm-run-all copy-assets build-css compile-local --theme=login",
     "build-email": "npm-run-all --theme=email",
     "update-local-resources": "docker cp themes/tdr/$npm_config_theme/. $npm_config_container_name:/opt/jboss/keycloak/themes/tdr/$npm_config_theme",
-    "build-local": "npm-run-all build-login build-email update-local-resources",
+    "build-local": "npm-run-all build-login-local build-email update-local-resources",
     "build-theme": "npm-run-all build-login build-email"
   },
   "repository": {
@@ -33,10 +36,15 @@
   },
   "homepage": "https://github.com/nationalarchives/tdr-auth-server#readme",
   "dependencies": {
+    "base64url": "^3.0.1",
     "govuk-frontend": "^4.0.1",
-    "unfetch": "^4.1.0"
+    "unfetch": "^4.1.0",
+    "webpack": "^5.70.0"
   },
   "devDependencies": {
+    "@types/node": "^17.0.21",
+    "@types/webappsec-credential-management": "^0.6.2",
+    "buffer": "^6.0.3",
     "copyfiles": "^2.4.1",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.5",
@@ -46,7 +54,9 @@
     "prettier": "2.5.1",
     "sass": "^1.49.9",
     "stylelint": "^14.5.3",
-    "stylelint-config-sass-guidelines": "^9.0.1"
+    "stylelint-config-sass-guidelines": "^9.0.1",
+    "ts-loader": "^9.2.8",
+    "webpack-cli": "^4.9.2"
   },
   "lint-staged": {
     "themes/tdr/css-src/**/*.scss": "stylelint"

@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "outDir": "./themes/tdr/login/resources/js/",
+    "noImplicitAny": true,
+    "module": "es2015",
+    "target": "es2015",
+    "lib": ["es2017", "dom", "dom.iterable"],
+    "sourceMap": false,
+    "moduleResolution": "node",
+    "strict": true,
+    "types": ["@types/webappsec-credential-management", "@types/node"]
+  },
+  "include": ["themes/tdr/login/src/*"],
+  "exclude": ["themes/tdr/login/resources/js"]
+}
