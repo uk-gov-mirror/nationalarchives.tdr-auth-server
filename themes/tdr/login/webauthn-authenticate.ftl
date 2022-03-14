@@ -4,7 +4,7 @@
         ${kcSanitize(msg("webauthn-login-title"))?no_esc}
     <#elseif section = "form">
 
-      <form id="webAuth" action="${url.loginAction}" method="post">
+      <form id="webAuth" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
         <input type="hidden" id="clientDataJSON" name="clientDataJSON"/>
         <input type="hidden" id="authenticatorData" name="authenticatorData"/>
         <input type="hidden" id="signature" name="signature"/>
@@ -29,5 +29,6 @@
       <input type="hidden" id="isUserIdentified" value="${isUserIdentified}">
       <input type="hidden" id="rpId" value="${rpId}">
     <#elseif section = "info">
+
     </#if>
 </@layout.registrationLayout>

@@ -1,6 +1,8 @@
 <#import "template.ftl" as layout>
 <@layout.registrationLayout; section>
-    <#if section = "form">
+    <#if section = "title">
+      title
+    <#elseif section = "form">
       <input type="hidden" id="unsupported-browser-message" value="${msg("webauthn-unsupported-browser-text")?no_esc}">
       <input type="hidden" id="challenge" value="${challenge}">
       <input type="hidden" id="userid" value="${userid}">
@@ -15,19 +17,20 @@
       <input type="hidden" id="createTimeout" value="${createTimeout}">
       <input type="hidden" id="excludeCredentialIds" value="${excludeCredentialIds}">
 
-      <form id="register" action="${url.loginAction}" method="post">
-        <input type="hidden" id="clientDataJSON" name="clientDataJSON"/>
-        <input type="hidden" id="attestationObject" name="attestationObject"/>
-        <input type="hidden" id="publicKeyCredentialId" name="publicKeyCredentialId"/>
-        <input type="hidden" id="authenticatorLabel" name="authenticatorLabel"/>
-        <input type="hidden" id="error" name="error"/>
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="registerWebAuthn">
-            Click register to setup your hardware token
-          </label>
-
-          <input type="submit" name="registerWebAuthn" class="govuk-button" id="registerWebAuthn" value="${msg("doRegister")}"/>
+      <form id="register" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
+        <div class="${properties.kcFormGroupClass!}">
+          <input type="hidden" id="clientDataJSON" name="clientDataJSON"/>
+          <input type="hidden" id="attestationObject" name="attestationObject"/>
+          <input type="hidden" id="publicKeyCredentialId" name="publicKeyCredentialId"/>
+          <input type="hidden" id="authenticatorLabel" name="authenticatorLabel"/>
+          <input type="hidden" id="error" name="error"/>
         </div>
       </form>
+
+      <label class="govuk-label" for="registerWebAuthn">
+        Click register to setup your hardware token
+      </label>
+
+      <input type="submit" name="registerWebAuthn" class="govuk-button" id="registerWebAuthn" value="${msg("doRegister")}"/>
     </#if>
 </@layout.registrationLayout>
