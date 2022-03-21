@@ -352,6 +352,32 @@ The key in the personalisation Map corresponds to the name of the personalisatio
 
 The tests should be run in the `govuk-notify-spi` and `event-publisher-spi` directories when using sbt on the command line, depending on which spi is being worked on. 
 
+### Overriding default text
+
+The emails and the login page have a file called `messages_en.properties` in the `/messages` directory of each. In this `messages_en.properties` file, you can override the default Keycloak text. 
+Each message has an associated key/variable
+
+#### How to find each messages key/variable
+
+If not already in the docker container, run `docker exec -it keycloak bash`
+
+1. Once in the container, run this command `cd opt/jboss/keycloak/themes/base/`
+
+2. You will be presented with these 4 directories:
+
+   1. account
+   2. admin
+   3. email
+   4. login
+
+3. `cd` into the one that interests you e.g. `cd account`
+
+4. `cd` into the `messages` directory
+
+5. run this command `cat messages_en.properties` to view the contents of the file
+
+Once you have identified the line that you'd like to edit, copy and paste it into the messages `messages_en.properties`
+
 ## Databases
 
 Keycloak uses a different database depending on whether it's running locally or on ECS. Local development uses the internal H2 database on the docker image. When it's running on ECS, it uses a postgresql RDS instance defined [here](https://github.com/nationalarchives/tdr-terraform-environments/blob/master/modules/keycloak/database.tf) 
