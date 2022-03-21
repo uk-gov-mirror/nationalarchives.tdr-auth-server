@@ -175,7 +175,7 @@ To run, build and test locally:
 2. Navigate to the cloned repository: `$ cd tdr-auth-server`
 3. Build the TDR theme:
     * If npm is not installed install [nvm](https://github.com/nvm-sh/nvm#intro) in root directory
-    * Once nvm is installed run: `[root directory] $ nvm install 14.9`
+    * Once nvm is installed run: `[root directory] $ nvm install 16.5.0`
     * Run the following commands in the root directory:  `[root directory] $ npm install` and `[root directory] $ npm run build-theme`
         * this will compile the theme sass and copy the static assets to the theme `resource` directory
 4. Build the GovUk Notify spi jar:
