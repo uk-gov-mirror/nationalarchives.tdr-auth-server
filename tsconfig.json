@@ -7,8 +7,9 @@
     "lib": ["es2017", "dom", "dom.iterable"],
     "sourceMap": false,
     "moduleResolution": "node",
+    "esModuleInterop": true,
     "strict": true,
-    "types": ["@types/webappsec-credential-management", "@types/node"]
+    "types": ["@types/webappsec-credential-management", "@types/node", "@types/jest"]
   },
   "include": ["themes/tdr/login/src/*"],
   "exclude": ["themes/tdr/login/resources/js"]
