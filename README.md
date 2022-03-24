@@ -175,7 +175,7 @@ To run, build and test locally:
 2. Navigate to the cloned repository: `$ cd tdr-auth-server`
 3. Build the TDR theme:
     * If npm is not installed install [nvm](https://github.com/nvm-sh/nvm#intro) in root directory
-    * Once nvm is installed run: `[root directory] $ nvm install 14.9`
+    * Once nvm is installed run: `[root directory] $ nvm install 16.5.0`
     * Run the following commands in the root directory:  `[root directory] $ npm install` and `[root directory] $ npm run build-theme`
         * this will compile the theme sass and copy the static assets to the theme `resource` directory
 4. Build the GovUk Notify spi jar:
@@ -351,6 +351,32 @@ The key in the personalisation Map corresponds to the name of the personalisatio
 #### Testing from the command line with sbt
 
 The tests should be run in the `govuk-notify-spi` and `event-publisher-spi` directories when using sbt on the command line, depending on which spi is being worked on. 
+
+### Overriding default text
+
+The emails and the login page have a file called `messages_en.properties` in the `/messages` directory of each. In this `messages_en.properties` file, you can override the default Keycloak text. 
+Each message has an associated key/variable
+
+#### How to find each messages key/variable
+
+If not already in the docker container, run `docker exec -it keycloak bash`
+
+1. Once in the container, run this command `cd opt/jboss/keycloak/themes/base/`
+
+2. You will be presented with these 4 directories:
+
+   1. account
+   2. admin
+   3. email
+   4. login
+
+3. `cd` into the one that interests you e.g. `cd account`
+
+4. `cd` into the `messages` directory
+
+5. run this command `cat messages_en.properties` to view the contents of the file
+
+Once you have identified the line that you'd like to edit, copy and paste it into the messages `messages_en.properties`
 
 ## Databases
 
