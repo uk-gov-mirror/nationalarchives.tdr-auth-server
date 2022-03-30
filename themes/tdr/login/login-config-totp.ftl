@@ -63,7 +63,7 @@
                         <#if mode??><input type="hidden" id="mode" name="mode" value="${mode}"/></#if>
                     </div>
                     <#if message?has_content && message.type = 'error'>
-                      <p class="govuk-error-message" id="error-form-login">
+                      <p class="govuk-error-message" id="error-kc-form-login">
                         <span class="govuk-visually-hidden">${msg("screenReaderError")}</span>
                         ${message.summary}
                       </p>
