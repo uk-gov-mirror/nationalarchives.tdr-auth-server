@@ -24,7 +24,7 @@
             </div>
 
             <button class="govuk-button" type="submit" data-module="govuk-button" role="button" name="login">
-                ${msg("signInButton")}
+                Continue
             </button>
         </form>
     </#if>

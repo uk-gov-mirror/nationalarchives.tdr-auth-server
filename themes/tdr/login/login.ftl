@@ -41,6 +41,9 @@
                   <a class="govuk-link" href="${properties.tdrHomeUrl}/contact">${msg("resetPassword")}</a>
               </p>
           </form>
+          <p class="govuk-body">
+            If you have problems signing in, contact us at <a class="govuk-link" href="mailto:tdr@nationalarchives.gov.uk" data-hsupport="email">tdr@nationalarchives.gov.uk</a>
+          </p>
         </#if>
     </#if>
 </@layout.registrationLayout>
