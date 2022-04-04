@@ -9,13 +9,14 @@ window.onload = () => {
 
   if (register) {
     register.addEventListener("click", () => {
-      webAuthn.registerSecurityKey()
+      const publicKey = webAuthn.getCreationPublicKey()
+      webAuthn.registerSecurityKey(publicKey)
     })
   }
 
   if (authenticate) {
     authenticate.addEventListener("click", () => {
-      webAuthn.webAuthnAuthenticate()
+      webAuthn.webAuthnAuthenticate(webAuthn.doAuthenticate.bind(webAuthn))
     })
   }
 }

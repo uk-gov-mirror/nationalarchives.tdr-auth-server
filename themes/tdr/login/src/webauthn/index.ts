@@ -1,6 +1,16 @@
 import base64url from "base64url"
 
 export default class WebAuthn {
+  credentials: CredentialsContainer
+
+  constructor(credentials?: CredentialsContainer) {
+    if (credentials) {
+      this.credentials = credentials
+    } else {
+      this.credentials = window.navigator.credentials
+    }
+  }
+
   setInputValue(id: string, value: string): void {
     const input: HTMLInputElement | null = document.querySelector(`#${id}`)
     if (input) {
@@ -31,59 +41,56 @@ export default class WebAuthn {
     }
   }
 
-  public webAuthnAuthenticate(): void {
+  public webAuthnAuthenticate(authenticate: (publicKey: PublicKeyCredentialRequestOptions) => void): void {
+
+    const getAuthenticatePublicKey: (allowCredentials: PublicKeyCredentialDescriptor[]) => PublicKeyCredentialRequestOptions  = allowCredentials => {
+      this.checkIfWebAuthnSupported()
+
+      const getUserVerification: () => UserVerificationRequirement | null = () => {
+        const verification = this.getValueFromInput("userVerification")
+        if (verification == "not specified") {
+          return null
+        } else {
+          return verification as UserVerificationRequirement
+        }
+      }
+
+      let publicKey: PublicKeyCredentialRequestOptions = {
+        rpId: this.getValueFromInput("rpId"),
+        challenge: base64url.toBuffer(this.challenge)
+      }
+
+      if (this.createTimeout !== 0) publicKey.timeout = this.createTimeout * 1000
+
+      if (allowCredentials.length) {
+        publicKey.allowCredentials = allowCredentials
+      }
+
+      const userVerification = getUserVerification()
+      if (userVerification) {
+        publicKey.userVerification = userVerification
+      }
+      return publicKey
+    }
+
     let isUserIdentified = this.getValueFromInput("isUserIdentified")
     if (!isUserIdentified) {
-      this.doAuthenticate([])
+      authenticate(getAuthenticatePublicKey([]))
       return
     }
-    this.checkAllowCredentials()
-  }
-
-  checkAllowCredentials() {
     let allowCredentials: PublicKeyCredentialDescriptor[] = []
     const useCheckElements: HTMLCollectionOf<Element> = document.getElementsByClassName("authn_use_check")
     for (const authnUseCheck of useCheckElements) {
-
       allowCredentials.push({
         id: base64url.toBuffer((authnUseCheck as HTMLInputElement).value),
         type: 'public-key',
       })
     }
-    this.doAuthenticate(allowCredentials)
+    authenticate(getAuthenticatePublicKey(allowCredentials))
   }
 
-
-  doAuthenticate(allowCredentials: PublicKeyCredentialDescriptor[]): void {
-
-    this.checkIfWebAuthnSupported()
-
-    const getUserVerification: () => UserVerificationRequirement | null = () => {
-      const verification = this.getValueFromInput("userVerification")
-      if (verification == "not specified") {
-        return null
-      } else {
-        return verification as UserVerificationRequirement
-      }
-    }
-
-    let publicKey: PublicKeyCredentialRequestOptions = {
-      rpId: this.getValueFromInput("rpId"),
-      challenge: base64url.toBuffer(this.challenge)
-    }
-
-    if (this.createTimeout !== 0) publicKey.timeout = this.createTimeout * 1000
-
-    if (allowCredentials.length) {
-      publicKey.allowCredentials = allowCredentials
-    }
-
-    const userVerification = getUserVerification()
-    if (userVerification) {
-      publicKey.userVerification = userVerification
-    }
-
-    navigator.credentials.get({publicKey})
+  doAuthenticate(publicKey: PublicKeyCredentialRequestOptions): void {
+    this.credentials.get({publicKey})
       .then((result: Credential | null) => {
         if (result) {
           (window as any).result = result
@@ -105,9 +112,7 @@ export default class WebAuthn {
               webAuth.submit()
             }
           }
-
         }
-
       })
       .catch((err) => {
         this.setInputValue("error", err)
@@ -116,33 +121,33 @@ export default class WebAuthn {
           webAuth.submit()
         }
       })
-
   }
 
-  getAttestationConveyancePreference(): AttestationConveyancePreference | null {
-    const attestation = this.getValueFromInput("attestationConveyancePreference")
-    if (attestation == "not specified") {
-      return null
-    } else {
-      return attestation as AttestationConveyancePreference
+  submitRegisterForm: () => void = () => {
+    const registerForm: HTMLFormElement | null = document.querySelector("#register")
+    if (registerForm) {
+      registerForm.submit()
     }
   }
 
-  public registerSecurityKey(): void {
+  getCreationPublicKey(): PublicKeyCredentialCreationOptions {
+    const getPubKeyCredParams: (signatureAlgorithms: string) => PublicKeyCredentialParameters[] = signatureAlgorithms => {
+      if (signatureAlgorithms === "") {
+        return [{type: "public-key", alg: -7}]
+      }
+      return signatureAlgorithms.split(',').map(alg => ({
+        type: "public-key",
+        alg: parseInt(alg, 10)
+      }))
+    }
 
-    // Check if WebAuthn is supported by this browser
-    this.checkIfWebAuthnSupported()
-
-    // mandatory parameters
     const challenge = this.getValueFromInput("challenge")
     const userid = this.getValueFromInput("userid")
     const username = this.getValueFromInput("username")
     const signatureAlgorithms = this.getValueFromInput("signatureAlgorithms")
     const name = this.getValueFromInput("rpEntityName")
-    const pubKeyCredParams: PublicKeyCredentialParameters[] = this.getPubKeyCredParams(signatureAlgorithms)
-
+    const pubKeyCredParams: PublicKeyCredentialParameters[] = getPubKeyCredParams(signatureAlgorithms)
     const rp: PublicKeyCredentialRpEntity = {name}
-
     const publicKey: PublicKeyCredentialCreationOptions = {
       challenge: base64url.toBuffer(challenge),
       rp,
@@ -154,10 +159,18 @@ export default class WebAuthn {
       pubKeyCredParams: pubKeyCredParams,
     }
 
-    // optional parameters
     publicKey.rp.id = this.getValueFromInput("rpId")
 
-    const attestationConveyancePreference = this.getAttestationConveyancePreference()
+    const getAttestationConveyancePreference: () => AttestationConveyancePreference | null = () => {
+      const attestation = this.getValueFromInput("attestationConveyancePreference")
+      if (attestation == "not specified") {
+        return null
+      } else {
+        return attestation as AttestationConveyancePreference
+      }
+    }
+
+    const attestationConveyancePreference = getAttestationConveyancePreference()
     if (attestationConveyancePreference) {
       publicKey.attestation = attestationConveyancePreference
     }
@@ -206,17 +219,21 @@ export default class WebAuthn {
     if (this.createTimeout !== 0) publicKey.timeout = this.createTimeout * 1000
 
     const excludeCredentialIds = this.getValueFromInput("excludeCredentialIds")
-    const excludeCredentials: PublicKeyCredentialDescriptor[] = this.getExcludeCredentials(excludeCredentialIds)
+    const excludeCredentials: PublicKeyCredentialDescriptor[] = excludeCredentialIds.split(",").map(id => ({
+      type: "public-key",
+      id: base64url.toBuffer(id)
+    }))
     if (excludeCredentials.length > 0) publicKey.excludeCredentials = excludeCredentials
 
-    const submitRegisterForm: () => void = () => {
-      const registerForm: HTMLFormElement | null = document.querySelector("#register")
-      if (registerForm) {
-        registerForm.submit()
-      }
-    }
+    return publicKey
+  }
 
-    navigator.credentials.create({publicKey})
+  public registerSecurityKey(publicKey: PublicKeyCredentialCreationOptions): void {
+
+    // Check if WebAuthn is supported by this browser
+    this.checkIfWebAuthnSupported()
+
+    this.credentials.create({publicKey})
       .then((result: Credential | null) => {
         if (result) {
           (window as any).result = result
@@ -230,37 +247,18 @@ export default class WebAuthn {
             this.setInputValue("clientDataJSON", base64url.encode(new Buffer(clientDataJSON)))
             this.setInputValue("attestationObject", base64url.encode(new Buffer(attestationObject)))
             this.setInputValue("publicKeyCredentialId", base64url.encode(new Buffer(publicKeyCredentialId)))
-
             const initLabel = "WebAuthn Authenticator (Default Label)"
             let labelResult = window.prompt("Please input your registered authenticator's label", initLabel)
             if (labelResult === null) labelResult = initLabel
             this.setInputValue("authenticatorLabel", labelResult)
-            submitRegisterForm()
+            this.submitRegisterForm()
           }
         }
       })
-      .catch(function (err) {
+      .catch((err) => {
         const errorElement: HTMLInputElement | null = document.querySelector("#error")
         errorElement!.value = err
-        submitRegisterForm()
-
+        this.submitRegisterForm()
       })
-  }
-
-  getPubKeyCredParams(signatureAlgorithms: string): PublicKeyCredentialParameters[] {
-    if (signatureAlgorithms === "") {
-      return [{type: "public-key", alg: -7}]
-    }
-    return signatureAlgorithms.split(',').map(alg => ({
-      type: "public-key",
-      alg: parseInt(alg, 10)
-    }))
-  }
-
-  getExcludeCredentials(excludeCredentialIds: string): PublicKeyCredentialDescriptor[] {
-    return excludeCredentialIds.split(",").map(id => ({
-      type: "public-key",
-      id: base64url.toBuffer(id)
-    }))
   }
 }
