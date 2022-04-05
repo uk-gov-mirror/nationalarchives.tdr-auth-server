@@ -348,9 +348,11 @@ The key in the personalisation Map corresponds to the name of the personalisatio
  * TDR Staging
  * Transfer Digital Records
  
-#### Testing from the command line with sbt
+#### Testing from the command line with sbt and npm
 
-The tests should be run in the `govuk-notify-spi` and `event-publisher-spi` directories when using sbt on the command line, depending on which spi is being worked on. 
+The tests should be run in the `govuk-notify-spi` and `event-publisher-spi` directories when using sbt on the command line, depending on which spi is being worked on.
+
+There are tests for the login theme typescript which can be run in the root directory using `npm test` 
 
 ### Overriding default text
 

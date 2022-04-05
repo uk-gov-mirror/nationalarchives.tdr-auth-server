@@ -57,7 +57,6 @@ const options: PublicKeyCredentialCreationOptions = {
   pubKeyCredParams: [],
   rp: {id: "", name: ""},
   user: {id: Buffer.alloc(0), name: "", displayName: ""}
-
 }
 
 const createInputElement: (id: string, value?: string) => HTMLInputElement = (id, value) => {
