@@ -1,31 +1,30 @@
 import Dependencies._
 
-lazy val projectScalaVersion = "2.13.8"
-
-lazy val commonDependencies: List[ModuleID] = List(
-  keycloakCore,
-  keycloakModelJpa,
-  keycloakServerSpi,
-  mockito % Test,
-  scalaTest % Test
+lazy val commonSettings = Seq(
+  scalaVersion := "2.13.8",
+  Test / fork := true,
+  assemblyJarName in assembly := s"${(This / name).value}.jar",
+  libraryDependencies ++= Seq(
+    keycloakCore,
+    keycloakModelJpa,
+    keycloakServerSpi,
+    mockito % Test,
+    scalaTest % Test
+  ),
+  assemblyMergeStrategy in assembly := {
+    case PathList("META-INF", "MANIFEST.MF") => MergeStrategy.discard
+    case _ => MergeStrategy.first
+  }
 )
-
-fork in Test := true
 
 lazy val eventPublisherSpi = (project in file("./event-publisher-spi"))
   .settings(
     name := "event-publisher-spi",
-    scalaVersion := projectScalaVersion,
-    Test / fork := true,
-    libraryDependencies ++= awsUtils :: commonDependencies,
-    assemblyJarName in assembly := "event-publisher-spi.jar"
-  )
+    libraryDependencies += awsUtils,
+  ).settings(commonSettings)
 
-lazy val govUKNotifySPI = (project in file("./govuk-notify-spi"))
+lazy val govUkNotifySpi = (project in file("./govuk-notify-spi"))
   .settings(
     name := "govuk-notify-spi",
-    scalaVersion := projectScalaVersion,
-    Test / fork := true,
-    libraryDependencies ++= notifyJavaClient :: commonDependencies,
-    assemblyJarName in assembly := "govuk-notify-spi.jar"
-  )
+    libraryDependencies += notifyJavaClient,
+  ).settings(commonSettings)

@@ -178,25 +178,9 @@ To run, build and test locally:
     * Once nvm is installed run: `[root directory] $ nvm install 16.5.0`
     * Run the following commands in the root directory:  `[root directory] $ npm install` and `[root directory] $ npm run build-theme`
         * this will compile the theme sass and copy the static assets to the theme `resource` directory
-4. Build the GovUk Notify spi jar:
-    * Navigate to the `govuk-notify-spi` directory: `[root directory] $ cd govuk-notify-spi`
-    * In the `govuk-notify-spi` directory run the following command: `sbt assembly`
-    * This will generate the jar for the GovUK Notify service here: `govuk-notify-spi/target/scala-2.13/govuk-notify-spi.jar`
-5. Change the Docker `COPY` command in the `Dockerfile` which copies the `govuk-notify-spi.jar` to the `deployments` directory, to copy the locally built jar:
-  ```
-  COPY govuk-notify-spi/target/scala-2.13/govuk-notify-spi.jar /opt/jboss/keycloak/standalone/deployments/
-  ```
-   * Do not commit this change to the `Dockerfile`
-   
-6. Build the Event Publisher spi jar:
-    * Navigate to the `event-publisher-spi` directory: `[root directory] $ cd event-publisher-spi`
-    * In the `event-publisher-spi` directory run the following command: `sbt assembly`
-    * This will generate the jar for the Event Publisher service here: `event-publisher-spi/target/scala-2.13/event-publisher-spi.jar`
-7. Change the Docker `COPY` command in the `Dockerfile` which copies the `event-publisher-spi.jar` to the `deployments` directory, to copy the locally built jar:
-  ```
-   COPY event-publisher-spi/target/scala-2.13/event-publisher-spi.jar /opt/jboss/keycloak/standalone/deployments/
-  ```
-   * Do not commit this change to the `Dockerfile`
+4. Build both spi jars:
+    * From the root directory run the following command: `sbt govUkNotifySpi/assembly eventPublisherSpi/assembly`
+    * This will generate the jar for the GovUK Notify service and the Event Publisher service
 8. Build the docker image locally:
     * Run the docker build command: `[root directory] $ docker build -t [account id].dkr.ecr.[region].amazonaws.com/tdr-auth-server:[your build tag] .`
 9. Run the local docker image:
@@ -350,7 +334,9 @@ The key in the personalisation Map corresponds to the name of the personalisatio
  
 #### Testing from the command line with sbt
 
-The tests should be run in the `govuk-notify-spi` and `event-publisher-spi` directories when using sbt on the command line, depending on which spi is being worked on. 
+The tests should be run from the root directories using the subproject name.
+`sbt govUkNotifySpi/test`
+`sbt eventPublisherSpi/test`
 
 ### Overriding default text
 
