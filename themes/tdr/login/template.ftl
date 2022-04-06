@@ -87,7 +87,13 @@
                                 <div class="govuk-error-summary__body">
                                     <ul class="govuk-list govuk-error-summary__list">
                                         <li>
-                                            <a href="#error-kc-form-login">${message.summary}</a>
+                                            <#if message.summary = msg("webauthn-error-register-verification")>
+                                              <p>${msg("webauthn-error-register-verification")?no_esc}</p>
+                                            <#elseif message.summary = msg("webauthn-error-api-get")>
+                                              <p>${msg("webauthn-error-api-get")?no_esc}</p>
+                                            <#else>
+                                              <a href="#error-kc-form-login">${message.summary}</a>
+                                            </#if>
                                         </li>
                                     </ul>
                                     <#if message.summary = msg("invalidTotpMessage")>

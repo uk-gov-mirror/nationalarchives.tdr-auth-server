@@ -177,7 +177,7 @@ To run, build and test locally:
     * If npm is not installed install [nvm](https://github.com/nvm-sh/nvm#intro) in root directory
     * Once nvm is installed run: `[root directory] $ nvm install 16.5.0`
     * Run the following commands in the root directory:  `[root directory] $ npm install` and `[root directory] $ npm run build-theme`
-        * this will compile the theme sass and copy the static assets to the theme `resource` directory
+        * this will compile the theme sass, copy the static assets to the theme `resource` directory and compile the typescript for WebAuthn.
 4. Build both spi jars:
     * From the root directory run the following command: `sbt govUkNotifySpi/assembly eventPublisherSpi/assembly`
     * This will generate the jar for the GovUK Notify service and the Event Publisher service
@@ -332,11 +332,13 @@ The key in the personalisation Map corresponds to the name of the personalisatio
  * TDR Staging
  * Transfer Digital Records
  
-#### Testing from the command line with sbt
+#### Testing from the command line with sbt and npm
 
 The tests should be run from the root directories using the subproject name.
 `sbt govUkNotifySpi/test`
 `sbt eventPublisherSpi/test`
+
+There are tests for the login theme typescript which can be run in the root directory using `npm test` 
 
 ### Overriding default text
 
