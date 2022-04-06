@@ -10,7 +10,7 @@ permissions:
   contents: read
 jobs:
   test:
-    uses: nationalarchives/tdr-github-actions/.github/workflows/tdr_test.yml@main
+    uses: nationalarchives/tdr-github-actions/.github/workflows/tdr_test.yml@remove-management-account-parameter
     with:
       repo-name: tdr-auth-server
       test-command: |
@@ -18,5 +18,4 @@ jobs:
         npm run checks
         sbt scalastyle test
     secrets:
-      MANAGEMENT_ACCOUNT: ${{ secrets.MANAGEMENT_ACCOUNT }}
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
