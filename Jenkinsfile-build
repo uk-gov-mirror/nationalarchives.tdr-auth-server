@@ -42,14 +42,10 @@ pipeline {
                 }
               }
               steps {
-                dir("./govuk-notify-spi") {
-                  sh 'sbt -no-colors test scalastyle assembly'
-                  stash includes: "target/scala-2.13/govuk-notify-spi.jar", name: "govuk-notify-spi"
-                }
-                dir("./event-publisher-spi") {
-                  sh 'sbt -no-colors test scalastyle assembly'
-                  stash includes: "target/scala-2.13/event-publisher-spi.jar", name: "event-publisher-spi"
-                }
+                sh 'sbt govUkNotifySpi/scalastyle govUkNotifySpi/assembly'
+                sh 'sbt eventPublisherSpi/scalastyle eventPublisherSpi/assembly'
+                stash includes: "govuk-notify-spi/target/scala-2.13/govuk-notify-spi.jar", name: "govuk-notify-spi"
+                stash includes: "event-publisher-spi/target/scala-2.13/event-publisher-spi.jar", name: "event-publisher-spi"
               }
             }
           }
