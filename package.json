@@ -19,6 +19,8 @@
     "update-local-resources": "docker cp themes/tdr/$npm_config_theme/. $npm_config_container_name:/opt/jboss/keycloak/themes/tdr/$npm_config_theme",
     "build-local": "npm-run-all build-login-local build-email update-local-resources",
     "build-theme": "npm-run-all build-login build-email",
+    "check-style": "stylelint 'themes/tdr/css-src/**/*.scss'",
+    "checks" : "npm-run-all check-style test",
     "test": "jest"
   },
   "repository": {
