@@ -16,8 +16,7 @@ jobs:
       test-command: |
         npm install
         npm run checks
-        sbt govUkNotifySpi/scalastyle govUkNotifySpi/test eventPublisherSpi/scalastyle eventPublisherSpi/test
-
+        sbt scalastyle test
     secrets:
       MANAGEMENT_ACCOUNT: ${{ secrets.MANAGEMENT_ACCOUNT }}
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

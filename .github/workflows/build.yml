@@ -13,7 +13,7 @@ jobs:
         npm install
         npm run build-theme
         wget --header "Authorization: token ${{ secrets.WORKFLOW_PAT }}" https://raw.githubusercontent.com/nationalarchives/tdr-configurations/master/keycloak/tdr-realm-export.json
-        sbt govUkNotifySpi/assembly eventPublisherSpi/assembly
+        sbt assembly
     secrets:
       MANAGEMENT_ACCOUNT: ${{ secrets.MANAGEMENT_ACCOUNT }}
       WORKFLOW_PAT: ${{ secrets.WORKFLOW_PAT }}

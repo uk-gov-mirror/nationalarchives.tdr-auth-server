@@ -17,6 +17,9 @@ lazy val commonSettings = Seq(
   }
 )
 
+lazy val root = (project in file("."))
+  .aggregate(eventPublisherSpi, govUkNotifySpi)
+
 lazy val eventPublisherSpi = (project in file("./event-publisher-spi"))
   .settings(
     name := "event-publisher-spi",
