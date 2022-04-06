@@ -37,9 +37,6 @@
             <button class="govuk-button" type="submit" data-module="govuk-button" role="button" name="login">
                 ${msg("signInButton")}
             </button>
-              <p class="govuk-body-s">
-                  <a class="govuk-link" href="${properties.tdrHomeUrl}/contact">${msg("resetPassword")}</a>
-              </p>
           </form>
           <p class="govuk-body">
             If you have problems signing in, contact us at <a class="govuk-link" href="mailto:tdr@nationalarchives.gov.uk" data-hsupport="email">tdr@nationalarchives.gov.uk</a>
