@@ -16,6 +16,7 @@ permissions:
 jobs:
   deploy:
     uses: nationalarchives/tdr-github-actions/.github/workflows/ecs_deploy.yml@main
+    if: ${{ false }}
     with:
       service: keycloak
       image-name: auth-server
@@ -26,3 +27,10 @@ jobs:
       MANAGEMENT_ACCOUNT: ${{ secrets.MANAGEMENT_ACCOUNT }}
       WORKFLOW_PAT: ${{ secrets.WORKFLOW_PAT }}
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  push-update-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          docker build --pull -f Dockerfile-update -t ${{ secrets.MANAGEMENT_ACCOUNT }}.dkr.ecr.eu-west-2.amazonaws.com/keycloak-update:${{ github.event.inputs.environment }} .
+          docker push ${{ secrets.MANAGEMENT_ACCOUNT }}.dkr.ecr.eu-west-2.amazonaws.com/keycloak-update:${{ github.event.inputs.environment }}          
