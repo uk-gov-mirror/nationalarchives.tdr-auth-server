@@ -14,9 +14,18 @@ on:
 
 jobs:
   update:
+    environment: ${{ github.event.inputs.environment }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - id: role-name
+        run: print(f"::set-output name=role-name::TDRGitHubRunKeycloakUpdateRole{'intg'.title()}")
+        shell: python
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.ACCOUNT_NUMBER }}:role/${{ steps.role-name.outputs.role-name }}
+          aws-region: eu-west-2
+          role-session-name: APIDownloadDependencies
       - run: |
           pip install boto3
           python .github/scripts/run_task.py ${{ secrets.ACCOUNT_NUMBER }} ${{ github.event.inputs.environment }} ${{ github.event.inputs.update-policy }}
