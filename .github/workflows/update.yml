@@ -11,7 +11,8 @@ on:
         description: 'The update policy'
         required: true
         default: "SKIP"
-
+permissions:
+  id-token: write
 jobs:
   update:
     environment: ${{ github.event.inputs.environment }}
