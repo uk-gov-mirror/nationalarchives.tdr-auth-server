@@ -132,23 +132,10 @@
                     <h2 class="govuk-visually-hidden">Support links</h2>
                     <ul class="govuk-footer__inline-list">
                         <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link" href="${properties.tdrHomeUrl}/faq">
-                                FAQ
-                            </a>
-                        </li>
-
-                        <li class="govuk-footer__inline-list-item">
                             <a class="govuk-footer__link" href="${properties.tdrHomeUrl}/contact">
                                 Contact
                             </a>
                         </li>
-
-                        <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link" href="${properties.tdrHomeUrl}/help">
-                              Help
-                            </a>
-                        </li>
-
                         <li class="govuk-footer__inline-list-item">
                             <a class="govuk-footer__link" href="${properties.tdrHomeUrl}/cookies">
                                 Cookies
