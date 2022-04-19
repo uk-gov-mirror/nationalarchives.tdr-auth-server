@@ -33,7 +33,7 @@ def get_access_token():
     return access_token
 
 def get_realm_data():
-    update_realm_configuration('', env_properties_file)
+    update_realm_configuration('/tmp/', env_properties_file)
     with open('tdr-realm.json', 'r+') as realm:
         realm_data = json.load(realm)
     return realm_data
@@ -83,4 +83,5 @@ def update_realm():
     )
     print(f"Partial Import Response Status: {partial_result.status_code}")
 
+update_realm_configuration('/tmp/', env_properties_file)
 update_realm()
