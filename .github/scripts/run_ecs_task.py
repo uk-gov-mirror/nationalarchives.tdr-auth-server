@@ -22,8 +22,8 @@ subnets = [subnet['SubnetId'] for subnet in ec2_client.describe_subnets(Filters=
 ])['Subnets']]
 
 response = client.run_task(
-    cluster="keycloak_update_intg",
-    taskDefinition="keycloak-update-intg",
+    cluster="keycloak_update_" + stage,
+    taskDefinition="keycloak-update-" + stage,
     launchType="FARGATE",
     platformVersion="1.4.0",
     overrides={
