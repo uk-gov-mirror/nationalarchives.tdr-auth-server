@@ -9,7 +9,7 @@
             <div class="govuk-form-group">
                 <div class="govuk-form-group">
                     <label class="govuk-label" for="username">
-                        ${msg("email")}
+                        ${msg("receiveResetPasswordEmail")}
                     </label>
                     <input type="text" class="govuk-input govuk-!-width-two-thirds" id="username" name="username"
                            value="${(login.username!'')}" type="text" autofocus autocomplete="off"/>
