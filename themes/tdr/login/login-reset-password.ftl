@@ -1,9 +1,9 @@
 <#import "template.ftl" as layout>
-<#assign forgotPasswordPageTitle = msg("emailForgotTitle")>
+<#assign passwordResetPageTitle = msg("passwordReset")>
 
-<@layout.registrationLayout pageTitle=forgotPasswordPageTitle; section>
+<@layout.registrationLayout pageTitle=passwordResetPageTitle; section>
     <#if section = "header">
-        ${forgotPasswordPageTitle}
+        ${passwordResetPageTitle}
     <#elseif section = "form">
         <form id="kc-reset-password-form" action="${url.loginAction}" method="post">
             <div class="govuk-form-group">
