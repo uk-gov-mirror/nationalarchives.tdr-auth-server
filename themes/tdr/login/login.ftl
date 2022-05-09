@@ -39,6 +39,9 @@
             </button>
           </form>
           <p class="govuk-body">
+            <a href="${url.loginResetCredentialsUrl}">${msg("doForgotPassword")}</a>
+          </p>
+          <p class="govuk-body">
             If you have problems signing in, contact us at <a class="govuk-link" href="mailto:tdr@nationalarchives.gov.uk" data-hsupport="email">tdr@nationalarchives.gov.uk</a>
           </p>
         </#if>
