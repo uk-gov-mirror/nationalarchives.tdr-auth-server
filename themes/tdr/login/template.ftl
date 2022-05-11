@@ -102,12 +102,12 @@
                                 </div>
                             </div>
                         <#else>
-                            <div class="govuk-warning-text">
+                            <div class="govuk-warning-text" aria-labelledby="warning-message" role="alert" tabindex="-1">
                                 <#if message.type = 'success'><span
                                     class="${properties.kcFeedbackSuccessIcon!}"></span></#if>
                                 <#if message.type = 'warning'><span class="govuk-warning-text__icon" aria-hidden="true">!</span></#if>
                                 <#if message.type = 'info'><span class="${properties.kcFeedbackInfoIcon!}"></span></#if>
-                                <strong class="govuk-warning-text__text">
+                                <strong class="govuk-warning-text__text" id="warning-message">
                                     <span class="govuk-warning-text__assistive">Warning</span>
                                     ${message.summary}
                                 </strong>
