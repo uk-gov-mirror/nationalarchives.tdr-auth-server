@@ -58,8 +58,6 @@
                         <label for="totp" class="govuk-label">${msg("authenticatorCode")}</label>
                         <input type="text" id="totp" name="totp" autocomplete="off" class="govuk-input govuk-!-width-two-thirds" />
                         <input type="hidden" id="totpSecret" name="totpSecret" value="${totp.totpSecret}" />
-                        <label for="userLabel" class="govuk-label">${msg("loginTotpDeviceName")}</label>
-                        <input type="text" class="govuk-input govuk-!-width-two-thirds" id="userLabel" name="userLabel" autocomplete="off">
                         <#if mode??><input type="hidden" id="mode" name="mode" value="${mode}"/></#if>
                     </div>
                     <#if message?has_content && message.type = 'error'>
