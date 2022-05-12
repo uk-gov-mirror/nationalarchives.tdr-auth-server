@@ -52,7 +52,6 @@
             </#if>
             <li>
                 <p class="govuk-body">${msg("loginTotpStep3")}</p>
-                <p class="govuk-body">${msg("loginTotpStep3DeviceName")}</p>
                 <form action="${url.loginAction}" id="totp-settings-form" method="post">
                     <div class="govuk-form-group<#if message?has_content && message.type = 'error'>--error</#if>">
                         <label for="totp" class="govuk-label">${msg("authenticatorCode")}</label>
