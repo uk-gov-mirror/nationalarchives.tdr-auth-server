@@ -9,6 +9,7 @@ COPY themes/tdr/login /opt/keycloak/themes/tdr/login
 COPY themes/tdr/email /opt/keycloak/themes/tdr/email
 COPY govuk-notify-spi/target/scala-2.13/govuk-notify-spi.jar /opt/keycloak/standalone/deployments/
 COPY event-publisher-spi/target/scala-2.13/event-publisher-spi.jar /opt/keycloak/standalone/deployments/
+RUN /opt/keycloak/bin/kc.sh build --db=postgres
 RUN chown -R keycloak /tmp/environment-properties
 RUN chown keycloak /tmp/tdr-realm-export.json /tmp/import_tdr_realm.py
 RUN chmod +x /tmp/import_tdr_realm.py
