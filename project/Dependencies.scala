@@ -1,7 +1,7 @@
 import sbt._
 
 object Dependencies {
-  private val keycloakVersion = "16.1.0"
+  private val keycloakVersion = "18.0.0"
 
   lazy val keycloakCore: ModuleID = "org.keycloak" % "keycloak-core" % keycloakVersion % "provided"
   lazy val keycloakServerSpi: ModuleID = "org.keycloak" % "keycloak-server-spi" % keycloakVersion % "provided"

@@ -31,3 +31,8 @@ lazy val govUkNotifySpi = (project in file("./govuk-notify-spi"))
     name := "govuk-notify-spi",
     libraryDependencies += notifyJavaClient,
   ).settings(commonSettings)
+
+lazy val databaseSpi = (project in file("./database-spi"))
+  .settings(
+    name := "database-spi"
+  ).settings(commonSettings)
