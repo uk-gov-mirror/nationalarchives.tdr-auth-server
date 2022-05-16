@@ -9,4 +9,4 @@ host = os.environ['KEYCLOAK_HOST']
 
 update_realm_configuration('/tmp/', env_properties_file)
 subprocess.call(['/opt/keycloak/bin/kc.sh', 'import', '--file', '/tmp/tdr-realm.json'])
-subprocess.call(['/opt/keycloak/bin/kc.sh', 'start', '--hostname', host, '--proxy', 'edge', '--spi-connections-jpa-default-migration-strategy=update'])
+subprocess.call(['/opt/keycloak/bin/kc.sh', 'start', '--hostname', host, '--proxy', 'edge'])
