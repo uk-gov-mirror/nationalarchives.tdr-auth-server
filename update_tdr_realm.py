@@ -9,7 +9,8 @@ stage_to_url = dict(
     local='http://localhost:8081',
     intg='https://auth.tdr-integration.nationalarchives.gov.uk',
     prod='https://auth.tdr.nationalarchives.gov.uk',
-    staging='https://auth.tdr-staging.nationalarchives.gov.uk'
+    staging='https://auth.tdr-staging.nationalarchives.gov.uk',
+    sandbox = 'https://auth.tdr-sandbox.nationalarchives.gov.uk'
 )
 
 stage: str = sys.argv[1]
@@ -25,7 +26,7 @@ def get_access_token():
         'client_id': 'tdr-realm-admin'
     }
     authentication_request = requests.post(
-        f'{base_auth_url}/auth/realms/tdr/protocol/openid-connect/token',
+        f'{base_auth_url}/realms/tdr/protocol/openid-connect/token',
         data=payload
     )
     authentication_data = authentication_request.json()
@@ -70,14 +71,14 @@ def update_realm():
     #                 Depending on the policy set will overwrite, skip or fail for existing resources
     #                 Takes a partial realm representation
     top_level_result = requests.put(
-        f'{base_auth_url}/auth/admin/realms/tdr',
+        f'{base_auth_url}/admin/realms/tdr',
         data=json.dumps(full_realm_data),
         headers=headers
     )
     print(f"Top Level Import Response Status: {top_level_result.status_code}")
 
     partial_result = requests.post(
-        f'{base_auth_url}/auth/admin/realms/tdr/partialImport',
+        f'{base_auth_url}/admin/realms/tdr/partialImport',
         data=json.dumps(partial_import_data),
         headers=headers
     )
