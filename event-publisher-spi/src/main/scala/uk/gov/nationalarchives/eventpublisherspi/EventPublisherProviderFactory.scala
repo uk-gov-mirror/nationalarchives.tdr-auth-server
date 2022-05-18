@@ -15,14 +15,13 @@ class EventPublisherProviderFactory extends EventListenerProviderFactory {
   var oneDayIntervalMillis: Long = 24 * 60 * 60 * 1000
 
   override def create(session: KeycloakSession): EventListenerProvider = {
-    EventPublisherProvider(eventPublisherConfig.get, session);
+    EventPublisherProvider(eventPublisherConfig.get, session)
   }
 
   override def init(config: Config.Scope): Unit = {
-    val snsUrl = config.get("snsUrl")
-    val snsTopicArn = config.get("snsTopicArn")
-    val tdrEnvironment = config.get("tdrEnvironment")
-    eventPublisherConfig = Option(EventPublisherConfig(snsUrl, snsTopicArn, tdrEnvironment))
+    val snsUrl = sys.env("TDR_ENV")
+    val tdrEnvironment = sys.env("SNS_TOPIC_ARN")
+    eventPublisherConfig = Option(EventPublisherConfig(snsUrl, tdrEnvironment))
   }
 
   override def postInit(factory: KeycloakSessionFactory): Unit = {
