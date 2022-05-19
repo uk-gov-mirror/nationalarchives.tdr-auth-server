@@ -161,7 +161,6 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     publishRequest1.topicArn should equal(topicArn)
     publishRequest2.message should equal(expectedMessage2)
     publishRequest2.topicArn should equal(topicArn)
-
   }
 
   "The run method" should "not send a message if there is a user without otp but with webauthn" in {
