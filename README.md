@@ -179,7 +179,7 @@ To run, build and test locally:
     * Run the following commands in the root directory:  `[root directory] $ npm install` and `[root directory] $ npm run build-theme`
         * this will compile the theme sass, copy the static assets to the theme `resource` directory and compile the typescript for WebAuthn.
 4. Build both spi jars:
-    * From the root directory run the following command: `sbt govUkNotifySpi/assembly eventPublisherSpi/assembly`
+    * From the root directory run the following command: `sbt assembly`
     * This will generate the jar for the GovUK Notify service and the Event Publisher service
 8. Build the docker image locally:
     * Run the docker build command: `[root directory] $ docker build -t [account id].dkr.ecr.[region].amazonaws.com/tdr-auth-server:[your build tag] .`
