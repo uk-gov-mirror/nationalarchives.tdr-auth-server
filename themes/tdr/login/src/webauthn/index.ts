@@ -27,9 +27,6 @@ export default class WebAuthn {
     }
   }
 
-  challenge = this.getValueFromInput("challenge")
-  createTimeout = parseInt(this.getValueFromInput("createTimeout"), 10)
-
   checkIfWebAuthnSupported() {
     if (!window.PublicKeyCredential) {
       const unsupportedMessage = this.getValueFromInput("unsupported-browser-message")
@@ -55,12 +52,15 @@ export default class WebAuthn {
         }
       }
 
+      const challenge = this.getValueFromInput("challenge")
+      const createTimeout = parseInt(this.getValueFromInput("createTimeout"), 10)
+
       let publicKey: PublicKeyCredentialRequestOptions = {
         rpId: this.getValueFromInput("rpId"),
-        challenge: base64url.toBuffer(this.challenge)
+        challenge: base64url.toBuffer(challenge)
       }
 
-      if (this.createTimeout !== 0) publicKey.timeout = this.createTimeout * 1000
+      if (createTimeout !== 0) publicKey.timeout = createTimeout * 1000
 
       if (allowCredentials.length) {
         publicKey.allowCredentials = allowCredentials
@@ -216,7 +216,8 @@ export default class WebAuthn {
 
     if (isAuthenticatorSelectionSpecified) publicKey.authenticatorSelection = authenticatorSelection
 
-    if (this.createTimeout !== 0) publicKey.timeout = this.createTimeout * 1000
+    const createTimeout = parseInt(this.getValueFromInput("createTimeout"), 10)
+    if (createTimeout !== 0) publicKey.timeout = createTimeout * 1000
 
     const excludeCredentialIds = this.getValueFromInput("excludeCredentialIds")
     const excludeCredentials: PublicKeyCredentialDescriptor[] = excludeCredentialIds.split(",").map(id => ({
