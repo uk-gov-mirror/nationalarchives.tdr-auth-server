@@ -58,7 +58,7 @@ class EventPublisherProviderSpec extends AnyFlatSpec with Matchers {
          |  "message" : "User Calling Username has assigned role 'admin' to user Affected Username from ip 172.17.0.1 in the master realm"
          |}""".stripMargin
 
-    val eventPublisher = new EventPublisherProvider(EventPublisherConfig("snsTopicArn", "tdrEnv"), mockSession, mockSnsClient)
+    val eventPublisher = new EventPublisherProvider(EventPublisherConfig("snsTopicArn", "tdrEnv"), mockKeycloakSession, mockSnsClient)
     eventPublisher.onEvent(adminEvent)
 
     verify(mockSnsClient, times(1)).publish(publishRequestCaptor.capture())
@@ -127,13 +127,14 @@ class EventPublisherProviderSpec extends AnyFlatSpec with Matchers {
     val mockKeycloakSession = mock[KeycloakSession]
     val mockKeycloakContext = mock[KeycloakContext]
     val mockKeycloakUriInfo = mock[KeycloakUriInfo]
+    val mockSnsClient = mock[SnsClient]
     val mockRealm = mock[RealmModel]
     val mockRealmProvider = mock[RealmProvider]
     val mockUserProvider = mock[UserProvider]
-    val mockSnsUtils = mock[SNSUtils]
     val user = mock[UserModel]
     val userId = "2bfdc4b4-bebb-48db-8648-04e787b686a9"
     val stubbedURI = URI.create("https://base-url.com/auth/")
+    val publishRequestCaptor: ArgumentCaptor[PublishRequest] = ArgumentCaptor.forClass(classOf[PublishRequest])
 
     when(mockKeycloakSession.getContext).thenReturn(mockKeycloakContext)
     when(mockKeycloakContext.getUri).thenReturn(mockKeycloakUriInfo)
@@ -157,23 +158,27 @@ class EventPublisherProviderSpec extends AnyFlatSpec with Matchers {
          |  "message" : "Keycloak id <https://base-url.com/auth/admin/tdr/console/#/realms/tdr/users/2bfdc4b4-bebb-48db-8648-04e787b686a9| 2bfdc4b4-bebb-48db-8648-04e787b686a9> has been disabled"
          |}""".stripMargin
 
-    val eventPublisher = new EventPublisherProvider(EventPublisherConfig("http://snsUrl.com", "snsTopicArn", "tdrEnv"), mockKeycloakSession, mockSnsUtils)
-    eventPublisher.onEvent(loginEvent)
 
-    verify(mockSnsUtils, times(1)).publish(expectedMessage, "snsTopicArn")
+    val eventPublisher = new EventPublisherProvider(EventPublisherConfig("snsTopicArn", "tdrEnv"), mockKeycloakSession, mockSnsClient)
+    eventPublisher.onEvent(loginEvent)
+    verify(mockSnsClient, times(1)).publish(publishRequestCaptor.capture())
+
+    val publishRequest: PublishRequest = publishRequestCaptor.getValue
+    publishRequest.message should equal(expectedMessage)
+    publishRequest.topicArn should equal("snsTopicArn")
   }
 
   "the onEvent function" should "not publish a message if the login event is not 'user_disabled'" in {
     val mockSession = mock[KeycloakSession]
-    val mockSnsUtils = mock[SNSUtils]
+    val mockSnsClient = mock[SnsClient]
 
     val loginEvent = new Event()
     loginEvent.setType(EventType.LOGIN_ERROR)
     loginEvent.setError("test_error")
 
-    val eventPublisher = new EventPublisherProvider(EventPublisherConfig("http://snsUrl.com", "snsTopicArn", "tdrEnv"), mockSession, mockSnsUtils)
+    val eventPublisher = new EventPublisherProvider(EventPublisherConfig("snsTopicArn", "tdrEnv"), mockSession, mockSnsClient)
     eventPublisher.onEvent(loginEvent)
 
-    verify(mockSnsUtils, times(0)).publish(any[String], any[String])
+    verify(mockSnsClient, times(0)).publish(any[PublishRequest])
   }
 }

@@ -27,7 +27,8 @@ class EventPublisherProvider(config: EventPublisherConfig, session: KeycloakSess
   override def close(): Unit = { }
 
   def publishEvent(f: Event => String, event: Event): Unit = {
-    snsUtils.publish(f(event), config.snsTopicArn)
+    val publishRequest = PublishRequest.builder.message(f(event)).topicArn(config.snsTopicArn).build()
+    snsClient.publish(publishRequest)
   }
 
   def publishAdminEvent(f: AdminEvent => String, event: AdminEvent): Unit = {
