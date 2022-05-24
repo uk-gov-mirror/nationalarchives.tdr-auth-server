@@ -36,5 +36,8 @@
         "https://tdr-integration.nationalarchives.gov.uk/*"
       ]
     }
+  },
+  "browserSecurityHeaders" : {
+    "contentSecurityPolicy": "frame-src 'self'; frame-ancestors http://localhost:9000 https://tdr-integration.nationalarchives.gov.uk 'self'; object-src 'none';"
   }
 }

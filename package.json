@@ -16,7 +16,7 @@
     "build-login": "npm-run-all copy-assets build-css compile --theme=login",
     "build-login-local": "npm-run-all copy-assets build-css compile-local --theme=login",
     "build-email": "npm-run-all --theme=email",
-    "update-local-resources": "docker cp themes/tdr/$npm_config_theme/. $npm_config_container_name:/opt/jboss/keycloak/themes/tdr/$npm_config_theme",
+    "update-local-resources": "docker cp themes/tdr/$npm_config_theme/. $npm_config_container_name:/opt/keycloak/themes/tdr/$npm_config_theme",
     "build-local": "npm-run-all build-login-local build-email update-local-resources",
     "build-theme": "npm-run-all build-login build-email",
     "check-style": "stylelint 'themes/tdr/css-src/**/*.scss'",

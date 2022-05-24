@@ -37,5 +37,8 @@
     "redirectUris": [
       "https://tdr-staging.nationalarchives.gov.uk/*"
     ]
+  },
+  "browserSecurityHeaders" : {
+    "contentSecurityPolicy": "frame-src 'self'; frame-ancestors https://tdr-staging.nationalarchives.gov.uk 'self'; object-src 'none';"
   }
 }

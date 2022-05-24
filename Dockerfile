@@ -1,17 +1,19 @@
-FROM jboss/keycloak:16.1.0
+FROM quay.io/keycloak/keycloak:18.0.0
 USER root
 RUN microdnf update && microdnf install python3
-
+WORKDIR /opt/keycloak
 COPY environment-properties /tmp/environment-properties
-COPY import_tdr_realm.py update_client_configuration.py update_realm_configuration.py tdr-realm-export.json /tmp/
-COPY standalone-ha.xml /opt/jboss/keycloak/standalone/configuration/
-COPY themes/tdr/login /opt/jboss/keycloak/themes/tdr/login
-COPY themes/tdr/email /opt/jboss/keycloak/themes/tdr/email
-COPY govuk-notify-spi/target/scala-2.13/govuk-notify-spi.jar /opt/jboss/keycloak/standalone/deployments/
-COPY event-publisher-spi/target/scala-2.13/event-publisher-spi.jar /opt/jboss/keycloak/standalone/deployments/
-RUN chown -R jboss /tmp/environment-properties
-RUN chown jboss /tmp/tdr-realm-export.json /tmp/import_tdr_realm.py
+COPY build.conf import_tdr_realm.py update_client_configuration.py update_realm_configuration.py tdr-realm-export.json /tmp/
+COPY themes/tdr/login themes/tdr/login
+COPY themes/tdr/email themes/tdr/email
+COPY govuk-notify-spi/target/scala-2.13/govuk-notify-spi* providers/
+COPY event-publisher-spi/target/scala-2.13/event-publisher-spi.jar providers/
+COPY keycloak.conf conf/
+RUN bin/kc.sh -cf /tmp/build.conf build
+RUN chown -R keycloak /tmp/environment-properties
+RUN chown keycloak /tmp/tdr-realm-export.json /tmp/import_tdr_realm.py
 RUN chmod +x /tmp/import_tdr_realm.py
 USER 1000
+RUN mkdir -p data/import
 
 ENTRYPOINT /tmp/import_tdr_realm.py

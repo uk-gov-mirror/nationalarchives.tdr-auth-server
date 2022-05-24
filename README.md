@@ -2,26 +2,11 @@
 
 All of our documentation is stored in the [tdr-dev-documentation](https://github.com/nationalarchives/tdr-dev-documentation) repository.
 
-## Updating Keycloak version
-
-**Important Note**
-
-When updating Keycloak version the **tdr-entrypoint.sh** script needs to be updated to ensure it is kept up-to-date with any changes:
-1. Copy latest version of the file from GitHub: https://github.com/keycloak/keycloak-containers/blob/master/server/tools/docker-entrypoint.sh
-2. Copy the new version of the Keycloak provided entry point script into the *tdr-entrypoint.sh* script
-3. Add the following commands to the updated *tdr-entrypoint.sh*:
-
-    ```
-    if [[ -n ${TDR_KEYCLOAK_IMPORT:-} ]]; then
-      SYS_PROPS+=" -Dkeycloak.migration.action=import"
-      SYS_PROPS+=" -Dkeycloak.migration.provider=singleFile"
-      SYS_PROPS+=" -Dkeycloak.migration.file=$TDR_KEYCLOAK_IMPORT"
-      SYS_PROPS+=" -Dkeycloak.migration.strategy=OVERWRITE_EXISTING"
-    fi
-    ```
-
 ## Dockerfile
-This repository holds the Dockerfile used to build our keycloak server which we will be using for authentication and authorisation. 
+This repository holds the Dockerfile used to build our keycloak server which we will be using for authentication and authorisation.
+
+## Dockerfile-update
+This is used for an ECS task which is run by the GitHub actions workflow defined in `.github/workflows/update.yml` It updates the realm configuration by calling the `update_tdr_realm.py` Python script.
 
 ## Docker Container
 
@@ -29,21 +14,17 @@ The docker container runs with the pre-defined `keycloak` user.
 
 This user is part of the `root` group, but *does not* have root user permissions.
 
-## Jenkinsfile
-There is a Jenkinsfile build and push this to docker hub. The Jenkinsfile has three stages.
-The first two are run in parallel. 
+## GitHub actions
+There are three actions workflows in `.github/worfklows/`
+* test.yml - This runs the typescript tests, typescript linter and scala tests for the event-publisher SPI and the govuk-notify SPI.
+* build.yml - This builds the two SPI jars, builds the custom tdr theme and then builds the docker image and tags it with a new version number.
+* deploy.yml - This tags the image with the environment tag and restarts the ECS task to deploy the new version. 
 
-One clones the Home Office's govuk keycloak theme project and builds it.
-
-The other clones a [TNA fork](https://github.com/nationalarchives/keycloak-sms-authenticator-sns) of BEIS' SMS MFA keycloak repo and builds that. The original repo is missing a dependency in the pom which I've added in the fork. 
-
-The output from both of these are stashed and then unstashed in the third stage. They are then used to build the Dockerfile.
-
-## import_env_realm.py script
+## update_realm_configuration.py script
 
 The import_env_realm.py runs scripts to update the Keycloak json configuration files (which are held in a private repository) with TDR environment specific properties and combines the individual realm json into a single json configuration file for import into Keycloak at start up.
 
-## update_env_client_configuration.py script
+## update_client_configuration.py script
 
 The update_env_client_configuration.py script provides functions for updating Keycloak realm client json. 
 
@@ -51,15 +32,6 @@ Primarily it:
  * injects secret values which cannot be safely stored in the configuration file.
  * updates specific json elements based on the environment properties json file provided.
  
-## tdr-entrypoint.sh script
-
-The tdr-entrypoint.sh script provides the entry point on start up of the Keycloak docker container.
-
-It has specific TDR commands around realm import, and is copied from the default entrypoint script provided in the keycloak image (/opt/jboss/tools/docker-entrypoint.sh)
-
-## Configuration file
-
-The standalone-ha.xml is mostly the standard configuration for keycloak with a few changes to get it to work with the load balancer. Some of these are discussed in the keycloak [documentation](https://www.keycloak.org/docs/latest/server_installation/#_setting-up-a-load-balancer-or-proxy)
 
 ## TDR Theme
 
@@ -90,18 +62,18 @@ Both these AWS SSM parameter *values* need to set manually in the AWS SSM parame
 
 See here for full details about the GovUK Notify service: https://www.notifications.service.gov.uk/
 
+## Configuration
+There are two configuration files:
+### build.conf
+This contains config options that are needed at build time, when the docker image is built. Currently, this defines the database as postgres and enables the custom SPIs.
+
+### keycloak.conf
+This defines configuration options used when the server starts. Currently, this is the host name and logging options.
+
 ### Keycloak Email Sender Configuration
 
-GovUK Notify is defined as the default email sender in the `standalone-ha.xml`:
+GovUK Notify is defined as the default email sender in the `build.conf` as `spi-email-sender-provider=govuknotify`
 
-  ```
-  <spi name="emailSender">
-    <default-provider>govuknotify</default-provider>
-      <provider name="govuknotify" enabled="true">
-        <properties />                        
-      </provider>
-  </spi>
-  ```
 ### Requesting access to GovUK Notify Services
 
 Contact a member of the TDR team to request access to the TDR GovUK Notify Services
@@ -117,23 +89,12 @@ The following events trigger the publishing service:
 
 ### Event Publishing Configuration
 
-The event publishing SPI is defined as an event listener in the `standalone-ha.xml`:
-  ```
-  <spi name="eventsListener">
-    ...
-    <provider name="event-publisher" enabled="true">
-      <properties>
-        <property name="tdrEnvironment" value="${env.TDR_ENV}"/>
-        <property name="snsUrl" value="https://sns.eu-west-2.amazonaws.com"/>
-        <property name="snsTopicArn" value="${env.SNS_TOPIC_ARN}"/>
-      </properties>
-    </provider>
-  </spi>
-  ```
+The event publishing SPI is defined as an event listener in the `build.conf` as `spi-events-listener-event-publisher-enabled=true`
+
 
 ## Updating TDR Realm Configuration json
 
-A separate Jenkins job is used to update the TDR realm configuration: TDR Auth Server Update
+A separate GitHub actions workflow is used to update the TDR realm configuration: [TDR Update Auth Server Configuration](https://github.com/nationalarchives/tdr-auth-server/actions/workflows/update.yml)
 
 This is because on container start up, if a realm already exists, its configuration json is ignored. So restarting the container will not update the configuration.
 
@@ -152,7 +113,6 @@ Two REST endpoints are used to update a Keycloak realm:
     * `OVERWRITE`: Overwrites the existing resource
     * **Note**: This option only applies to the partial import
 
-**Note**: The `OVERWRITE` option is not available in the Jenkins job as it causes undesirable behaviours, such as users existing group mappings to be removed.
 
 To update Keycloak with, for example, a new client:
 1. Update the relevant Keycloak json configuration file (tdr-realm-export.json). See README for the [tdr-configurations](https://github.com/nationalarchives/tdr-configurations#keycloak-configurations-usage) private repository on how to do this.
@@ -161,11 +121,11 @@ To update Keycloak with, for example, a new client:
     
     This ensures that the secret value is stored securely and is not exposed in the code.
 
-    * Update the update_env_client_configuration.py script to replace the placeholder secret value in the relevant realm json configuration file, with the new secret value set in the Terraform.
-3. Run the Jenkins build, selecting the relevant parameter options:
-    * `STAGE`: the TDR environment to be updated
-    * `UPDATE_POLICY`: what behaviour to apply if a resource already exists. See notes above regarding the possible options.
-4. Once the Jenkins job has been completed log into the Keycloak instance that has been updated as an administrator, and check the expected changes have been made.
+    * Update the update_client_configuration.py script to replace the placeholder secret value in the relevant realm json configuration file, with the new secret value set in the Terraform.
+3. Run the GitHub actions workflow, selecting the relevant parameter options:
+    * `environment`: the TDR environment to be updated
+    * `update-policy`: what behaviour to apply if a resource already exists. See notes above regarding the possible options.
+4. Once the GitHub actions workflow has been completed log into the Keycloak instance that has been updated as an administrator, and check the expected changes have been made.
 
 ## Running Locally
 
@@ -179,11 +139,18 @@ To run, build and test locally:
     * Run the following commands in the root directory:  `[root directory] $ npm install` and `[root directory] $ npm run build-theme`
         * this will compile the theme sass, copy the static assets to the theme `resource` directory and compile the typescript for WebAuthn.
 4. Build both spi jars:
-    * From the root directory run the following command: `sbt govUkNotifySpi/assembly eventPublisherSpi/assembly`
+    * From the root directory run the following command: `sbt assembly`
     * This will generate the jar for the GovUK Notify service and the Event Publisher service
-8. Build the docker image locally:
+5. Update the start script. In the `import_tdr_realm.py` replace:
+
+    `subprocess.call(['/opt/keycloak/bin/kc.sh', 'start'])` with
+
+    `subprocess.call(['/opt/keycloak/bin/kc.sh', 'start-dev', '--import-realm'])`
+
+   Don't commit these changes.
+6. Build the docker image locally:
     * Run the docker build command: `[root directory] $ docker build -t [account id].dkr.ecr.[region].amazonaws.com/tdr-auth-server:[your build tag] .`
-9. Run the local docker image:
+7. Run the local docker image:
     ```
     [root directory] $ docker run -d --name [some name] -p 8081:8080 \
     -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin -e KEYCLOAK_IMPORT=/tmp/tdr-realm.json \
@@ -213,8 +180,8 @@ To run, build and test locally:
     * `DB_VENDOR`: the type of database to use. In the dev environment, we use Keycloak's embedded H2 database
     * `SNS_TOPIC_ARN`: the AWS topic arn to publish event messages to
     * `TDR_ENV`: the name of the TDR environment where Keycloak is running
-10. Navigate to http://localhost:8081/auth/admin
-11. Log on using the `KEYCLOAK_PASSWORD` and `KEYCLOAK_USER` defined in the docker run command
+8. Navigate to http://localhost:8081/auth/admin
+9. Log on using the `KEYCLOAK_PASSWORD` and `KEYCLOAK_USER` defined in the docker run command
 
 To log into the running docker container with a bash shell: `$ docker exec -it [your container name] bash`
 
@@ -292,26 +259,11 @@ To update the realm configuration on the locally running Keycloak instances:
 **Note:** The TDR theme sass is used by the TDR Transfer Frontend. When updating the sass for the theme, ensure that any changes are also implemented in the tdr-transfer-frontend repo: https://github.com/nationalarchives/tdr-transfer-frontend/tree/master/npm/css-src/sass
 * This includes any changes to the `.stylelintrc.json`
 
-1. Disable the Theme cache by changing the following in the `standalone-ha.xml` (**Note: do not merge these changes**):
-    * staticMaxAge: -1
-    * cacheThemes: false
-    * cacheTemplates: false
-    ```
-    <theme>
-        <staticMaxAge>-1</staticMaxAge>
-        <cacheThemes>false</cacheThemes>
-        <cacheTemplates>false</cacheTemplates>
-        <welcomeTheme>${env.KEYCLOAK_WELCOME_THEME:keycloak}</welcomeTheme>
-        <default>${env.KEYCLOAK_DEFAULT_THEME:keycloak}</default>
-        <dir>${jboss.home.dir}/themes</dir>
-    </theme>
-    ```
-
-2. Rebuild the image locally and run. `docker build -t [account id].dkr.ecr.[region].amazonaws.com/tdr-auth-server:[your build tag] .`
-3. Make necessary changes to the TDR theme (freemarker templates/sass/static resources)
-4. Run following command from the root directory: `[root directory] $ npm run build-local --container_name=[name of running container]`
-5. Refresh the locally running Keycloak pages to see the changes.
-6. Repeat steps 3 to 5 as necessary.
+1. Rebuild the image locally and run. `docker build -t [account id].dkr.ecr.[region].amazonaws.com/tdr-auth-server:[your build tag] .`
+2. Make necessary changes to the TDR theme (freemarker templates/sass/static resources)
+3. Run following command from the root directory: `[root directory] $ npm run build-local --container_name=[name of running container]`
+4. Refresh the locally running Keycloak pages to see the changes.
+5. Repeat steps 3 to 5 as necessary.
 
 ### Updating Emails
 
@@ -337,6 +289,8 @@ The key in the personalisation Map corresponds to the name of the personalisatio
 The tests should be run from the root directories using the subproject name.
 `sbt govUkNotifySpi/test`
 `sbt eventPublisherSpi/test`
+
+You can also run both sets of tests by running `sbt assembly` from the root of the project.
 
 There are tests for the login theme typescript which can be run in the root directory using `npm test` 
 

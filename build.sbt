@@ -3,11 +3,19 @@ import Dependencies._
 lazy val commonSettings = Seq(
   scalaVersion := "2.13.8",
   Test / fork := true,
-  assemblyJarName in assembly := s"${(This / name).value}.jar",
+  assembly / assemblyJarName := s"${(This / name).value}.jar",
+  assemblyPackageScala / assembleArtifact := false,
+  assemblyPackageDependency / assembleArtifact := false,
+  assemblyPackageDependency / test := {},
   libraryDependencies ++= Seq(
+    circeCore,
+    circeParser,
+    circeGeneric,
+    notifyJavaClient,
     keycloakCore,
     keycloakModelJpa,
     keycloakServerSpi,
+    snsSdk,
     mockito % Test,
     scalaTest % Test
   ),
@@ -22,12 +30,10 @@ lazy val root = (project in file("."))
 
 lazy val eventPublisherSpi = (project in file("./event-publisher-spi"))
   .settings(
-    name := "event-publisher-spi",
-    libraryDependencies += awsUtils,
+    name := "event-publisher-spi"
   ).settings(commonSettings)
 
 lazy val govUkNotifySpi = (project in file("./govuk-notify-spi"))
   .settings(
-    name := "govuk-notify-spi",
-    libraryDependencies += notifyJavaClient,
+    name := "govuk-notify-spi" ,
   ).settings(commonSettings)

@@ -6,14 +6,15 @@ import org.keycloak.timer.ScheduledTask
 import software.amazon.awssdk.http.apache.ApacheHttpClient
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.sns.SnsClient
-import uk.gov.nationalarchives.aws.utils.SNSUtils
 import uk.gov.nationalarchives.eventpublisherspi.EventPublisherProvider.{EventDetails, EventPublisherConfig}
 import io.circe.generic.auto._
 import io.circe.syntax.EncoderOps
+import software.amazon.awssdk.services.sns.model.PublishRequest
+
 import java.net.URI
 import scala.jdk.CollectionConverters._
 
-class UserMonitoringTask(snsUtils: SNSUtils, config: EventPublisherConfig, validConfiguredCredentialTypes: List[String]) extends ScheduledTask {
+class UserMonitoringTask(snsClient: SnsClient, config: EventPublisherConfig, validConfiguredCredentialTypes: List[String]) extends ScheduledTask {
   val logger: Logger = Logger.getLogger(classOf[UserMonitoringTask])
 
   override def run(session: KeycloakSession): Unit = {
@@ -44,7 +45,8 @@ class UserMonitoringTask(snsUtils: SNSUtils, config: EventPublisherConfig, valid
              |""".stripMargin)
 
         val eventDetails = EventDetails(config.tdrEnvironment, message).asJson.toString()
-        snsUtils.publish(eventDetails, config.snsTopicArn)
+        val publishRequest = PublishRequest.builder.message(eventDetails).topicArn(config.snsTopicArn).build()
+        snsClient.publish(publishRequest)
       }
     })
   }
@@ -56,11 +58,10 @@ object UserMonitoringTask {
   private val validConfiguredCredentialTypes = List("otp", "webauthn")
 
   def apply(config: EventPublisherConfig): UserMonitoringTask = {
-    val snsUtils: SNSUtils = SNSUtils(SnsClient.builder()
+    val snsClient = SnsClient.builder()
       .region(Region.EU_WEST_2)
-      .endpointOverride(URI.create(config.sqsUrl))
       .httpClient(httpClient)
-      .build())
-    new UserMonitoringTask(snsUtils, config, validConfiguredCredentialTypes)
+      .build()
+    new UserMonitoringTask(snsClient, config, validConfiguredCredentialTypes)
   }
 }

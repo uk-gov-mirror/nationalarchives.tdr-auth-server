@@ -13,5 +13,5 @@ def update_realm_configuration(directory_path, env_properties_file):
 
         update_client_configuration(tdr_clients, tdr_client_props)
 
-    with open(f'{directory_path}tdr-realm.json', 'w') as tdr_realm:
+    with open(f'/opt/keycloak/data/import/tdr-realm.json', 'w') as tdr_realm:
         json.dump(tdr_realm_data, tdr_realm)
