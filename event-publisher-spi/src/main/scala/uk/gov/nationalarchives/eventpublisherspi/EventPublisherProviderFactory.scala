@@ -19,8 +19,8 @@ class EventPublisherProviderFactory extends EventListenerProviderFactory {
   }
 
   override def init(config: Config.Scope): Unit = {
-    val snsUrl = sys.env("TDR_ENV")
-    val tdrEnvironment = sys.env("SNS_TOPIC_ARN")
+    val tdrEnvironment = sys.env("TDR_ENV")
+    val snsUrl = sys.env("SNS_TOPIC_ARN")
     eventPublisherConfig = Option(EventPublisherConfig(snsUrl, tdrEnvironment))
   }
 
