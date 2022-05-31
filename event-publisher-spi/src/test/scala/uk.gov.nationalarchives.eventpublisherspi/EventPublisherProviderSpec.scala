@@ -155,7 +155,7 @@ class EventPublisherProviderSpec extends AnyFlatSpec with Matchers {
     val expectedMessage =
       s"""{
          |  "tdrEnv" : "tdrEnv",
-         |  "message" : "Keycloak id <https://base-url.com/auth/admin/tdr/console/#/realms/tdr/users/2bfdc4b4-bebb-48db-8648-04e787b686a9| 2bfdc4b4-bebb-48db-8648-04e787b686a9> has been disabled"
+         |  "message" : "Keycloak id <https://base-url.com/auth/admin/master/console/#/realms/tdr/users/2bfdc4b4-bebb-48db-8648-04e787b686a9| 2bfdc4b4-bebb-48db-8648-04e787b686a9> has been disabled"
          |}""".stripMargin
 
 
