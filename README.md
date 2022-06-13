@@ -153,7 +153,7 @@ To run, build and test locally:
 7. Run the local docker image:
     ```
     [root directory] $ docker run -d --name [some name] -p 8081:8080 \
-    -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin -e KEYCLOAK_IMPORT=/tmp/tdr-realm.json \
+    -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin -e KEYCLOAK_IMPORT=/tmp/tdr-realm.json \
     -e REALM_ADMIN_CLIENT_SECRET=[some value] -e CLIENT_SECRET=[some value] -e BACKEND_CHECKS_CLIENT_SECRET=[some value] \
     -e REPORTING_CLIENT_SECRET=[some value] \
     -e USER_ADMIN_CLIENT_SECRET=[some value] \
@@ -164,10 +164,11 @@ To run, build and test locally:
     -e DB_VENDOR=h2 \
     -e SNS_TOPIC_ARN=[Tdr notifications topic arn] \
     -e TDR_ENV=[Tdr environment] \
+    -e KEYCLOAK_HOST=[Keycloak host] \
     [account id].dkr.ecr.[region].amazonaws.com/tdr-auth-server:[your build tag]
     ```
-    * `KEYCLOAK_USER`: root Keycloak user name
-    * `KEYCLOAK_PASSWORD`: password for the root Keycloak user
+    * `KEYCLOAK_ADMIN`: root Keycloak user name
+    * `KEYCLOAK_ADMIN_PASSWORD`: password for the root Keycloak user
     * `KEYCLOAK_IMPORT`: Location of the generated Keycloak TDR realm json file that contains the configuration for the TDR realm
     * `REALM_ADMIN_CLIENT_SECRET`: tdr realm admin client secret value
     * `CLIENT_SECRET`: tdr client secret value
@@ -180,8 +181,9 @@ To run, build and test locally:
     * `DB_VENDOR`: the type of database to use. In the dev environment, we use Keycloak's embedded H2 database
     * `SNS_TOPIC_ARN`: the AWS topic arn to publish event messages to
     * `TDR_ENV`: the name of the TDR environment where Keycloak is running
+    * `KEYCLOAK_HOST`: the host for keycloak for example localhost:8081
 8. Navigate to http://localhost:8081/auth/admin
-9. Log on using the `KEYCLOAK_PASSWORD` and `KEYCLOAK_USER` defined in the docker run command
+9. Log on using the `KEYCLOAK_ADMIN_PASSWORD` and `KEYCLOAK_ADMIN` defined in the docker run command
 
 To log into the running docker container with a bash shell: `$ docker exec -it [your container name] bash`
 
