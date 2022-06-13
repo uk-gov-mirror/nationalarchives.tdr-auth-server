@@ -19,10 +19,15 @@ lazy val commonSettings = Seq(
     mockito % Test,
     scalaTest % Test
   ),
-  assemblyMergeStrategy in assembly := {
+  assembly / assemblyMergeStrategy := {
+    case PathList("META-INF", "MANIFEST.MF") => MergeStrategy.discard
+    case _ => MergeStrategy.first
+  },
+  assemblyPackageDependency / assemblyMergeStrategy := {
     case PathList("META-INF", "MANIFEST.MF") => MergeStrategy.discard
     case _ => MergeStrategy.first
   }
+
 )
 
 lazy val root = (project in file("."))
