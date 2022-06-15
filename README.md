@@ -325,4 +325,31 @@ Once you have identified the line that you'd like to edit, copy and paste it int
 ## Databases
 
 Keycloak uses a different database depending on whether it's running locally or on ECS. Local development uses the internal H2 database on the docker image. When it's running on ECS, it uses a postgresql RDS instance defined [here](https://github.com/nationalarchives/tdr-terraform-environments/blob/master/modules/keycloak/database.tf) 
- 
+
+## Sending Email Locally
+
+In order to get emails working locally i.e. to test reset email we need to switch to prod mode.
+
+1. Undo any changes in the `import_tdr_realm_py`
+2. Update the start script. In the `import_tdr_realm.py` replace:
+
+   `subprocess.call(['/opt/keycloak/bin/kc.sh', 'start'])` with
+
+   `subprocess.call(['/opt/keycloak/bin/kc.sh', 'start', '--import-realm'])`
+3. run `docker network create keycloak-network`
+4. run `docker run --name keycloak-db --net keycloak-network -e POSTGRES_PASSWORD=password -e POSTGRES_USER=keycloak -e POSTGRES_DB=keycloak -d -p 5432:5432 postgres`
+5. Add the line `RUN keytool -genkeypair -storepass password -storetype PKCS12 -keyalg RSA -keysize 2048 -dname "CN=server" -alias server -ext "SAN:c=DNS:localhost,IP:127.0.0.1" -keystore conf/server.keystore` in  the `Docker` file underneath `WORKDIR /opt/keycloak` line
+6. Run the docker build command: `[root directory] $ docker build -t [account id].dkr.ecr.[region].amazonaws.com/tdr-auth-server:[your build tag] .`
+7. Alter the docker run command to `docker run  --rm --name keycloak --net keycloak-network -p 8081:8080 -p 8443:8443 -e KC_DB_URL_HOST=keycloak-db -e KC_DB_USERNAME=keycloak -e KC_DB_PASSWORD=password`
+8. Navigate to https://localhost:8443 and ignore the warnings from your browser.
+
+#### Troubleshoot for sending email locally
+
+If you want to make changes to the themes whilst in prod mode add these lines to the `keycloak.conf`
+```
+spi-theme-cache-themes=false
+spi-theme-cache-templates=false
+spi-theme-static-max-age=-1
+```
+If you are connecting the frontend to your keycloak instance ensure you set the `AUTH_URL` to
+`AUTH_URL=http://localhost:8081` and not `https://localhost:8443`.
