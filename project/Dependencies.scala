@@ -1,7 +1,7 @@
 import sbt._
 
 object Dependencies {
-  private val keycloakVersion = "18.0.0"
+  private val keycloakVersion = "18.0.1"
   private val circeVersion = "0.14.2"
 
   lazy val circeCore = "io.circe" %% "circe-core" % circeVersion
