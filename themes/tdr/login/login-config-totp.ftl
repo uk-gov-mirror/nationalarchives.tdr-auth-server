@@ -62,9 +62,7 @@
                     <#if message?has_content && message.type = 'error'>
                       <p class="govuk-error-message" id="error-kc-form-login">
                         <span class="govuk-visually-hidden">${msg("screenReaderError")}</span>
-                          <#if message.summary != "There is an error">
-                            ${message.summary}
-                          </#if>
+                        ${message.summary}
                       </p>
                     </#if>
                     <button class="govuk-button" type="submit" data-module="govuk-button" role="button" name="login">
