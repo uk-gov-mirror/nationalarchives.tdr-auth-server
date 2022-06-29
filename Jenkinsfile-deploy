@@ -1,9 +1,0 @@
-library("tdr-jenkinslib")
-
-ecsDeployJob(
-  imageName: "auth-server",
-  toDeploy: params.TO_DEPLOY,
-  ecsService: "keycloak",
-  stage: params.STAGE,
-  testDelaySeconds: 300
-)

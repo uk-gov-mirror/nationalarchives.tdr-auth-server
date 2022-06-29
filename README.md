@@ -91,6 +91,13 @@ The following events trigger the publishing service:
 
 The event publishing SPI is defined as an event listener in the `build.conf` as `spi-events-listener-event-publisher-enabled=true`
 
+## Database Credentials Service (SPI)
+
+This is an SPI which is provided by Quarkus which is the underlying framework which Keycloak runs on. The configuration is set in `quarkus.properties`
+
+There is a single class, `RDSCredentialsProvider` with a `getCredentials` method. 
+This gets the password using the `generateAuthenticationToken` on `RDSUtilities` and returns it which is then used to connect to the database. 
+There is a cache which refreshes every 5 minutes so we're not calling AWS for every new database connection.
 
 ## Updating TDR Realm Configuration json
 
@@ -98,7 +105,7 @@ A separate GitHub actions workflow is used to update the TDR realm configuration
 
 This is because on container start up, if a realm already exists, its configuration json is ignored. So restarting the container will not update the configuration.
 
-The TDR Auth Server Update Jenkins job updates existing realm configuration using the Keycloak REST APIs: https://www.keycloak.org/docs-api/11.0/rest-api/index.html
+The TDR Update Auth Server Configuration GitHub actions workflow updates existing realm configuration using the Keycloak REST APIs: https://www.keycloak.org/docs-api/11.0/rest-api/index.html
 
 Two REST endpoints are used to update a Keycloak realm:
 * `PUT /{realm}`: updates the top-level information of the realm.    
@@ -138,7 +145,7 @@ To run, build and test locally:
     * Once nvm is installed run: `[root directory] $ nvm install 16.5.0`
     * Run the following commands in the root directory:  `[root directory] $ npm install` and `[root directory] $ npm run build-theme`
         * this will compile the theme sass, copy the static assets to the theme `resource` directory and compile the typescript for WebAuthn.
-4. Build both spi jars:
+4. Build all three spi jars:
     * From the root directory run the following command: `sbt assembly`
     * This will generate the jar for the GovUK Notify service and the Event Publisher service
 5. Update the start script. In the `import_tdr_realm.py` replace:
@@ -292,7 +299,7 @@ The tests should be run from the root directories using the subproject name.
 `sbt govUkNotifySpi/test`
 `sbt eventPublisherSpi/test`
 
-You can also run both sets of tests by running `sbt assembly` from the root of the project.
+You can also run both sets of tests by running `sbt test` from the root of the project.
 
 There are tests for the login theme typescript which can be run in the root directory using `npm test` 
 
