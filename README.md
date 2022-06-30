@@ -105,7 +105,7 @@ A separate GitHub actions workflow is used to update the TDR realm configuration
 
 This is because on container start up, if a realm already exists, its configuration json is ignored. So restarting the container will not update the configuration.
 
-The TDR Update Auth Server Configuration GitHub actions workflow updates existing realm configuration using the Keycloak REST APIs: https://www.keycloak.org/docs-api/11.0/rest-api/index.html
+The TDR Update Auth Server Configuration GitHub actions workflow updates existing realm configuration using the Keycloak REST APIs: https://www.keycloak.org/docs-api/18.0/rest-api/index.html
 
 Two REST endpoints are used to update a Keycloak realm:
 * `PUT /{realm}`: updates the top-level information of the realm.    
