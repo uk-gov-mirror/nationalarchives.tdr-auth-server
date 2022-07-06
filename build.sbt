@@ -16,6 +16,10 @@ lazy val commonSettings = Seq(
     keycloakModelJpa,
     keycloakServerSpi,
     snsSdk,
+    awsSecretsManager,
+    quarkusCredentials % Provided,
+    rds,
+    scalaCache,
     mockito % Test,
     scalaTest % Test
   ),
@@ -31,7 +35,7 @@ lazy val commonSettings = Seq(
 )
 
 lazy val root = (project in file("."))
-  .aggregate(eventPublisherSpi, govUkNotifySpi)
+  .aggregate(eventPublisherSpi, govUkNotifySpi, credentialProvider)
 
 lazy val eventPublisherSpi = (project in file("./event-publisher-spi"))
   .settings(
@@ -41,4 +45,9 @@ lazy val eventPublisherSpi = (project in file("./event-publisher-spi"))
 lazy val govUkNotifySpi = (project in file("./govuk-notify-spi"))
   .settings(
     name := "govuk-notify-spi" ,
+  ).settings(commonSettings)
+
+lazy val credentialProvider = (project in file("./credentials-provider"))
+  .settings(
+    name := "credentials-provider"
   ).settings(commonSettings)
