@@ -1,0 +1,5 @@
+requests
+python-jose
+urllib3
+python-keycloak
+boto3
