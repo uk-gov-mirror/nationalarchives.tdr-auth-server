@@ -3,7 +3,7 @@ package uk.gov.nationalarchives.eventpublisherspi
 import org.keycloak.events.{Event, EventType}
 import org.keycloak.events.admin.{AdminEvent, AuthDetails, OperationType, ResourceType}
 import org.keycloak.models._
-import org.mockito.ArgumentCaptor
+import org.mockito.{ArgumentCaptor, Mockito}
 import org.mockito.ArgumentMatchersSugar.any
 import org.mockito.MockitoSugar.{mock, times, verify, when}
 import org.scalatest.flatspec.AnyFlatSpec
@@ -21,7 +21,7 @@ class EventPublisherProviderSpec extends AnyFlatSpec with Matchers {
     val mockRealm = mock[RealmModel]
     val mockRealmProvider = mock[RealmProvider]
     val mockUserProvider = mock[UserProvider]
-    val mockSnsClient = mock[SnsClient]
+    val mockSnsClient = Mockito.mock(classOf[SnsClient])
     val callingUser = mock[UserModel]
     val callingUserId = "2bfdc4b4-bebb-48db-8648-04e787b686a9"
     val affectedUser = mock[UserModel]
@@ -69,7 +69,7 @@ class EventPublisherProviderSpec extends AnyFlatSpec with Matchers {
 
   "the onEvent function" should "not publish a message if a role other than 'admin' is assigned to a user" in {
     val mockSession = mock[KeycloakSession]
-    val mockSnsClient = mock[SnsClient]
+    val mockSnsClient = Mockito.mock(classOf[SnsClient])
 
     val adminEvent = new AdminEvent()
     adminEvent.setResourceType(ResourceType.REALM_ROLE_MAPPING)
@@ -87,7 +87,7 @@ class EventPublisherProviderSpec extends AnyFlatSpec with Matchers {
 
   "the onEvent function" should "not publish a message if event resource type is not 'realm role mapping'" in {
     val mockSession = mock[KeycloakSession]
-    val mockSnsClient = mock[SnsClient]
+    val mockSnsClient = Mockito.mock(classOf[SnsClient])
 
     val adminEvent = new AdminEvent()
     adminEvent.setResourceType(ResourceType.AUTH_EXECUTION)
@@ -106,7 +106,7 @@ class EventPublisherProviderSpec extends AnyFlatSpec with Matchers {
 
   "the onEvent function" should "not publish a message if event operation type is not 'create'" in {
     val mockSession = mock[KeycloakSession]
-    val mockSnsClient = mock[SnsClient]
+    val mockSnsClient = Mockito.mock(classOf[SnsClient])
 
     val adminEvent = new AdminEvent()
 
@@ -127,7 +127,7 @@ class EventPublisherProviderSpec extends AnyFlatSpec with Matchers {
     val mockKeycloakSession = mock[KeycloakSession]
     val mockKeycloakContext = mock[KeycloakContext]
     val mockKeycloakUriInfo = mock[KeycloakUriInfo]
-    val mockSnsClient = mock[SnsClient]
+    val mockSnsClient = Mockito.mock(classOf[SnsClient])
     val mockRealm = mock[RealmModel]
     val mockRealmProvider = mock[RealmProvider]
     val mockUserProvider = mock[UserProvider]
@@ -170,7 +170,7 @@ class EventPublisherProviderSpec extends AnyFlatSpec with Matchers {
 
   "the onEvent function" should "not publish a message if the login event is not 'user_disabled'" in {
     val mockSession = mock[KeycloakSession]
-    val mockSnsClient = mock[SnsClient]
+    val mockSnsClient = Mockito.mock(classOf[SnsClient])
 
     val loginEvent = new Event()
     loginEvent.setType(EventType.LOGIN_ERROR)
