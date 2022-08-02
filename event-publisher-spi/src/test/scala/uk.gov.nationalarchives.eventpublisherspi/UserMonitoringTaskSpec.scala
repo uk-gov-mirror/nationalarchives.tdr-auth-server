@@ -1,7 +1,7 @@
 package uk.gov.nationalarchives.eventpublisherspi
 
 import org.keycloak.models._
-import org.mockito.{ArgumentCaptor, MockitoSugar}
+import org.mockito.{ArgumentCaptor, Mockito, MockitoSugar}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import software.amazon.awssdk.services.sns.SnsClient
@@ -26,7 +26,7 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     val mockUserCredentialManager = mock[UserCredentialManager]
     val mockUserModel = mock[UserModel]
     val mockUserProvider = mock[UserProvider]
-    val mockSnsClient = mock[SnsClient]
+    val mockSnsClient = Mockito.mock(classOf[SnsClient])
 
     when(mockRealmModel.getName).thenReturn("testRealm")
     when(mockUserProvider.getUsersStream(mockRealmModel)).thenReturn(java.util.stream.Stream.of(mockUserModel))
@@ -49,7 +49,7 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     val mockUserModelWithMFA = mock[UserModel]
     val mockUserModelWithoutMFA = mock[UserModel]
     val mockUserProvider = mock[UserProvider]
-    val mockSnsClient = mock[SnsClient]
+    val mockSnsClient = Mockito.mock(classOf[SnsClient])
     val publishRequestCaptor: ArgumentCaptor[PublishRequest] = ArgumentCaptor.forClass(classOf[PublishRequest])
 
     when(mockRealmModel.getName).thenReturn("testRealm")
@@ -85,7 +85,7 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     val mockUserModelWithoutMFA1 = mock[UserModel]
     val mockUserModelWithoutMFA2 = mock[UserModel]
     val mockUserProvider = mock[UserProvider]
-    val mockSnsClient = mock[SnsClient]
+    val mockSnsClient = Mockito.mock(classOf[SnsClient])
     val publishRequestCaptor: ArgumentCaptor[PublishRequest] = ArgumentCaptor.forClass(classOf[PublishRequest])
 
     when(mockRealmModel.getName).thenReturn("testRealm")
@@ -123,7 +123,7 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     val mockUserModelWithoutMFA1 = mock[UserModel]
     val mockUserModelWithoutMFA2 = mock[UserModel]
     val mockUserProvider = mock[UserProvider]
-    val mockSnsClient = mock[SnsClient]
+    val mockSnsClient = Mockito.mock(classOf[SnsClient])
     val publishRequestCaptor: ArgumentCaptor[PublishRequest] = ArgumentCaptor.forClass(classOf[PublishRequest])
 
     when(mockRealmModel1.getName).thenReturn("testRealm1")
@@ -170,7 +170,7 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     val mockUserCredentialManager = mock[UserCredentialManager]
     val mockUserModel = mock[UserModel]
     val mockUserProvider = mock[UserProvider]
-    val mockSnsClient = mock[SnsClient]
+    val mockSnsClient = Mockito.mock(classOf[SnsClient])
 
     when(mockRealmModel.getName).thenReturn("testRealm")
     when(mockUserProvider.getUsersStream(mockRealmModel)).thenReturn(java.util.stream.Stream.of(mockUserModel))
