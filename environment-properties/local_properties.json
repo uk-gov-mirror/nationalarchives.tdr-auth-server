@@ -34,6 +34,11 @@
       "http://localhost:9000/*"
     ]
   },
+  "tdr-rotate-secrets": {
+    "redirectUris": [
+      "http://localhost:9000/*"
+    ]
+  },
   "browserSecurityHeaders" : {
     "contentSecurityPolicy": "frame-src 'self'; frame-ancestors http://localhost:9000 'self'; object-src 'none';"
   }
