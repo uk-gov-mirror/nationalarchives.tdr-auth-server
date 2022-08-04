@@ -1,17 +1,16 @@
 package uk.gov.nationalarchives.eventpublisherspi
 
+import io.circe.generic.auto._
+import io.circe.syntax.EncoderOps
 import org.jboss.logging.Logger
-import org.keycloak.models.{KeycloakSession, UserModel, UserProvider}
+import org.keycloak.models.{KeycloakSession, SubjectCredentialManager, UserModel, UserProvider}
 import org.keycloak.timer.ScheduledTask
 import software.amazon.awssdk.http.apache.ApacheHttpClient
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.sns.SnsClient
-import uk.gov.nationalarchives.eventpublisherspi.EventPublisherProvider.{EventDetails, EventPublisherConfig}
-import io.circe.generic.auto._
-import io.circe.syntax.EncoderOps
 import software.amazon.awssdk.services.sns.model.PublishRequest
+import uk.gov.nationalarchives.eventpublisherspi.EventPublisherProvider.{EventDetails, EventPublisherConfig}
 
-import java.net.URI
 import scala.jdk.CollectionConverters._
 
 class UserMonitoringTask(snsClient: SnsClient, config: EventPublisherConfig, validConfiguredCredentialTypes: List[String]) extends ScheduledTask {
@@ -22,11 +21,12 @@ class UserMonitoringTask(snsClient: SnsClient, config: EventPublisherConfig, val
     val realms = session.realms()
       .getRealmsStream.iterator().asScala.toList
     realms.foreach(realm => {
-      val credentialManager = session.userCredentialManager()
+
       val users: List[UserModel] = userProvider.getUsersStream(realm).iterator().asScala.toList
       val usersNoMFA = users
         .filter(u => {
-          validConfiguredCredentialTypes.forall(credentialType => !credentialManager.isConfiguredFor(realm, u, credentialType))
+          val credentialManager: SubjectCredentialManager = u.credentialManager()
+          validConfiguredCredentialTypes.forall(credentialType => !credentialManager.isConfiguredFor(credentialType))
 
         })
       val userIds = usersNoMFA.map(_.getId)

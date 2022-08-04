@@ -57,6 +57,8 @@ class NotifyEmailSenderProvider(environmentVariables: Map[String, String]) exten
       case Success(_) => ()
     }
   }
+
+  override def send(config: util.Map[String, String], address: String, subject: String, textBody: String, htmlBody: String): Unit = ()
 }
 
 case class NotifyEmailInfo(templateId: String, userEmail: String, personalisation: Map[String, String], reference: String)
