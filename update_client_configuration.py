@@ -21,6 +21,8 @@ def update_client_secrets(client, client_id):
         client['secret'] = os.environ['USER_ADMIN_CLIENT_SECRET']
     if client_id == "tdr-reporting":
         client['secret'] = os.environ['REPORTING_CLIENT_SECRET']
+    if client_id == "tdr-rotate-secrets":
+        client['secret'] = os.environ['ROTATE_CLIENT_SECRETS_CLIENT_SECRET']
 
 def update_client(client, client_id, client_env_props):
     client_props = client_env_props[client_id]
