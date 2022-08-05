@@ -32,6 +32,11 @@
       "redirectUris": [
         "https://tdr-sandbox.nationalarchives.gov.uk/*"
       ]
+    },
+    "tdr-rotate-secrets": {
+      "redirectUris": [
+        "https://tdr-sandbox.nationalarchives.gov.uk/*"
+      ]
     }
   },
   "browserSecurityHeaders" : {

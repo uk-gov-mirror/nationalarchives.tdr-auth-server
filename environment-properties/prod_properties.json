@@ -38,6 +38,11 @@
       "https://tdr.nationalarchives.gov.uk/*"
     ]
   },
+  "tdr-rotate-secrets": {
+    "redirectUris": [
+      "https://tdr.nationalarchives.gov.uk/*"
+    ]
+  },
   "browserSecurityHeaders" : {
     "contentSecurityPolicy": "frame-src 'self'; frame-ancestors https://tdr.nationalarchives.gov.uk 'self'; object-src 'none';"
   }
