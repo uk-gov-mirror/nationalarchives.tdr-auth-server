@@ -21,6 +21,11 @@
         "https://tdr-staging.nationalarchives.gov.uk",
         "*"
       ]
+    },
+    "tdr-rotate-secrets": {
+      "redirectUris": [
+        "https://tdr-staging.nationalarchives.gov.uk/*"
+      ]
     }
   },
   "tdr-realm-admin": {

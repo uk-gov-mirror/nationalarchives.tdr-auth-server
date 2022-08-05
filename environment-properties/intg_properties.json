@@ -35,6 +35,11 @@
       "redirectUris": [
         "https://tdr-integration.nationalarchives.gov.uk/*"
       ]
+    },
+    "tdr-rotate-secrets": {
+      "redirectUris": [
+        "https://tdr-integration.nationalarchives.gov.uk/*"
+      ]
     }
   },
   "browserSecurityHeaders" : {
