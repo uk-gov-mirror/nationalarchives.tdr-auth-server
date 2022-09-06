@@ -202,11 +202,13 @@ To log into the running docker container with a bash shell: `$ docker exec -it [
 Make changes to the realm export json file as necessary to test new configurations.
 
 Tip: the quickest way to view the TDR login theme (that is displayed to TDR users) is to (while logged into the console):
-1. move your cursor to the top left (below the keycloak logo), Until it reveals the "Master" realm
-2. select the "Master" Realm
-3. go to the "Themes" tab
-4. under "login theme", select "tdr" from the dropdown menu
-5. sign out (click "Admin" on the top right and select "Sign out")
+
+1. select the "Master" Realm (top left, below the keycloak logo) if it's not already selected
+2. select "Realm roles" in the sidebar
+3. select "default-roles-master"
+4. select the "Themes" tab
+5. under "login theme", select "tdr" from the dropdown menu
+6. sign out (click "Admin" on the top right and select "Sign out")
 
 ### Optionally Run Event Publishing to AWS SNS Topic
 
