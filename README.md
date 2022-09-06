@@ -142,11 +142,11 @@ To run, build and test locally:
 2. Navigate to the cloned repository: `$ cd tdr-auth-server`
 3. Build the TDR theme:
     * If npm is not installed install [nvm](https://github.com/nvm-sh/nvm#intro) in root directory
-    * Once nvm is installed run: `[root directory] $ nvm install 16.5.0`
+    * Once nvm is installed run: `[root directory] $ nvm install 16.17.0`
     * Run the following commands in the root directory:  `[root directory] $ npm install` and `[root directory] $ npm run build-theme`
         * this will compile the theme sass, copy the static assets to the theme `resource` directory and compile the typescript for WebAuthn.
 4. Build all three spi jars:
-    * From the root directory run the following command: `sbt assembly`
+    * From the root directory run the following command: `sbt assemblyPackageDependency assembly`
     * This will generate the jar for the GovUK Notify service and the Event Publisher service
 5. Update the start script. In the `import_tdr_realm.py` replace:
 
