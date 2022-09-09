@@ -2,6 +2,7 @@
 <#assign betaBanner = msg("betaBanner")>
 <#assign betaBannerInfo = msg("betaBannerInfo")>
 <#assign betaBannerLink = msg("betaBannerLink")>
+<#assign loggedInPageTitle = msg("loggedInTitle")>
 
 <#macro registrationLayout pageTitle=signInPageTitle displayInfo=false displayMessage=true displayRequiredFields=false showAnotherWayIfPresent=true>
     <!DOCTYPE html>
@@ -74,8 +75,13 @@
         <main class="govuk-main-wrapper " id="main-content" role="main">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <h1 class="govuk-heading-l">${pageTitle}</h1>
-
+                    <h1 class="govuk-heading-l">
+                        <#if message?has_content && message.summary = msg("alreadyLoggedInMessage")>
+                            ${loggedInPageTitle}
+                        <#else>
+                            ${pageTitle}
+                        </#if>
+                    </h1>
                     <#-- Start TDR Error Messages -->
                     <#if displayMessage && message?has_content>
                         <#if message.type = 'error'>
