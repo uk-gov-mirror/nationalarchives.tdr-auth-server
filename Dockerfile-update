@@ -1,7 +1,7 @@
 FROM python:alpine
 RUN pip install requests
 RUN apk update \
-    && apk upgrade zlib libtirpc
+    && apk upgrade zlib libtirpc expat
 COPY update_tdr_realm.py update_client_configuration.py update_realm_configuration.py /tmp/
 COPY environment-properties /tmp/environment-properties
 WORKDIR /tmp
