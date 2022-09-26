@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 curl -o tdr-realm-export.json https://github.com/nationalarchives/tdr-configurations/blob/master/keycloak/tdr-realm-export.json &&
 npm install &&
