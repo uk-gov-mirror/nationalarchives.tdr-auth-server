@@ -141,7 +141,7 @@ To run, build and test locally:
 1. Navigate to the cloned repository: `$ cd tdr-auth-server`
 2. If npm is not installed, install [nvm](https://github.com/nvm-sh/nvm#intro) in the root directory
    1. run `nvm install 16.17.1` if this version is not installed already
-3. Run the `local_setup.sh` script in root directory by running the command `$ sh local_setup.sh` (you can replace "sh" with whatever shell you use)
+3. Run the `local_setup.sh` script in root directory by running the command `$ ./local_setup.sh`
    1. If this script fails to run, check out the 'Troubleshoot for Running Locally' section below and then continue with the steps
 4. Update the start script. In the `import_tdr_realm.py` replace:
 
