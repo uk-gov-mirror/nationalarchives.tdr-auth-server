@@ -344,7 +344,7 @@ Once you have identified the line that you'd like to edit, copy and paste it int
         * this will compile the theme sass, copy the static assets to the theme `resource` directory and compile the typescript for WebAuthn.
 4. Build all three spi jars:
     * From the root directory run the following command: `sbt assemblyPackageDependency assembly`
-    * This will generate the jar for the GovUK Notify service and the Event Publisher service
+    * This will generate the jar for the GovUK Notify service, the Event Publisher service and the credential provider service
 5. Continue with the "Running Locally steps"
 
 ## Databases
