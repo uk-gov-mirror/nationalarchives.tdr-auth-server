@@ -1,6 +1,6 @@
 <#import "template.ftl" as layout>
 <#assign backToApplicationText = kcSanitize(msg("backToApplication"))>
-<#assign cnotinueToApplicationText = kcSanitize(msg("continueToApplication"))>
+<#assign continueToApplicationText = kcSanitize(msg("continueToApplication"))>
 
 <@layout.registrationLayout displayMessage=false; section>
     <#if section = "header">
@@ -28,7 +28,7 @@
                 <p class="govuk-body">
                     <a class="govuk-link" href="${client.baseUrl}">
                         <#if message.summary == msg("alreadyLoggedInMessage")>
-                            ${cnotinueToApplicationText?no_esc}
+                            ${continueToApplicationText?no_esc}
                         <#else>
                             ${backToApplicationText?no_esc}
                         </#if>
