@@ -1,5 +1,6 @@
 <#import "template.ftl" as layout>
 <#assign backToApplicationText = kcSanitize(msg("backToApplication"))>
+<#assign continueToApplicationText = kcSanitize(msg("continueToApplication"))>
 
 <@layout.registrationLayout displayMessage=false; section>
     <#if section = "header">
@@ -24,7 +25,15 @@
             <#elseif actionUri?has_content>
                 <p class="govuk-body"><a class="govuk-link" href="${actionUri}"><#if requiredActions??><#list requiredActions><#items as reqActionItem>${msg("requiredAction.${reqActionItem}")}<#sep>, </#items></#list><#else></#if></a></p>
             <#elseif (client.baseUrl)?has_content>
-                <p class="govuk-body"><a class="govuk-link" href="${client.baseUrl}">${backToApplicationText?no_esc}</a></p>
+                <p class="govuk-body">
+                    <a class="govuk-link" href="${client.baseUrl}">
+                        <#if message.summary == msg("alreadyLoggedInMessage")>
+                            ${continueToApplicationText?no_esc}
+                        <#else>
+                            ${backToApplicationText?no_esc}
+                        </#if>
+                    </a>
+                </p>
             </#if>
         </#if>
     </#if>
