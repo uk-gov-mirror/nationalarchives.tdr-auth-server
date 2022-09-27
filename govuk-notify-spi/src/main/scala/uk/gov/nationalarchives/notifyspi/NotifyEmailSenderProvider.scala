@@ -1,30 +1,43 @@
 package uk.gov.nationalarchives.notifyspi
 
 import java.util
-
 import org.keycloak.email.{EmailException, EmailSenderProvider}
 import org.keycloak.models.UserModel
+import software.amazon.awssdk.http.apache.ApacheHttpClient
+import software.amazon.awssdk.regions.Region
 import uk.gov.service.notify.NotificationClient
 
+import java.net.URI
 import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
+import software.amazon.awssdk.services.ssm.SsmClient
+import software.amazon.awssdk.services.ssm.model.GetParameterRequest
+import com.typesafe.config.{ConfigFactory, Config => TypeSafeConfig}
 
 class NotifyEmailSenderProvider(environmentVariables: Map[String, String]) extends EmailSenderProvider {
+  val configFactory: TypeSafeConfig = ConfigFactory.load
+  val ssmEndpoint: String = configFactory.getString("ssm.endpoint")
+  val notifyApiKeyPath: String = configFactory.getString("notify.apiKeyPath")
+  val notifyTemplateIdPath: String = configFactory.getString("notify.templateIdPath")
 
   private implicit class EnvironmentalVariablesUtils(map: Map[String, String]) {
     def getApiKey: String = {
-      retrieveValue("GOVUK_NOTIFY_API_KEY")
+      getSsmParameterValue(notifyApiKeyPath)
     }
 
     def getTemplateId: String = {
-      retrieveValue("GOVUK_NOTIFY_TEMPLATE_ID")
+      getSsmParameterValue(notifyTemplateIdPath)
     }
 
-    private def retrieveValue(key: String): String = {
-      map.get(key) match {
-        case Some(value) => value
-        case _ => throw new EmailException(s"Missing '$key' value")
-      }
+    private def getSsmParameterValue(parameterPath: String): String = {
+      val httpClient = ApacheHttpClient.builder.build
+      val ssmClient: SsmClient = SsmClient.builder()
+        .endpointOverride(URI.create(ssmEndpoint))
+        .httpClient(httpClient)
+        .region(Region.EU_WEST_2)
+        .build()
+      val getParameterRequest = GetParameterRequest.builder.name(parameterPath).withDecryption(true).build
+      ssmClient.getParameter(getParameterRequest).parameter().value()
     }
   }
 

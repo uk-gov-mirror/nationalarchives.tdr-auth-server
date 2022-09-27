@@ -23,32 +23,6 @@ class NotifyEmailSenderProviderSpec extends AnyFlatSpec with Matchers {
 
   private val mockUser = mock[UserModel]
 
-  "the send function" should "throw an exception if the api key is missing" in {
-    val envVars = Map("GOVUK_NOTIFY_TEMPLATE_ID" -> "templateId")
-
-    val emailSenderProvider = new NotifyEmailSenderProvider(envVars)
-
-    val ex = intercept[Exception] {
-      emailSenderProvider.send(Map[String, String]().asJava, mockUser, subject, textBody, htmlBody)
-    }
-
-    ex.isInstanceOf[EmailException] should be(true)
-    ex.getMessage should be("Missing 'GOVUK_NOTIFY_API_KEY' value")
-  }
-
-  "the send function" should "throw an exception if the template id is missing" in {
-    val envVars = Map("GOVUK_NOTIFY_API_KEY" -> "apiKey")
-
-    val emailSenderProvider = new NotifyEmailSenderProvider(envVars)
-
-    val ex = intercept[Exception] {
-      emailSenderProvider.send(Map[String, String]().asJava, mockUser, subject, textBody, htmlBody)
-    }
-
-    ex.isInstanceOf[EmailException] should be(true)
-    ex.getMessage should be("Missing 'GOVUK_NOTIFY_TEMPLATE_ID' value")
-  }
-
   "the sendNotifyEmail function" should "call the notification client sendEmail function with the correct arguments" in {
     val templateIdCaptor: ArgumentCaptor[String] = ArgumentCaptor.forClass(classOf[String])
     val emailAddressCaptor: ArgumentCaptor[String] = ArgumentCaptor.forClass(classOf[String])
