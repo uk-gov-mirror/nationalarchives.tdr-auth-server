@@ -138,26 +138,21 @@ To update Keycloak with, for example, a new client:
 
 To run, build and test locally:
 
-1. Copy the [tdr-realm-export.json](https://github.com/nationalarchives/tdr-configurations/blob/master/keycloak/tdr-realm-export.json) from the tdr-configurations repository into the tdr-auth-server directory
-2. Navigate to the cloned repository: `$ cd tdr-auth-server`
-3. Build the TDR theme:
-    * If npm is not installed install [nvm](https://github.com/nvm-sh/nvm#intro) in root directory
-    * Once nvm is installed run: `[root directory] $ nvm install 16.17.0`
-    * Run the following commands in the root directory:  `[root directory] $ npm install` and `[root directory] $ npm run build-theme`
-        * this will compile the theme sass, copy the static assets to the theme `resource` directory and compile the typescript for WebAuthn.
-4. Build all three spi jars:
-    * From the root directory run the following command: `sbt assemblyPackageDependency assembly`
-    * This will generate the jar for the GovUK Notify service and the Event Publisher service
-5. Update the start script. In the `import_tdr_realm.py` replace:
+1. Navigate to the cloned repository: `$ cd tdr-auth-server`
+2. If npm is not installed, install [nvm](https://github.com/nvm-sh/nvm#intro) in the root directory
+   1. run `nvm install 16.17.1` if this version is not installed already
+3. Run the `local_setup.sh` script in root directory by running the command `$ ./local_setup.sh`
+   1. If this script fails to run, check out the 'Troubleshoot for Running Locally' section below and then continue with the steps
+4. Update the start script. In the `import_tdr_realm.py` replace:
 
     `subprocess.call(['/opt/keycloak/bin/kc.sh', 'start'])` with
 
     `subprocess.call(['/opt/keycloak/bin/kc.sh', 'start-dev', '--import-realm'])`
 
-   Don't commit these changes.
-6. Build the docker image locally:
+   **Don't commit these changes.**
+5. Build the docker image locally:
     * Run the docker build command: `[root directory] $ docker build -t [account id].dkr.ecr.[region].amazonaws.com/tdr-auth-server:[your build tag] .`
-   7. Run the local docker image:
+    * Run the local docker image:
        ```
        [root directory] $ docker run -d --name [some name] -p 8081:8080 \
        -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin -e KEYCLOAK_IMPORT=/tmp/tdr-realm.json \
@@ -194,8 +189,8 @@ To run, build and test locally:
        * `TDR_ENV`: the name of the TDR environment where Keycloak is running
        * `KEYCLOAK_HOST`: the host for keycloak for example localhost:8081
        * `KC_DB_PASSWORD`: the password for the db
-8. Navigate to http://localhost:8081/admin
-9. Log on using the `KEYCLOAK_ADMIN_PASSWORD` and `KEYCLOAK_ADMIN` defined in the docker run command
+6. Navigate to http://localhost:8081/admin
+7. Log on using the `KEYCLOAK_ADMIN_PASSWORD` and `KEYCLOAK_ADMIN` defined in the docker run command
 
 To log into the running docker container with a bash shell: `$ docker exec -it [your container name] bash`
 
@@ -335,6 +330,22 @@ If not already in the docker container, run `docker exec -it keycloak bash`
 5. run this command `cat messages_en.properties` to view the contents of the file
 
 Once you have identified the line that you'd like to edit, copy and paste it into the messages `messages_en.properties`
+
+### Troubleshoot for Running Locally
+
+#### If local_setup.sh script fails to run
+
+1. Copy the [tdr-realm-export.json](https://github.com/nationalarchives/tdr-configurations/blob/master/keycloak/tdr-realm-export.json) from the tdr-configurations repository into the tdr-auth-server directory
+2. Navigate to the cloned repository: `$ cd tdr-auth-server`
+3. Build the TDR theme:
+    * If npm is not installed install [nvm](https://github.com/nvm-sh/nvm#intro) in root directory
+    * Once nvm is installed run: `[root directory] $ nvm install 16.17.0`
+    * Run the following commands in the root directory:  `[root directory] $ npm install` and `[root directory] $ npm run build-theme`
+        * this will compile the theme sass, copy the static assets to the theme `resource` directory and compile the typescript for WebAuthn.
+4. Build all three spi jars:
+    * From the root directory run the following command: `sbt assemblyPackageDependency assembly`
+    * This will generate the jar for the GovUK Notify service, the Event Publisher service and the credential provider service
+5. Continue with the "Running Locally steps"
 
 ## Databases
 
