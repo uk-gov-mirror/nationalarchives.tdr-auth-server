@@ -24,16 +24,10 @@
                 <p class="govuk-body"><a class="govuk-link" href="${pageRedirectUri}">${backToApplicationText?no_esc}</a></p>
             <#elseif actionUri?has_content>
                 <p class="govuk-body"><a class="govuk-link" href="${actionUri}"><#if requiredActions??><#list requiredActions><#items as reqActionItem>${msg("requiredAction.${reqActionItem}")}<#sep>, </#items></#list><#else></#if></a></p>
+            <#elseif message.summary == msg("alreadyLoggedInMessage")>
+                <p class="govuk-body"><a class="govuk-link" href="${properties.tdrHomeUrl}/homepage"> ${continueToApplicationText?no_esc} </a></p>
             <#elseif (client.baseUrl)?has_content>
-                <p class="govuk-body">
-                    <a class="govuk-link" href="${client.baseUrl}">
-                        <#if message.summary == msg("alreadyLoggedInMessage")>
-                            ${continueToApplicationText?no_esc}
-                        <#else>
-                            ${backToApplicationText?no_esc}
-                        </#if>
-                    </a>
-                </p>
+                <p class="govuk-body"><a class="govuk-link" href="${client.baseUrl}">${backToApplicationText?no_esc}</a></p>
             </#if>
         </#if>
     </#if>
