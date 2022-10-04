@@ -162,8 +162,8 @@ To run, build and test locally:
        -e ROTATE_CLIENT_SECRETS_CLIENT_SECRET=[some value] \
        -e KEYCLOAK_CONFIGURATION_PROPERTIES=[env]_properties.json \
        -e FRONTEND_URL=[home page url] \
-       -e GOVUK_NOTIFY_TEMPLATE_ID=[govuk notify service template id] \
-       -e GOVUK_NOTIFY_API_KEY=[govuk notify service api key] \
+       -e GOVUK_NOTIFY_API_KEY_PATH=[SSM parameter path for the govuk notify service api key] \
+       -e GOVUK_NOTIFY_TEMPLATE_ID_PATH=[SSM parameter path for the govuk notify template id] \
        -e DB_VENDOR=h2 \
        -e SNS_TOPIC_ARN=[Tdr notifications topic arn] \
        -e TDR_ENV=[Tdr environment] \
@@ -182,8 +182,8 @@ To run, build and test locally:
        * `ROTATE_CLIENT_SECRETS_CLIENT_SECRET`: tdr rotate client secrets client secret value
        * `KEYCLOAK_CONFIGURATION_PROPERTIES`: json file containing specific Keycloak configuration to a TDR environment
        * `FRONTEND_URL`: TDR application home page URL
-       * `GOVUK_NOTIFY_TEMPLATE_ID`: the GovUK Notify service template id secret value to be used
-       * `GOVUK_NOTIFY_API_KEY`: the GovUK Notify service api key secret value to be used
+       * `GOVUK_NOTIFY_TEMPLATE_ID_PATH`: AWS SSM paramter path for the GovUK Notify service template id secret value to be used (`/{environment}/keycloak/govuk_notify/template_id`)
+       * `GOVUK_NOTIFY_API_KEY_PATH`: AWS SSM parameter pathe for the GovUK Notify service api key secret value to be used (`/{environment}/keycloak/govuk_notify/api_key`)
        * `DB_VENDOR`: the type of database to use. In the dev environment, we use Keycloak's embedded H2 database
        * `SNS_TOPIC_ARN`: the AWS topic arn to publish event messages to
        * `TDR_ENV`: the name of the TDR environment where Keycloak is running
@@ -212,41 +212,17 @@ If you are working on the event publishing you can optionally send messages to a
 To run the event publishing:
 
 1. When setting the environment variables for running the local docker image ensure the `SNS_TOPIC_ARN` value is the ARN of the topic you wish to publish to.
-2. Once the local Keycloak container is running log into it: `$ docker exec -it [your container name] bash`
-3. In the container run the following commands:
-   * Navigate to the home directory: `[docker container] $ cd ~/`
-   * Create AWS credential directory: `[docker container ~/] $ mkdir .aws`
-   * Navigate to the created `./aws` directory: `[docker container ~/] $ cd /.aws`
-   * Retrieve credentials from AWS SSO for the environment that will give access to the SNS topic
-   * Add AWS credentials file to the AWS credential directory. Replace `placeholder value` with the retrieved credentials:
-  ```
-    [docker container ~/.aws directory] $ cat << EOF > credentials
-    [default]
-    aws_access_key_id=placeholder value
-    aws_secret_access_key=placeholder value
-    aws_session_token=placeholder value
-    EOF
-  ```
-   * Check the `./aws/credentials` file has been created and contains the correct credentials.
-   * Note as with all AWS SSO credentials these credentials are time limited and will need to be reset periodically, by repeating the last two commands.
-   
-   Alternatively you can add the necessary permissions to access the SNS topic arn by adding them as environment variables when starting the Keycloak container:
-   * Make sure you have the permission variables set locally
-   * Add the following environment variables to the Keycloak container start command:
-   ```
-    -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
-    -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
-    -e AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN
-   ```
-4. Log into the locally running Keycloak (http://localhost:8081)
-5. Go to the realm where you want to publish the event from.
-6. Navigate to the events config tab: "Events" > "Config". Ensure the following configuration:
+2. Once the container is running, will need to add AWS permissions to publish messages to the SNS Topic.
+   * See the [Adding AWS Permissions To Running Docker Container](#Adding AWS Permissions To Running Docker Container) section for instructions on adding permissions
+3. Log into the locally running Keycloak (http://localhost:8081)
+4. Go to the realm where you want to publish the event from.
+5. Navigate to the events config tab: "Events" > "Config". Ensure the following configuration:
    * *Event Listeners*: includes the `event-publisher`
    * *Login Events Settings* > *Save Events*: `ON`
    * *Admin Events Settings* > *Save Events*: `ON`
    * *Admin Events Settings* > *Include Representation*: `ON`
-7. Trigger the required event in Keycloak
-8. Check the relevant SNS topic / cloudwatch logs that message has been sent.
+6. Trigger the required event in Keycloak
+7. Check the relevant SNS topic / cloudwatch logs that message has been sent.
 
 ### Update Realm Configuration Locally
 
@@ -366,7 +342,10 @@ In order to get emails working locally i.e. to test reset email we need to switc
 5. Add the line `RUN keytool -genkeypair -storepass password -storetype PKCS12 -keyalg RSA -keysize 2048 -dname "CN=server" -alias server -ext "SAN:c=DNS:localhost,IP:127.0.0.1" -keystore conf/server.keystore` in  the `Docker` file underneath `WORKDIR /opt/keycloak` line
 6. Run the docker build command: `[root directory] $ docker build -t [account id].dkr.ecr.[region].amazonaws.com/tdr-auth-server:[your build tag] .`
 7. Alter the docker run command to `docker run  --rm --name keycloak --net keycloak-network -p 8081:8080 -p 8443:8443 -e KC_DB_URL_HOST=keycloak-db -e KC_DB_USERNAME=keycloak -e KC_DB_PASSWORD=password -e KEYCLOAK_HOST=localhost:8443`
-8. Navigate to https://localhost:8443 and ignore the warnings from your browser.
+8. Once the container is running, will need to add AWS permissions to read the SSM parameter values. 
+   * See the [Adding AWS Permissions To Running Docker Container](#Adding AWS Permissions To Running Docker Container) section for instructions on adding permissions
+
+9. Navigate to https://localhost:8443 and ignore the warnings from your browser.
 
 #### Troubleshoot for sending email locally
 
@@ -378,3 +357,32 @@ spi-theme-static-max-age=-1
 ```
 If you are connecting the frontend to your keycloak instance ensure you set the `AUTH_URL` to
 `AUTH_URL=http://localhost:8081` and not `https://localhost:8443`.
+
+## Adding AWS Permissions To Running Docker Container
+
+1. Once the local Keycloak container is running log into it: `$ docker exec -it [your container name] bash`
+2. In the container run the following commands:
+   * Navigate to the home directory: `[docker container] $ cd ~/`
+   * Create AWS credential directory: `[docker container ~/] $ mkdir .aws`
+   * Navigate to the created `./aws` directory: `[docker container ~/] $ cd /.aws`
+   * Retrieve credentials from AWS SSO for the environment that will give access to the SNS topic
+   * Add AWS credentials file to the AWS credential directory. Replace `placeholder value` with the retrieved credentials:
+  ```
+    [docker container ~/.aws directory] $ cat << EOF > credentials
+    [default]
+    aws_access_key_id=placeholder value
+    aws_secret_access_key=placeholder value
+    aws_session_token=placeholder value
+    EOF
+  ```
+* Check the `./aws/credentials` file has been created and contains the correct credentials.
+* Note as with all AWS SSO credentials these credentials are time limited and will need to be reset periodically, by repeating the last two commands.
+
+Alternatively you can add the permissions by adding them as environment variables when starting the Keycloak container:
+* Make sure you have the permission variables set locally
+* Add the following environment variables to the Keycloak container `run` command:
+   ```
+    -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+    -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+    -e AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN
+   ```
