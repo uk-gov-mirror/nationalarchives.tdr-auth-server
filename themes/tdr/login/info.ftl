@@ -1,5 +1,6 @@
 <#import "template.ftl" as layout>
 <#assign backToApplicationText = kcSanitize(msg("backToApplication"))>
+<#assign continueToApplicationText = kcSanitize(msg("continueToApplication"))>
 
 <@layout.registrationLayout displayMessage=false; section>
     <#if section = "header">
@@ -23,6 +24,8 @@
                 <p class="govuk-body"><a class="govuk-link" href="${pageRedirectUri}">${backToApplicationText?no_esc}</a></p>
             <#elseif actionUri?has_content>
                 <p class="govuk-body"><a class="govuk-link" href="${actionUri}"><#if requiredActions??><#list requiredActions><#items as reqActionItem>${msg("requiredAction.${reqActionItem}")}<#sep>, </#items></#list><#else></#if></a></p>
+            <#elseif message.summary == msg("alreadyLoggedInMessage")>
+                <p class="govuk-body"><a class="govuk-link" href="${properties.tdrHomeUrl}/homepage"> ${continueToApplicationText?no_esc} </a></p>
             <#elseif (client.baseUrl)?has_content>
                 <p class="govuk-body"><a class="govuk-link" href="${client.baseUrl}">${backToApplicationText?no_esc}</a></p>
             </#if>
