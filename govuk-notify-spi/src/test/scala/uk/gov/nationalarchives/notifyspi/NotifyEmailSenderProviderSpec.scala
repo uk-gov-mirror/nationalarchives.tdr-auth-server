@@ -1,9 +1,6 @@
 package uk.gov.nationalarchives.notifyspi
 
-import java.util
-
 import org.keycloak.email.EmailException
-import org.keycloak.models.UserModel
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{mock, when}
@@ -11,17 +8,13 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import uk.gov.service.notify.{NotificationClient, NotificationClientException, SendEmailResponse}
 
+import java.util
 import scala.jdk.CollectionConverters._
 
 class NotifyEmailSenderProviderSpec extends AnyFlatSpec with Matchers {
 
-  private val subject = "Some subject"
-  private val textBody = "Some text body"
-  private val htmlBody = "html body"
   private val userEmail = "user@something.com"
   private val userId = "userId"
-
-  private val mockUser = mock[UserModel]
 
   "the sendNotifyEmail function" should "call the notification client sendEmail function with the correct arguments" in {
     val templateIdCaptor: ArgumentCaptor[String] = ArgumentCaptor.forClass(classOf[String])
