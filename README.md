@@ -365,7 +365,7 @@ If you are connecting the frontend to your keycloak instance ensure you set the 
    * Navigate to the home directory: `[docker container] $ cd ~/`
    * Create AWS credential directory: `[docker container ~/] $ mkdir .aws`
    * Navigate to the created `./aws` directory: `[docker container ~/] $ cd /.aws`
-   * Retrieve credentials from AWS SSO for the environment that will give access to the SNS topic
+   * Retrieve credentials from AWS SSO for the environment that will give access
    * Add AWS credentials file to the AWS credential directory. Replace `placeholder value` with the retrieved credentials:
   ```
     [docker container ~/.aws directory] $ cat << EOF > credentials
