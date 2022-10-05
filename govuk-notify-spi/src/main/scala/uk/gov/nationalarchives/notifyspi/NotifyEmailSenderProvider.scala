@@ -16,29 +16,25 @@ import com.typesafe.config.{ConfigFactory, Config => TypeSafeConfig}
 
 class NotifyEmailSenderProvider(environmentVariables: Map[String, String]) extends EmailSenderProvider {
   val configFactory: TypeSafeConfig = ConfigFactory.load
-  val ssmEndpoint: String = configFactory.getString("ssm.endpoint")
   val notifyApiKeyPath: String = configFactory.getString("notify.apiKeyPath")
   val notifyTemplateIdPath: String = configFactory.getString("notify.templateIdPath")
 
-  private implicit class EnvironmentalVariablesUtils(map: Map[String, String]) {
-    def getApiKey: String = {
-      getSsmParameterValue(notifyApiKeyPath)
-    }
+  def getApiKey: String = {
+    getSsmParameterValue(notifyApiKeyPath)
+  }
 
-    def getTemplateId: String = {
-      getSsmParameterValue(notifyTemplateIdPath)
-    }
+  def getTemplateId: String = {
+    getSsmParameterValue(notifyTemplateIdPath)
+  }
 
-    private def getSsmParameterValue(parameterPath: String): String = {
-      val httpClient = ApacheHttpClient.builder.build
-      val ssmClient: SsmClient = SsmClient.builder()
-        .endpointOverride(URI.create(ssmEndpoint))
-        .httpClient(httpClient)
-        .region(Region.EU_WEST_2)
-        .build()
-      val getParameterRequest = GetParameterRequest.builder.name(parameterPath).withDecryption(true).build
-      ssmClient.getParameter(getParameterRequest).parameter().value()
-    }
+  private def getSsmParameterValue(parameterPath: String): String = {
+    val httpClient = ApacheHttpClient.builder.build
+    val ssmClient: SsmClient = SsmClient.builder()
+      .httpClient(httpClient)
+      .region(Region.EU_WEST_2)
+      .build()
+    val getParameterRequest = GetParameterRequest.builder.name(parameterPath).withDecryption(true).build
+    ssmClient.getParameter(getParameterRequest).parameter().value()
   }
 
   override def send(config: util.Map[String, String],
@@ -47,13 +43,13 @@ class NotifyEmailSenderProvider(environmentVariables: Map[String, String]) exten
                      textBody: String,
                      htmlBody: String): Unit = {
 
-    val notifyClient = new NotificationClient(environmentVariables.getApiKey)
+    val notifyClient = new NotificationClient(getApiKey)
 
     val personalisation: Map[String, String] = Map(
       "keycloakMessage" -> textBody,
       "keycloakSubject" -> subject)
 
-    sendNotifyEmail(notifyClient, NotifyEmailInfo(environmentVariables.getTemplateId, user.getEmail, personalisation, user.getId))
+    sendNotifyEmail(notifyClient, NotifyEmailInfo(getTemplateId, user.getEmail, personalisation, user.getId))
   }
 
   override def close(): Unit = { }
