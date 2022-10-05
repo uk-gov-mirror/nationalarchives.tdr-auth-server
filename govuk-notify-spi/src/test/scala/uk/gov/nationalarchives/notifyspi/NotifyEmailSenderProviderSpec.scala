@@ -1,9 +1,6 @@
 package uk.gov.nationalarchives.notifyspi
 
-import java.util
-
 import org.keycloak.email.EmailException
-import org.keycloak.models.UserModel
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{mock, when}
@@ -11,43 +8,13 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import uk.gov.service.notify.{NotificationClient, NotificationClientException, SendEmailResponse}
 
+import java.util
 import scala.jdk.CollectionConverters._
 
 class NotifyEmailSenderProviderSpec extends AnyFlatSpec with Matchers {
 
-  private val subject = "Some subject"
-  private val textBody = "Some text body"
-  private val htmlBody = "html body"
   private val userEmail = "user@something.com"
   private val userId = "userId"
-
-  private val mockUser = mock[UserModel]
-
-  "the send function" should "throw an exception if the api key is missing" in {
-    val envVars = Map("GOVUK_NOTIFY_TEMPLATE_ID" -> "templateId")
-
-    val emailSenderProvider = new NotifyEmailSenderProvider(envVars)
-
-    val ex = intercept[Exception] {
-      emailSenderProvider.send(Map[String, String]().asJava, mockUser, subject, textBody, htmlBody)
-    }
-
-    ex.isInstanceOf[EmailException] should be(true)
-    ex.getMessage should be("Missing 'GOVUK_NOTIFY_API_KEY' value")
-  }
-
-  "the send function" should "throw an exception if the template id is missing" in {
-    val envVars = Map("GOVUK_NOTIFY_API_KEY" -> "apiKey")
-
-    val emailSenderProvider = new NotifyEmailSenderProvider(envVars)
-
-    val ex = intercept[Exception] {
-      emailSenderProvider.send(Map[String, String]().asJava, mockUser, subject, textBody, htmlBody)
-    }
-
-    ex.isInstanceOf[EmailException] should be(true)
-    ex.getMessage should be("Missing 'GOVUK_NOTIFY_TEMPLATE_ID' value")
-  }
 
   "the sendNotifyEmail function" should "call the notification client sendEmail function with the correct arguments" in {
     val templateIdCaptor: ArgumentCaptor[String] = ArgumentCaptor.forClass(classOf[String])
@@ -66,7 +33,7 @@ class NotifyEmailSenderProviderSpec extends AnyFlatSpec with Matchers {
     )).thenReturn(response)
 
     val emailInfo = NotifyEmailInfo("templateId", userEmail, Map("keycloakSubject" -> "Some subject", "keycloakMessage" -> "Some text body"), userId)
-    val emailSenderProvider = new NotifyEmailSenderProvider(Map())
+    val emailSenderProvider = new NotifyEmailSenderProvider()
     emailSenderProvider.sendNotifyEmail(notificationClient, emailInfo)
 
     templateIdCaptor.getValue should equal("templateId")
@@ -88,7 +55,7 @@ class NotifyEmailSenderProviderSpec extends AnyFlatSpec with Matchers {
       any[String]
     )).thenThrow(new NotificationClientException("Notification client error"))
 
-    val emailSenderProvider = new NotifyEmailSenderProvider(Map())
+    val emailSenderProvider = new NotifyEmailSenderProvider()
 
     val ex = intercept[Exception] {
       emailSenderProvider.sendNotifyEmail(notificationClient, NotifyEmailInfo("", "", Map(), ""))

@@ -1,31 +1,39 @@
 package uk.gov.nationalarchives.notifyspi
 
-import java.util
-
+import com.typesafe.config.{ConfigFactory, Config => TypeSafeConfig}
 import org.keycloak.email.{EmailException, EmailSenderProvider}
 import org.keycloak.models.UserModel
+import software.amazon.awssdk.http.apache.ApacheHttpClient
+import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.ssm.SsmClient
+import software.amazon.awssdk.services.ssm.model.GetParameterRequest
 import uk.gov.service.notify.NotificationClient
 
+import java.util
 import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
 
-class NotifyEmailSenderProvider(environmentVariables: Map[String, String]) extends EmailSenderProvider {
+class NotifyEmailSenderProvider() extends EmailSenderProvider {
+  val configFactory: TypeSafeConfig = ConfigFactory.load
+  val notifyApiKeyPath: String = configFactory.getString("notify.apiKeyPath")
+  val notifyTemplateIdPath: String = configFactory.getString("notify.templateIdPath")
 
-  private implicit class EnvironmentalVariablesUtils(map: Map[String, String]) {
-    def getApiKey: String = {
-      retrieveValue("GOVUK_NOTIFY_API_KEY")
-    }
+  def getApiKey: String = {
+    getSsmParameterValue(notifyApiKeyPath)
+  }
 
-    def getTemplateId: String = {
-      retrieveValue("GOVUK_NOTIFY_TEMPLATE_ID")
-    }
+  def getTemplateId: String = {
+    getSsmParameterValue(notifyTemplateIdPath)
+  }
 
-    private def retrieveValue(key: String): String = {
-      map.get(key) match {
-        case Some(value) => value
-        case _ => throw new EmailException(s"Missing '$key' value")
-      }
-    }
+  private def getSsmParameterValue(parameterPath: String): String = {
+    val httpClient = ApacheHttpClient.builder.build
+    val ssmClient: SsmClient = SsmClient.builder()
+      .httpClient(httpClient)
+      .region(Region.EU_WEST_2)
+      .build()
+    val getParameterRequest = GetParameterRequest.builder.name(parameterPath).withDecryption(true).build
+    ssmClient.getParameter(getParameterRequest).parameter().value()
   }
 
   override def send(config: util.Map[String, String],
@@ -34,13 +42,13 @@ class NotifyEmailSenderProvider(environmentVariables: Map[String, String]) exten
                      textBody: String,
                      htmlBody: String): Unit = {
 
-    val notifyClient = new NotificationClient(environmentVariables.getApiKey)
+    val notifyClient = new NotificationClient(getApiKey)
 
     val personalisation: Map[String, String] = Map(
       "keycloakMessage" -> textBody,
       "keycloakSubject" -> subject)
 
-    sendNotifyEmail(notifyClient, NotifyEmailInfo(environmentVariables.getTemplateId, user.getEmail, personalisation, user.getId))
+    sendNotifyEmail(notifyClient, NotifyEmailInfo(getTemplateId, user.getEmail, personalisation, user.getId))
   }
 
   override def close(): Unit = { }
