@@ -33,7 +33,7 @@ class NotifyEmailSenderProviderSpec extends AnyFlatSpec with Matchers {
     )).thenReturn(response)
 
     val emailInfo = NotifyEmailInfo("templateId", userEmail, Map("keycloakSubject" -> "Some subject", "keycloakMessage" -> "Some text body"), userId)
-    val emailSenderProvider = new NotifyEmailSenderProvider(Map())
+    val emailSenderProvider = new NotifyEmailSenderProvider()
     emailSenderProvider.sendNotifyEmail(notificationClient, emailInfo)
 
     templateIdCaptor.getValue should equal("templateId")
@@ -55,7 +55,7 @@ class NotifyEmailSenderProviderSpec extends AnyFlatSpec with Matchers {
       any[String]
     )).thenThrow(new NotificationClientException("Notification client error"))
 
-    val emailSenderProvider = new NotifyEmailSenderProvider(Map())
+    val emailSenderProvider = new NotifyEmailSenderProvider()
 
     val ex = intercept[Exception] {
       emailSenderProvider.sendNotifyEmail(notificationClient, NotifyEmailInfo("", "", Map(), ""))

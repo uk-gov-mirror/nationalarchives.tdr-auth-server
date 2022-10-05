@@ -1,20 +1,19 @@
 package uk.gov.nationalarchives.notifyspi
 
-import java.util
+import com.typesafe.config.{ConfigFactory, Config => TypeSafeConfig}
 import org.keycloak.email.{EmailException, EmailSenderProvider}
 import org.keycloak.models.UserModel
 import software.amazon.awssdk.http.apache.ApacheHttpClient
 import software.amazon.awssdk.regions.Region
-import uk.gov.service.notify.NotificationClient
-
-import java.net.URI
-import scala.jdk.CollectionConverters._
-import scala.util.{Failure, Success, Try}
 import software.amazon.awssdk.services.ssm.SsmClient
 import software.amazon.awssdk.services.ssm.model.GetParameterRequest
-import com.typesafe.config.{ConfigFactory, Config => TypeSafeConfig}
+import uk.gov.service.notify.NotificationClient
 
-class NotifyEmailSenderProvider(environmentVariables: Map[String, String]) extends EmailSenderProvider {
+import java.util
+import scala.jdk.CollectionConverters._
+import scala.util.{Failure, Success, Try}
+
+class NotifyEmailSenderProvider() extends EmailSenderProvider {
   val configFactory: TypeSafeConfig = ConfigFactory.load
   val notifyApiKeyPath: String = configFactory.getString("notify.apiKeyPath")
   val notifyTemplateIdPath: String = configFactory.getString("notify.templateIdPath")

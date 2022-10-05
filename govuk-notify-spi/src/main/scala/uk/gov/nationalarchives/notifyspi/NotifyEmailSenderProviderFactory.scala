@@ -9,7 +9,7 @@ class NotifyEmailSenderProviderFactory extends EmailSenderProviderFactory {
   private val emailSenderId = "govuknotify"
 
   override def create(session: KeycloakSession): EmailSenderProvider = {
-    new NotifyEmailSenderProvider(sys.env)
+    new NotifyEmailSenderProvider()
   }
 
   override def init(config: Config.Scope): Unit = { }
