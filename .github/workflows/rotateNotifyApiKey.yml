@@ -1,0 +1,14 @@
+# .github/workflows/scheduled-builds.yml
+name: TDR Rotate GOV.UK Notify API Key
+
+on:
+  schedule:
+    # Runs "at 08:30 in every 3rd month." (see https://crontab.guru) 30 08 * */3 *
+    - cron: '15 * * * *'
+jobs:
+  run:
+    name: Send API Key rotation notification
+    uses: nationalarchives/tdr-github-actions/.github/actions/slack-send@main
+    with:
+      message: ":warning: GOV.UK Notify API Keys should be rotated for all environments"
+      slack-url: ${{ secrets.SLACK_WEBHOOK }}
