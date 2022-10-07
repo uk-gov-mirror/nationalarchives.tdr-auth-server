@@ -3,8 +3,8 @@ name: TDR Rotate GOV.UK Notify API Key
 
 on:
   schedule:
-    # Runs "at 08:30 in every 3rd month." (see https://crontab.guru) 30 08 * */3 *
-    - cron: '15 * * * *'
+    # Runs "at 08:30 in every 3rd month." (see https://crontab.guru)
+    - cron: '30 08 * */3 *'
 jobs:
   run:
     name: Send API Key rotation notification
