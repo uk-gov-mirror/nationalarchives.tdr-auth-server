@@ -19,6 +19,6 @@ object Dependencies {
   lazy val scalaCache = "com.github.cb372" %% "scalacache-caffeine" % "0.28.0"
   lazy val scalaTest: ModuleID = "org.scalatest" %% "scalatest" % "3.2.14"
   lazy val snsSdk = "software.amazon.awssdk" % "sns" % "2.18.1"
-  lazy val awsSsm = "software.amazon.awssdk" % "ssm" % "2.17.265"
+  lazy val awsSsm = "software.amazon.awssdk" % "ssm" % "2.18.1"
   lazy val typeSafeConfig = "com.typesafe" % "config" % "1.4.2"
 }
