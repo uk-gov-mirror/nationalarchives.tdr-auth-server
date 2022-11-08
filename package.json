@@ -49,7 +49,7 @@
     "@types/webappsec-credential-management": "^0.6.3",
     "buffer": "^6.0.3",
     "copyfiles": "^2.4.1",
-    "husky": "^8.0.1",
+    "husky": "^8.0.2",
     "jest": "^27.5.1",
     "lint-staged": "^13.0.3",
     "minify": "^9.1.0",
