@@ -9,6 +9,7 @@ import software.amazon.awssdk.services.sns.model.PublishRequest
 import uk.gov.nationalarchives.eventpublisherspi.EventPublisherProvider.EventPublisherConfig
 
 import java.util
+import java.util.UUID
 import scala.jdk.CollectionConverters._
 class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar {
 
@@ -56,6 +57,8 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
 
     when(mockRealmModel.getName).thenReturn("testRealm")
     when(mockUserModelWithoutMFA.getId).thenReturn(userId)
+    when(mockUserModelWithMFA.getServiceAccountClientLink).thenReturn(null)
+    when(mockUserModelWithoutMFA.getServiceAccountClientLink).thenReturn(null)
     when(mockUserProvider.searchForUserStream(mockRealmModel, searchMap)).thenReturn(java.util.stream.Stream.of(mockUserModelWithMFA, mockUserModelWithoutMFA))
     when(mockUserCredentialManagerWithMFA.isConfiguredFor(otpCredentialType)).thenReturn(true)
     when(mockUserCredentialManagerWithMFA.isConfiguredFor(webauthnCredentialType)).thenReturn(true)
@@ -208,7 +211,7 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     when(mockRealmProvider.getRealmsStream).thenReturn(java.util.stream.Stream.of(mockRealmModel))
     when(mockSession.users()).thenReturn(mockUserProvider)
     when(mockSession.realms()).thenReturn(mockRealmProvider)
-    when(mockUserModel.getServiceAccountClientLink).thenReturn(null)
+    when(mockUserModel.getServiceAccountClientLink).thenReturn(UUID.randomUUID().toString)
     new UserMonitoringTask(mockSnsClient, EventPublisherConfig("", "test"), validConfiguredCredentialTypes, searchMap).run(mockSession)
 
     verifyZeroInteractions(mockSnsClient)
