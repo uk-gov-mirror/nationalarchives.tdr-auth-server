@@ -13,7 +13,11 @@ import uk.gov.nationalarchives.eventpublisherspi.EventPublisherProvider.{EventDe
 
 import scala.jdk.CollectionConverters._
 
-class UserMonitoringTask(snsClient: SnsClient, config: EventPublisherConfig, validConfiguredCredentialTypes: List[String], userSearchParams: java.util.Map[String, String]) extends ScheduledTask {
+class UserMonitoringTask(snsClient: SnsClient,
+                         config: EventPublisherConfig,
+                         validConfiguredCredentialTypes: List[String],
+                         userSearchParams: java.util.Map[String, String]) extends ScheduledTask {
+
   val logger: Logger = Logger.getLogger(classOf[UserMonitoringTask])
 
   override def run(session: KeycloakSession): Unit = {
