@@ -195,7 +195,7 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     verifyZeroInteractions(mockSnsClient)
   }
 
-  "The run method" should "not send a message if only service account methods are missing MFA" in {
+  "The run method" should "not send a message if only service account users are missing MFA" in {
     val mockSession = mock[KeycloakSession]
     val mockRealmProvider = mock[RealmProvider]
     val mockRealmModel = mock[RealmModel]
