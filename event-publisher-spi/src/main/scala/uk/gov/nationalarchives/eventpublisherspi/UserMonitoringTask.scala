@@ -13,7 +13,11 @@ import uk.gov.nationalarchives.eventpublisherspi.EventPublisherProvider.{EventDe
 
 import scala.jdk.CollectionConverters._
 
-class UserMonitoringTask(snsClient: SnsClient, config: EventPublisherConfig, validConfiguredCredentialTypes: List[String]) extends ScheduledTask {
+class UserMonitoringTask(snsClient: SnsClient,
+                         config: EventPublisherConfig,
+                         validConfiguredCredentialTypes: List[String],
+                         userSearchParams: java.util.Map[String, String]) extends ScheduledTask {
+
   val logger: Logger = Logger.getLogger(classOf[UserMonitoringTask])
 
   override def run(session: KeycloakSession): Unit = {
@@ -22,8 +26,10 @@ class UserMonitoringTask(snsClient: SnsClient, config: EventPublisherConfig, val
       .getRealmsStream.iterator().asScala.toList
     realms.foreach(realm => {
 
-      val users: List[UserModel] = userProvider.getUsersStream(realm).iterator().asScala.toList
+      val users: List[UserModel] = userProvider.searchForUserStream(realm, userSearchParams).iterator().asScala.toList
+
       val usersNoMFA = users
+        .filter(u => Option(u.getServiceAccountClientLink).getOrElse("").isBlank)
         .filter(u => {
           val credentialManager: SubjectCredentialManager = u.credentialManager()
           validConfiguredCredentialTypes.forall(credentialType => !credentialManager.isConfiguredFor(credentialType))
@@ -50,6 +56,7 @@ class UserMonitoringTask(snsClient: SnsClient, config: EventPublisherConfig, val
       }
     })
   }
+
 }
 
 object UserMonitoringTask {
@@ -62,6 +69,6 @@ object UserMonitoringTask {
       .region(Region.EU_WEST_2)
       .httpClient(httpClient)
       .build()
-    new UserMonitoringTask(snsClient, config, validConfiguredCredentialTypes)
+    new UserMonitoringTask(snsClient, config, validConfiguredCredentialTypes, Map[String, String]().asJava)
   }
 }

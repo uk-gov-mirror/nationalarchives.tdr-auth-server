@@ -8,8 +8,9 @@ import software.amazon.awssdk.services.sns.SnsClient
 import software.amazon.awssdk.services.sns.model.PublishRequest
 import uk.gov.nationalarchives.eventpublisherspi.EventPublisherProvider.EventPublisherConfig
 
-import scala.jdk.CollectionConverters.CollectionHasAsScala
-
+import java.util
+import java.util.UUID
+import scala.jdk.CollectionConverters._
 class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar {
 
   val validConfiguredCredentialTypes: List[String] = List("otp", "webauthn")
@@ -18,6 +19,7 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
   val userId = "dfd7356c-e6e0-40dd-affd-de04e29ad359"
   val userId2 = "4b3c3e89-775a-4c69-974e-bdc194a04d2d"
   val topicArn = "snsTopicArn"
+  val searchMap: util.Map[String, String] = Map[String, String]().asJava
 
   "The run method" should "not send a message if there are no users missing MFA" in {
     val mockSession = mock[KeycloakSession]
@@ -29,14 +31,14 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     val mockSnsClient = Mockito.mock(classOf[SnsClient])
 
     when(mockRealmModel.getName).thenReturn("testRealm")
-    when(mockUserProvider.getUsersStream(mockRealmModel)).thenReturn(java.util.stream.Stream.of(mockUserModel))
+    when(mockUserProvider.searchForUserStream(mockRealmModel, searchMap)).thenReturn(java.util.stream.Stream.of(mockUserModel))
     when(mockUserCredentialManager.isConfiguredFor(otpCredentialType)).thenReturn(true)
     when(mockUserCredentialManager.isConfiguredFor(webauthnCredentialType)).thenReturn(true)
     when(mockRealmProvider.getRealmsStream).thenReturn(java.util.stream.Stream.of(mockRealmModel))
     when(mockSession.users()).thenReturn(mockUserProvider)
     when(mockSession.realms()).thenReturn(mockRealmProvider)
     when(mockUserModel.credentialManager()).thenReturn(mockUserCredentialManager)
-    new UserMonitoringTask(mockSnsClient, EventPublisherConfig("", "test"), validConfiguredCredentialTypes).run(mockSession)
+    new UserMonitoringTask(mockSnsClient, EventPublisherConfig("", "test"), validConfiguredCredentialTypes, searchMap).run(mockSession)
 
     verifyZeroInteractions(mockSnsClient)
   }
@@ -55,7 +57,9 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
 
     when(mockRealmModel.getName).thenReturn("testRealm")
     when(mockUserModelWithoutMFA.getId).thenReturn(userId)
-    when(mockUserProvider.getUsersStream(mockRealmModel)).thenReturn(java.util.stream.Stream.of(mockUserModelWithMFA, mockUserModelWithoutMFA))
+    when(mockUserModelWithMFA.getServiceAccountClientLink).thenReturn(null)
+    when(mockUserModelWithoutMFA.getServiceAccountClientLink).thenReturn(null)
+    when(mockUserProvider.searchForUserStream(mockRealmModel, searchMap)).thenReturn(java.util.stream.Stream.of(mockUserModelWithMFA, mockUserModelWithoutMFA))
     when(mockUserCredentialManagerWithMFA.isConfiguredFor(otpCredentialType)).thenReturn(true)
     when(mockUserCredentialManagerWithMFA.isConfiguredFor(webauthnCredentialType)).thenReturn(true)
     when(mockUserCredentialManagerWithoutMFA.isConfiguredFor(otpCredentialType)).thenReturn(false)
@@ -65,7 +69,7 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     when(mockSession.realms()).thenReturn(mockRealmProvider)
     when(mockUserModelWithMFA.credentialManager()).thenReturn(mockUserCredentialManagerWithMFA)
     when(mockUserModelWithoutMFA.credentialManager()).thenReturn(mockUserCredentialManagerWithoutMFA)
-    new UserMonitoringTask(mockSnsClient, EventPublisherConfig(topicArn, "test"), validConfiguredCredentialTypes).run(mockSession)
+    new UserMonitoringTask(mockSnsClient, EventPublisherConfig(topicArn, "test"), validConfiguredCredentialTypes, searchMap).run(mockSession)
 
     val expectedMessage = """{
                              |  "tdrEnv" : "test",
@@ -94,7 +98,7 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     when(mockRealmModel.getName).thenReturn("testRealm")
     when(mockUserModelWithoutMFA1.getId).thenReturn(userId)
     when(mockUserModelWithoutMFA2.getId).thenReturn(userId2)
-    when(mockUserProvider.getUsersStream(mockRealmModel)).thenReturn(java.util.stream.Stream.of(mockUserModelWithoutMFA1, mockUserModelWithoutMFA2))
+    when(mockUserProvider.searchForUserStream(mockRealmModel, searchMap)).thenReturn(java.util.stream.Stream.of(mockUserModelWithoutMFA1, mockUserModelWithoutMFA2))
     when(mockUserCredentialManagerWithoutMFA1.isConfiguredFor(otpCredentialType)).thenReturn(false)
     when(mockUserCredentialManagerWithoutMFA1.isConfiguredFor(webauthnCredentialType)).thenReturn(false)
     when(mockUserCredentialManagerWithoutMFA2.isConfiguredFor(otpCredentialType)).thenReturn(false)
@@ -104,7 +108,7 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     when(mockSession.realms()).thenReturn(mockRealmProvider)
     when(mockUserModelWithoutMFA1.credentialManager()).thenReturn(mockUserCredentialManagerWithoutMFA1)
     when(mockUserModelWithoutMFA2.credentialManager()).thenReturn(mockUserCredentialManagerWithoutMFA2)
-    new UserMonitoringTask(mockSnsClient, EventPublisherConfig(topicArn, "test"), validConfiguredCredentialTypes).run(mockSession)
+    new UserMonitoringTask(mockSnsClient, EventPublisherConfig(topicArn, "test"), validConfiguredCredentialTypes, searchMap).run(mockSession)
 
     val expectedMessage = """{
                             |  "tdrEnv" : "test",
@@ -135,8 +139,8 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     when(mockRealmModel2.getName).thenReturn("testRealm2")
     when(mockUserModelWithoutMFA1.getId).thenReturn(userId)
     when(mockUserModelWithoutMFA2.getId).thenReturn(userId2)
-    when(mockUserProvider.getUsersStream(mockRealmModel1)).thenReturn(java.util.stream.Stream.of(mockUserModelWithoutMFA1))
-    when(mockUserProvider.getUsersStream(mockRealmModel2)).thenReturn(java.util.stream.Stream.of(mockUserModelWithoutMFA2))
+    when(mockUserProvider.searchForUserStream(mockRealmModel1, searchMap)).thenReturn(java.util.stream.Stream.of(mockUserModelWithoutMFA1))
+    when(mockUserProvider.searchForUserStream(mockRealmModel2, searchMap)).thenReturn(java.util.stream.Stream.of(mockUserModelWithoutMFA2))
     when(mockUserCredentialManagerWithoutMFA1.isConfiguredFor(otpCredentialType)).thenReturn(false)
     when(mockUserCredentialManagerWithoutMFA1.isConfiguredFor(webauthnCredentialType)).thenReturn(false)
     when(mockUserCredentialManagerWithoutMFA2.isConfiguredFor(otpCredentialType)).thenReturn(false)
@@ -146,7 +150,7 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     when(mockSession.realms()).thenReturn(mockRealmProvider)
     when(mockUserModelWithoutMFA1.credentialManager()).thenReturn(mockUserCredentialManagerWithoutMFA1)
     when(mockUserModelWithoutMFA2.credentialManager()).thenReturn(mockUserCredentialManagerWithoutMFA2)
-    new UserMonitoringTask(mockSnsClient, EventPublisherConfig(topicArn, "test"), validConfiguredCredentialTypes).run(mockSession)
+    new UserMonitoringTask(mockSnsClient, EventPublisherConfig(topicArn, "test"), validConfiguredCredentialTypes, searchMap).run(mockSession)
 
     val expectedMessage1 = """{
                             |  "tdrEnv" : "test",
@@ -179,14 +183,36 @@ class UserMonitoringTaskSpec extends AnyFlatSpec with Matchers with MockitoSugar
     val mockSnsClient = Mockito.mock(classOf[SnsClient])
 
     when(mockRealmModel.getName).thenReturn("testRealm")
-    when(mockUserProvider.getUsersStream(mockRealmModel)).thenReturn(java.util.stream.Stream.of(mockUserModel))
+    when(mockUserProvider.searchForUserStream(mockRealmModel, searchMap)).thenReturn(java.util.stream.Stream.of(mockUserModel))
     when(mockUserCredentialManager.isConfiguredFor(otpCredentialType)).thenReturn(false)
     when(mockUserCredentialManager.isConfiguredFor(webauthnCredentialType)).thenReturn(true)
     when(mockRealmProvider.getRealmsStream).thenReturn(java.util.stream.Stream.of(mockRealmModel))
     when(mockSession.users()).thenReturn(mockUserProvider)
     when(mockSession.realms()).thenReturn(mockRealmProvider)
     when(mockUserModel.credentialManager()).thenReturn(mockUserCredentialManager)
-    new UserMonitoringTask(mockSnsClient, EventPublisherConfig("", "test"), validConfiguredCredentialTypes).run(mockSession)
+    new UserMonitoringTask(mockSnsClient, EventPublisherConfig("", "test"), validConfiguredCredentialTypes, searchMap).run(mockSession)
+
+    verifyZeroInteractions(mockSnsClient)
+  }
+
+  "The run method" should "not send a message if only service account users are missing MFA" in {
+    val mockSession = mock[KeycloakSession]
+    val mockRealmProvider = mock[RealmProvider]
+    val mockRealmModel = mock[RealmModel]
+    val mockUserCredentialManager = mock[SubjectCredentialManager]
+    val mockUserModel = mock[UserModel]
+    val mockUserProvider = mock[UserProvider]
+    val mockSnsClient = Mockito.mock(classOf[SnsClient])
+
+    when(mockRealmModel.getName).thenReturn("testRealm")
+    when(mockUserProvider.searchForUserStream(mockRealmModel, searchMap)).thenReturn(java.util.stream.Stream.of(mockUserModel))
+    when(mockUserCredentialManager.isConfiguredFor(otpCredentialType)).thenReturn(true)
+    when(mockUserCredentialManager.isConfiguredFor(webauthnCredentialType)).thenReturn(true)
+    when(mockRealmProvider.getRealmsStream).thenReturn(java.util.stream.Stream.of(mockRealmModel))
+    when(mockSession.users()).thenReturn(mockUserProvider)
+    when(mockSession.realms()).thenReturn(mockRealmProvider)
+    when(mockUserModel.getServiceAccountClientLink).thenReturn(UUID.randomUUID().toString)
+    new UserMonitoringTask(mockSnsClient, EventPublisherConfig("", "test"), validConfiguredCredentialTypes, searchMap).run(mockSession)
 
     verifyZeroInteractions(mockSnsClient)
   }
