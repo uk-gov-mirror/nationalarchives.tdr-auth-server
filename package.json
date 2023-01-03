@@ -41,7 +41,7 @@
   "dependencies": {
     "base64url": "^3.0.1",
     "govuk-frontend": "^4.4.1",
-    "unfetch": "^4.1.0"
+    "unfetch": "^5.0.0"
   },
   "devDependencies": {
     "@types/jest": "^27.5.0",
