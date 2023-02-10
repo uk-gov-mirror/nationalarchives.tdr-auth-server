@@ -2,8 +2,9 @@ FROM python:alpine
 RUN pip install requests
 RUN apk update \
     && apk upgrade zlib libtirpc expat
-COPY update_tdr_realm.py update_client_configuration.py update_realm_configuration.py /tmp/
-COPY environment-properties /tmp/environment-properties
-WORKDIR /tmp
-ENTRYPOINT wget --header "Authorization: token $GITHUB_TOKEN" https://raw.githubusercontent.com/nationalarchives/tdr-configurations/master/keycloak/tdr-realm-export.json && \
+RUN mkdir -p /opt/keycloak/data/import
+COPY update_tdr_realm.py update_client_configuration.py update_realm_configuration.py /keycloak-configuration/
+COPY environment-properties /keycloak-configuration/environment-properties
+WORKDIR /keycloak-configuration
+ENTRYPOINT wget --header "Authorization: token $GITHUB_TOKEN" https://raw.githubusercontent.com/nationalarchives/tdr-configurations/master/keycloak/tdr-realm-export.json  && \
            python update_tdr_realm.py $ENVIRONMENT $UPDATE_POLICY
