@@ -155,7 +155,7 @@ To run, build and test locally:
     * Run the local docker image:
        ```
        [root directory] $ docker run -d --name [some name] -p 8081:8080 \
-       -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin -e KEYCLOAK_IMPORT=/tmp/tdr-realm.json \
+       -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin -e KEYCLOAK_IMPORT=/keycloak-configuration/tdr-realm.json \
        -e REALM_ADMIN_CLIENT_SECRET=[some value] -e CLIENT_SECRET=[some value] -e BACKEND_CHECKS_CLIENT_SECRET=[some value] \
        -e REPORTING_CLIENT_SECRET=[some value] \
        -e USER_ADMIN_CLIENT_SECRET=[some value] \

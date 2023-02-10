@@ -2,20 +2,20 @@ FROM quay.io/keycloak/keycloak:20.0.3
 USER root
 RUN microdnf update && microdnf install python3
 WORKDIR /opt/keycloak
+RUN mkdir /keycloak-configuration
 COPY quarkus.properties conf/
-COPY environment-properties /tmp/environment-properties
-COPY build.conf import_tdr_realm.py update_client_configuration.py update_realm_configuration.py tdr-realm-export.json /tmp/
+COPY environment-properties /keycloak-configuration/environment-properties
+COPY build.conf import_tdr_realm.py update_client_configuration.py update_realm_configuration.py tdr-realm-export.json /keycloak-configuration/
 COPY themes/tdr/login themes/tdr/login
 COPY themes/tdr/email themes/tdr/email
 COPY govuk-notify-spi/target/scala-2.13/govuk-notify-spi* providers/
 COPY credentials-provider/target/scala-2.13/credentials-provider.jar providers/
 COPY event-publisher-spi/target/scala-2.13/event-publisher-spi.jar providers/
 COPY keycloak.conf conf/
-RUN bin/kc.sh -cf /tmp/build.conf build
-RUN chown -R keycloak /tmp/environment-properties
-RUN chown keycloak /tmp/tdr-realm-export.json /tmp/import_tdr_realm.py
-RUN chmod +x /tmp/import_tdr_realm.py
+RUN bin/kc.sh -cf /keycloak-configuration/build.conf build
+RUN chown -R keycloak /keycloak-configuration
+RUN chmod +x /keycloak-configuration/import_tdr_realm.py
 USER 1000
 RUN mkdir -p data/import
 
-ENTRYPOINT /tmp/import_tdr_realm.py
+ENTRYPOINT /keycloak-configuration/import_tdr_realm.py
