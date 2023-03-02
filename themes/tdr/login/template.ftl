@@ -73,7 +73,7 @@
         </div>
 
         <#if displayBackLink>
-            <a href="${properties.tdrHomeUrl}" class="govuk-back-link">Back</a>
+            <a href="${url.loginAction}" class="govuk-back-link">Back</a>
         </#if>
         <main class="govuk-main-wrapper " id="main-content" role="main">
             <div class="govuk-grid-row">
