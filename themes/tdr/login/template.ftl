@@ -4,7 +4,7 @@
 <#assign betaBannerLink = msg("betaBannerLink")>
 <#assign loggedInPageTitle = msg("loggedInTitle")>
 
-<#macro registrationLayout pageTitle=signInPageTitle displayInfo=false displayMessage=true displayRequiredFields=false showAnotherWayIfPresent=true displayBackLink=false>
+<#macro registrationLayout pageTitle=signInPageTitle displayInfo=false displayMessage=true displayRequiredFields=false showAnotherWayIfPresent=true displayHomeLink=false>
     <!DOCTYPE html>
     <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
     <head>
@@ -72,8 +72,8 @@
             </p>
         </div>
 
-        <#if displayBackLink>
-            <a href="${properties.tdrHomeUrl}" class="govuk-back-link">Back</a>
+        <#if displayHomeLink>
+            <a href="${properties.tdrHomeUrl}" class="govuk-back-link">Home</a>
         </#if>
         <main class="govuk-main-wrapper " id="main-content" role="main">
             <div class="govuk-grid-row">
