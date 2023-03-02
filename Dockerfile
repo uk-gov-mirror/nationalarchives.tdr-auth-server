@@ -1,6 +1,10 @@
-FROM quay.io/keycloak/keycloak:20.0.5
+FROM quay.io/keycloak/keycloak:21.0.1 as builder
+FROM registry.access.redhat.com/ubi9-minimal
+COPY --from=builder /opt/keycloak/ /opt/keycloak/
 USER root
-RUN microdnf update && microdnf install python3
+RUN microdnf update -y && \
+    microdnf -y install python3 java-17-openjdk-headless shadow-utils
+RUN useradd -U keycloak
 WORKDIR /opt/keycloak
 RUN mkdir /keycloak-configuration
 COPY quarkus.properties conf/
