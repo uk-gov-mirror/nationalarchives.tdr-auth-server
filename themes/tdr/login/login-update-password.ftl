@@ -16,9 +16,9 @@
                     <div id="password-new-hint">
                         <p class="govuk-hint govuk-!-margin-bottom-1">${msg("passwordRestrictionsInfo")}</p>
                         <ul class="govuk-list govuk-list--bullet govuk-hint">
-                            <li>${msg("passwordRestrictions1")}</li>
-                            <li>${msg("passwordRestrictions2")}</li>
-                            <li>${msg("passwordRestrictions3")}</li>
+                            <li>${msg("passwordRestrictionCharacters")}</li>
+                            <li>${msg("passwordRestrictionCapitalLetter")}</li>
+                            <li>${msg("passwordRestrictionNumber")}</li>
                         </ul>
                     </div>
                 <input type="password" id="password-new" name="password-new" class="govuk-input govuk-input--width-10" autofocus autocomplete="new-password" />
