@@ -2,7 +2,7 @@
 <#assign updatePasswordPageTitle = msg("updatePasswordTitle")>
 <#assign hasError = (message?has_content && message.type = 'error')?then(true, false)>
 
-<@layout.registrationLayout pageTitle=updatePasswordPageTitle displayMessage=hasError displayHomeLink=true; section>
+<@layout.registrationLayout pageTitle=updatePasswordPageTitle displayMessage=hasError displayBackLink=true; section>
     <#if section = "header">
         ${updatePasswordPageTitle}
     <#elseif section = "form">
