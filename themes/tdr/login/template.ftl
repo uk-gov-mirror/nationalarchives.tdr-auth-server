@@ -6,7 +6,7 @@
 
 <#macro registrationLayout pageTitle=signInPageTitle displayInfo=false displayMessage=true displayRequiredFields=false showAnotherWayIfPresent=true>
     <!DOCTYPE html>
-    <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+    <html xmlns="http://www.w3.org/1999/xhtml" lang="en" class="govuk-template">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
