@@ -1,5 +1,5 @@
 <#import "template.ftl" as layout>
-<@layout.registrationLayout; section>
+<@layout.registrationLayout errorTarget="username"; section>
     <#if section = "header">
         ${msg("doLogIn")}
     <#elseif section = "form">

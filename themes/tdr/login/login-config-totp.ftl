@@ -1,5 +1,5 @@
 <#import "template.ftl" as layout>
-<@layout.registrationLayout displayInfo=true displayRequiredFields=true; section>
+<@layout.registrationLayout displayInfo=true displayRequiredFields=true errorTarget="totp"; section>
 
     <#if section = "header">
         ${msg("loginTotpTitle")}

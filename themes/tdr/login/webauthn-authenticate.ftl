@@ -1,5 +1,5 @@
 <#import "template.ftl" as layout>
-<@layout.registrationLayout; section>
+<@layout.registrationLayout errorTarget="authenticateWebAuthnButton"; section>
     <#if section = "header">
         ${kcSanitize(msg("webauthn-login-title"))?no_esc}
     <#elseif section = "form">

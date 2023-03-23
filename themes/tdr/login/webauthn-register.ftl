@@ -1,5 +1,5 @@
 <#import "template.ftl" as layout>
-<@layout.registrationLayout; section>
+<@layout.registrationLayout errorTarget="registerWebAuthn"; section>
     <#if section = "title">
       title
     <#elseif section = "form">
