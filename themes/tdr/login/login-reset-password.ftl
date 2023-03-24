@@ -1,7 +1,7 @@
 <#import "template.ftl" as layout>
 <#assign passwordResetPageTitle = msg("passwordReset")>
 
-<@layout.registrationLayout pageTitle=passwordResetPageTitle; section>
+<@layout.registrationLayout pageTitle=passwordResetPageTitle errorTarget="username"; section>
     <#if section = "header">
         ${passwordResetPageTitle}
     <#elseif section = "form">

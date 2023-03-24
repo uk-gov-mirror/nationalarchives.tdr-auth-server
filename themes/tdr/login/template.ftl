@@ -4,7 +4,7 @@
 <#assign betaBannerLink = msg("betaBannerLink")>
 <#assign loggedInPageTitle = msg("loggedInTitle")>
 
-<#macro registrationLayout pageTitle=signInPageTitle displayInfo=false displayMessage=true displayRequiredFields=false showAnotherWayIfPresent=true>
+<#macro registrationLayout pageTitle=signInPageTitle displayInfo=false displayMessage=true displayRequiredFields=false showAnotherWayIfPresent=true errorTarget="error-kc-form-login">
     <!DOCTYPE html>
     <html xmlns="http://www.w3.org/1999/xhtml" lang="en" class="govuk-template">
     <head>
@@ -17,7 +17,12 @@
                 <meta name="${meta?split('==')[0]}" content="${meta?split('==')[1]}"/>
             </#list>
         </#if>
-        <title>${msg("loginTitle",(realm.displayName!''))}</title>
+        <#if displayMessage && message?has_content && message.type = 'error'>
+          <title>Error: ${msg("loginTitle",(realm.displayName!''))}</title>
+        <#else>
+          <title>${msg("loginTitle",(realm.displayName!''))}</title>
+        </#if>
+
         <link rel="icon" href="${url.resourcesPath}/img/favicon.ico"/>
         <#if properties.stylesCommon?has_content>
             <#list properties.stylesCommon?split(' ') as style>
@@ -75,30 +80,23 @@
         <main class="govuk-main-wrapper " id="main-content" role="main">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <h1 class="govuk-heading-l">
-                        <#if message?has_content && message.summary = msg("alreadyLoggedInMessage")>
-                            ${loggedInPageTitle}
-                        <#else>
-                            ${pageTitle}
-                        </#if>
-                    </h1>
                     <#-- Start TDR Error Messages -->
                     <#if displayMessage && message?has_content>
                         <#if message.type = 'error'>
                             <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert"
                                  tabindex="-1" data-module="govuk-error-summary">
                                 <h2 class="govuk-error-summary__title" id="error-summary-title">
-                                    There is a problem with this form
+                                    There is a problem
                                 </h2>
                                 <div class="govuk-error-summary__body">
                                     <ul class="govuk-list govuk-error-summary__list">
                                         <li>
                                             <#if message.summary = msg("webauthn-error-register-verification")>
-                                              <p>${msg("webauthn-error-register-verification")?no_esc}</p>
+                                                <p>${msg("webauthn-error-register-verification")?no_esc}</p>
                                             <#elseif message.summary = msg("webauthn-error-api-get")>
-                                              <p>${msg("webauthn-error-api-get")?no_esc}</p>
+                                                <p>${msg("webauthn-error-api-get")?no_esc}</p>
                                             <#else>
-                                              <a href="#error-kc-form-login">${message.summary}</a>
+                                                <a href="#${errorTarget}">${message.summary}</a>
                                             </#if>
                                         </li>
                                     </ul>
@@ -121,7 +119,13 @@
                         </#if>
                     </#if>
                     <#-- End TDR Error Messages -->
-
+                    <h1 class="govuk-heading-l">
+                        <#if message?has_content && message.summary = msg("alreadyLoggedInMessage")>
+                            ${loggedInPageTitle}
+                        <#else>
+                            ${pageTitle}
+                        </#if>
+                    </h1>
                     <#nested "form">
                 </div>
             </div>
