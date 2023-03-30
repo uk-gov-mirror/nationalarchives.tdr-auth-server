@@ -1,5 +1,6 @@
 <#import "template.ftl" as layout>
-<@layout.registrationLayout errorTarget="otp"; section>
+<#assign enterOtpPageTitle = msg("enterOtp")>
+<@layout.registrationLayout pageTitle=enterOtpPageTitle errorTarget="otp"; section>
     <#if section="header">
         ${msg("doLogIn")}
     <#elseif section="form">

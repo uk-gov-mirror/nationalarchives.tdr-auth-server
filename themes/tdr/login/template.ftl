@@ -18,9 +18,9 @@
             </#list>
         </#if>
         <#if displayMessage && message?has_content && message.type = 'error'>
-          <title>Error: ${msg("loginTitle",(realm.displayName!''))}</title>
+          <title>Error: ${pageTitle} Transfer Digital Records - GOV.UK</title>
         <#else>
-          <title>${msg("loginTitle",(realm.displayName!''))}</title>
+          <title>${pageTitle} Transfer Digital Records - GOV.UK</title>
         </#if>
 
         <link rel="icon" href="${url.resourcesPath}/img/favicon.ico"/>
