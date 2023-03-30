@@ -2,7 +2,6 @@
 <#assign configureMfaPageTitle = msg("configureMfa")>
 <@layout.registrationLayout pageTitle=configureMfaPageTitle displayInfo=true displayRequiredFields=true errorTarget="totp"; section>
 
-
     <#if section = "header">
         ${msg("loginTotpTitle")}
 
