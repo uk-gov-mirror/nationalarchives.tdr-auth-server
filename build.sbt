@@ -11,6 +11,8 @@ lazy val commonSettings = Seq(
     circeCore,
     circeParser,
     circeGeneric,
+    javaxEnterprise,
+    javaxInject,
     notifyJavaClient,
     keycloakCore,
     keycloakModelJpa,
