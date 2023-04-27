@@ -35,7 +35,7 @@ Primarily it:
 
 ## TDR Theme
 
-TDR has its own Keycloak theme: `tdr`
+TDR has its own Keycloak theme: `tdr`.
 
 The TDR theme makes use of the standard Keycloak base theme, with specific overrides to the theme resources where required.
 
