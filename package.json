@@ -62,7 +62,7 @@
     "ts-jest": "^27.1.4",
     "ts-loader": "^9.4.2",
     "webpack": "^5.82.0",
-    "webpack-cli": "^5.0.2"
+    "webpack-cli": "^5.1.0"
   },
   "lint-staged": {
     "themes/tdr/css-src/**/*.scss": "stylelint"
