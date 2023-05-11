@@ -26,7 +26,7 @@ The import_env_realm.py runs scripts to update the Keycloak json configuration f
 
 ## update_client_configuration.py script
 
-The update_env_client_configuration.py script provides functions for updating Keycloak realm client json. 
+The update_env_client_configuration.py script provides functions for updating Keycloak realm client json.
 
 Primarily it:
  * injects secret values which cannot be safely stored in the configuration file.
