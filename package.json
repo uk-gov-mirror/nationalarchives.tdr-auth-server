@@ -45,14 +45,14 @@
   },
   "devDependencies": {
     "@types/jest": "^27.5.0",
-    "@types/node": "^20.2.1",
+    "@types/node": "^20.2.3",
     "@types/webappsec-credential-management": "^0.6.4",
     "buffer": "^6.0.3",
     "copyfiles": "^2.4.1",
     "husky": "^8.0.3",
     "jest": "^27.5.1",
     "lint-staged": "^13.2.2",
-    "minify": "^10.0.0",
+    "minify": "^10.2.0",
     "npm-run-all": "^4.1.5",
     "pre-commit": "^1.2.2",
     "prettier": "2.8.8",
@@ -60,8 +60,8 @@
     "stylelint": "^14.14.1",
     "stylelint-config-sass-guidelines": "^9.0.1",
     "ts-jest": "^27.1.4",
-    "ts-loader": "^9.4.2",
-    "webpack": "^5.83.1",
+    "ts-loader": "^9.4.3",
+    "webpack": "^5.84.0",
     "webpack-cli": "^5.1.1"
   },
   "lint-staged": {
