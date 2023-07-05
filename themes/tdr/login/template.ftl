@@ -4,7 +4,7 @@
 <#assign betaBannerLink = msg("betaBannerLink")>
 <#assign loggedInPageTitle = msg("loggedInTitle")>
 
-<#macro registrationLayout pageTitle=signInPageTitle displayInfo=false displayMessage=true displayRequiredFields=false showAnotherWayIfPresent=true errorTarget="error-kc-form-login">
+<#macro registrationLayout pageTitle=signInPageTitle displayHeading=true displayMessage=true displayRequiredFields=false showAnotherWayIfPresent=true errorTarget="error-kc-form-login">
     <!DOCTYPE html>
     <html xmlns="http://www.w3.org/1999/xhtml" lang="en" class="govuk-template">
     <head>
@@ -119,13 +119,15 @@
                         </#if>
                     </#if>
                     <#-- End TDR Error Messages -->
-                    <h1 class="govuk-heading-l">
-                        <#if message?has_content && message.summary = msg("alreadyLoggedInMessage")>
-                            ${loggedInPageTitle}
-                        <#else>
-                            ${pageTitle}
-                        </#if>
-                    </h1>
+                    <#if displayHeading>
+                        <h1 class="govuk-heading-l">
+                            <#if message?has_content && message.summary = msg("alreadyLoggedInMessage")>
+                                ${loggedInPageTitle}
+                            <#else>
+                                ${pageTitle}
+                            </#if>
+                        </h1>
+                    </#if>
                     <#nested "form">
                 </div>
             </div>
