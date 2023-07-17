@@ -2,6 +2,10 @@
 
 All of our documentation is stored in the [tdr-dev-documentation](https://github.com/nationalarchives/tdr-dev-documentation) repository.
 
+## Java Version
+
+**NOTE:** The Keycloak core libraries are compile with Java runtime 61. For running locally ensure have Java 17 installed to avoid compilation issues when building and testing the SPIs.
+
 ## Dockerfile
 This repository holds the Dockerfile used to build our keycloak server which we will be using for authentication and authorisation.
 
