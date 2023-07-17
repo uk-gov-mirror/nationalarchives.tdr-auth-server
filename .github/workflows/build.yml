@@ -5,7 +5,7 @@ on:
       - master
 jobs:
   pre-deploy:
-    uses: nationalarchives/tdr-github-actions/.github/workflows/ecs_build.yml@upgrade-java-version
+    uses: nationalarchives/tdr-github-actions/.github/workflows/ecs_build.yml@main
     with:
       repo-name: tdr-auth-server
       image-name: auth-server
