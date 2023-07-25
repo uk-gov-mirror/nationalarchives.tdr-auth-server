@@ -8,6 +8,7 @@ lazy val commonSettings = Seq(
   assemblyPackageDependency / assembleArtifact := false,
   assemblyPackageDependency / test := {},
   libraryDependencies ++= Seq(
+    caffiene,
     circeCore,
     circeParser,
     circeGeneric,

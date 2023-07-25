@@ -8,8 +8,8 @@ import software.amazon.awssdk.services.rds.RdsUtilities
 import software.amazon.awssdk.services.rds.model.GenerateAuthenticationTokenRequest
 
 import java.util
-import javax.enterprise.context.ApplicationScoped
-import javax.inject.Named
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Named
 import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
 import scalacache.CacheConfig
