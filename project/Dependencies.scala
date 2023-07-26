@@ -23,5 +23,5 @@ object Dependencies {
   lazy val snsSdk = "software.amazon.awssdk" % "sns" % "2.20.1"
   lazy val awsSsm = "software.amazon.awssdk" % "ssm" % "2.20.1"
   lazy val typeSafeConfig = "com.typesafe" % "config" % "1.4.2"
-  lazy val caffiene = "com.github.ben-manes.caffeine" % "caffeine" % "3.1.6"
+  lazy val caffiene = "com.github.ben-manes.caffeine" % "caffeine" % "3.1.7"
 }
