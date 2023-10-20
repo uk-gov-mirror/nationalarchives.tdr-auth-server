@@ -16,7 +16,7 @@ object Dependencies {
   lazy val keycloakServerSpi: ModuleID = "org.keycloak" % "keycloak-server-spi" % keycloakVersion % "provided"
   lazy val mockito: ModuleID = "org.mockito" %% "mockito-scala" % "1.17.27"
   lazy val notifyJavaClient: ModuleID = "uk.gov.service.notify" % "notifications-java-client" % "4.1.0-RELEASE"
-  lazy val quarkusCredentials = "io.quarkus" % "quarkus-credentials" % "3.5.0.CR1"
+  lazy val quarkusCredentials = "io.quarkus" % "quarkus-credentials" % "3.5.0"
   lazy val rds = "software.amazon.awssdk" % "rds" % "2.21.0"
   lazy val scalaCache = "com.github.cb372" %% "scalacache-caffeine" % "0.28.0"
   lazy val scalaTest: ModuleID = "org.scalatest" %% "scalatest" % "3.2.17"
