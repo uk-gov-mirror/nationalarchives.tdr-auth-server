@@ -5,22 +5,23 @@
     }
 }
 
-.govuk-header {
-    &__link--homepage--ayr {
-        &:hover,
-        &:active {
-            border-bottom: none;
-            text-decoration: none;
-            margin-bottom: 0.8rem;
-        }
-
-        @include on-mobile {
-            margin-right: 0;
-            font-size: 0.8rem;
-            display: inline-block;
-        }
+.govuk-header__link--homepage--ayr {
+    &:hover,
+    &:active {
+        border-bottom: none;
+        text-decoration: none;
+        margin-bottom: 0.8rem;
     }
 
+    @include on-mobile {
+        margin-right: 0;
+        font-size: 0.8rem;
+        display: inline-block;
+    }
+}
+
+
+.govuk-header {
     &__logo--ayr {
         width: auto;
 
