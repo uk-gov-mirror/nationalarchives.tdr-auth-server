@@ -17,10 +17,18 @@
                 <meta name="${meta?split('==')[0]}" content="${meta?split('==')[1]}"/>
             </#list>
         </#if>
-        <#if displayMessage && message?has_content && message.type = 'error'>
-          <title>Error: ${pageTitle} Transfer Digital Records - GOV.UK</title>
+        <#if properties.blockSharedPages = 'true'>
+            <#if displayMessage && message?has_content && message.type = 'error'>
+            <title>Error: ${pageTitle} Transfer Digital Records - GOV.UK</title>
+            <#else>
+            <title>${pageTitle} Transfer Digital Records - GOV.UK</title>
+            </#if>
         <#else>
-          <title>${pageTitle} Transfer Digital Records - GOV.UK</title>
+            <#if displayMessage && message?has_content && message.type = 'error'>
+            <title>Error: ${pageTitle} Transfer & Access Your Records - GOV.UK</title>
+            <#else>
+            <title>${pageTitle} Transfer & Access Your Records - GOV.UK</title>
+            </#if>
         </#if>
 
         <link rel="icon" href="${url.resourcesPath}/img/favicon.ico"/>
@@ -46,6 +54,7 @@
 
     <body class="govuk-template__body">
     <#-- Start TDR Template header -->
+    <#if properties.blockSharedPages = 'true'>
     <header class="govuk-header" role="banner" data-module="govuk-header">
         <div class="govuk-header__container govuk-width-container tna-header">
             <div class="govuk-header__logo">
@@ -78,6 +87,28 @@
         </div>
     </header>
     <#-- End TDR Template header -->
+    <#else>
+    <#-- Start AYR Template header -->
+
+    <header class="govuk-header" role="banner" data-module="govuk-header">
+        <div class="govuk-header__container govuk-header__container--ayr govuk-width-container">
+            <div class="govuk-header__logo govuk-header__logo--ayr">
+                <p class="govuk-header__link govuk-header__link--homepage govuk-header__link--homepage--ayr">
+                    <span class="govuk-header__logotype-text govuk-header__logotype--ayr">${msg("ayrHeader")}</span>
+                </p>
+            </div>
+            <div class="govuk-header__content govuk-header__content--ayr">
+                Delivered by
+                <a href="https://www.nationalarchives.gov.uk/"
+                   class="govuk-header__link govuk-header__link--ayr">The
+                National Archives</a>
+            </div>
+        </div>
+    </header>
+
+
+    </#if>
+    <#-- End AYR Template header -->
 
     <#-- Start TDR Content -->
     <div class="govuk-width-container">
@@ -139,7 +170,19 @@
                             <#if message?has_content && message.summary = msg("alreadyLoggedInMessage")>
                                 ${loggedInPageTitle}
                             <#else>
-                                ${pageTitle}
+                                <#if properties.blockSharedPages = 'true'>
+                                    ${pageTitle}
+                                <#else>
+                                    <#-- Display AYR Warning Text -->
+                                    <div class="govuk-warning-text">
+                                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                                    <strong class="govuk-warning-text__text">
+                                        <span class="govuk-visually-hidden">Warning</span>
+                                        Do not share your sign in details with anyone else.
+                                    </strong>
+                                    </div>
+                                    ${pageTitle}
+                                </#if>
                             </#if>
                         </h1>
                     </#if>
