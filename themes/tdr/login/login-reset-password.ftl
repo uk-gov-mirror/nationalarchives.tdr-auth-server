@@ -1,9 +1,14 @@
 <#import "template.ftl" as layout>
 <#assign passwordResetPageTitle = msg("passwordReset")>
+<#assign ayrPasswordResetPageTitle = msg("ayrPasswordReset")>
 
 <@layout.registrationLayout pageTitle=passwordResetPageTitle errorTarget="username"; section>
     <#if section = "header">
-        ${passwordResetPageTitle}
+        <#if properties.blockSharedPages = 'true'>
+            ${passwordResetPageTitle}
+        <#else>
+            ${ayrPasswordResetPageTitle}
+        </#if>
     <#elseif section = "form">
         <form id="kc-reset-password-form" action="${url.loginAction}" method="post">
             <div class="govuk-form-group">
