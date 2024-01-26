@@ -92,7 +92,6 @@
     <#-- End TDR Template header -->
     <#else>
     <#-- Start Template header -->
-
     <header class="govuk-header" role="banner" data-module="govuk-header">
         <div class="govuk-header__container tna-header__container govuk-width-container">
             <div class="govuk-header__logo tna-header__logo">
