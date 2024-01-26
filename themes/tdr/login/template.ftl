@@ -108,7 +108,6 @@
             </div>
         </div>
     </header>
-
     </#if>
     <#-- End Template header -->
 
