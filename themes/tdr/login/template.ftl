@@ -1,7 +1,10 @@
 <#assign signInPageTitle = msg("loginTitle")>
 <#assign betaBanner = msg("betaBanner")>
+<#assign tdrBetaBanner = msg("tdrBetaBanner")>
 <#assign betaBannerInfo = msg("betaBannerInfo")>
+<#assign tdrBetaBannerInfo = msg("tdrBetaBannerInfo")>
 <#assign betaBannerLink = msg("betaBannerLink")>
+<#assign tdrBetaBannerLink = msg("tdrBetaBannerLink")>
 <#assign loggedInPageTitle = msg("loggedInTitle")>
 
 <#macro registrationLayout pageTitle=signInPageTitle displayHeading=true displayMessage=true displayRequiredFields=false showAnotherWayIfPresent=true errorTarget="error-kc-form-login">
@@ -55,10 +58,10 @@
     <body class="govuk-template__body">
     <#-- Start TDR Template header -->
     <#if properties.blockSharedPages = 'true'>
-    <header class="govuk-header" role="banner" data-module="govuk-header">
-        <div class="govuk-header__container govuk-width-container tna-header">
-            <div class="govuk-header__logo">
-                <a href="${properties.tdrHomeUrl}" class="govuk-header__link govuk-header__link--homepage">
+    <header class="govuk-header govuk-header--tdr" role="banner" data-module="govuk-header">
+        <div class="govuk-header__container govuk-header__container--tdr govuk-width-container tna-header">
+            <div class="govuk-header__logo govuk-header__logo--tdr govuk-header--tdr">
+                <a href="${properties.tdrHomeUrl}" class="govuk-header__link govuk-header__link--homepage govuk-header__link--homepage--tdr">
                     <svg xmlns="http://www.w3.org/2000/svg" width="220" viewBox="0 0 250 35">
                         <g clip-path="url(#a)">
                             <path fill="currentColor" d="M1.17 1.17h48.58v31.97H1.17V1.17ZM0 0v34.31h50.92V0H0Z"/>
@@ -74,51 +77,50 @@
                         </defs>
                     </svg>
                     <span class="govuk-visually-hidden">
-                                ${msg("mainHeader")}
+                                ${msg("tdrMainHeader")}
                     </span>
                 </a>
             </div>
 
-            <div class="govuk-header__content govuk-header__content--nav-right">
-                <a href="${properties.tdrHomeUrl}" class="govuk-header__link govuk-header__service-name">
-                    ${msg("mainHeader")}
+            <div class="govuk-header__content govuk-header__content--tdr govuk-header__content--nav-right ">
+                <a href="${properties.tdrHomeUrl}" class="govuk-header__link govuk-header__service-name govuk-header__service-name--tdr">
+                    ${msg("tdrMainHeader")}
                 </a>
             </div>
         </div>
     </header>
     <#-- End TDR Template header -->
     <#else>
-    <#-- Start AYR Template header -->
+    <#-- Start Template header -->
 
     <header class="govuk-header" role="banner" data-module="govuk-header">
-        <div class="govuk-header__container govuk-header__container--ayr govuk-width-container">
-            <div class="govuk-header__logo govuk-header__logo--ayr">
-                <p class="govuk-header__link govuk-header__link--homepage govuk-header__link--homepage--ayr">
-                    <span class="govuk-header__logotype-text govuk-header__logotype--ayr">${msg("ayrHeader")}</span>
+        <div class="govuk-header__container tna-header__container govuk-width-container">
+            <div class="govuk-header__logo tna-header__logo">
+                <p class="govuk-header__link govuk-header__link--homepage tna-header__link--homepage">
+                    <span class="govuk-header__logotype-text tna-header__logotype">${msg("mainHeader")}</span>
                 </p>
             </div>
-            <div class="govuk-header__content govuk-header__content--ayr">
+            <div class="govuk-header__content tna-header__content">
                 Delivered by
                 <a href="https://www.nationalarchives.gov.uk/"
-                   class="govuk-header__link govuk-header__link--ayr">The
+                   class="govuk-header__link tna-header__link">The
                 National Archives</a>
             </div>
         </div>
     </header>
 
-
     </#if>
-    <#-- End AYR Template header -->
+    <#-- End Template header -->
 
     <#-- Start TDR Content -->
     <div class="govuk-width-container">
 
         <div class="govuk-phase-banner">
             <p class="govuk-phase-banner__content">
-                <strong class="govuk-tag govuk-phase-banner__content__tag">${msg("betaBanner")}</strong>
-                <span class="govuk-phase-banner__text">${msg("betaBannerInfo")}
+                <strong class="govuk-tag govuk-phase-banner__content__tag">${msg("tdrBetaBanner")}</strong>
+                <span class="govuk-phase-banner__text">${msg("tdrBetaBannerInfo")}
                 <a class="govuk-link" target="_blank" rel="noreferrer noopener"
-                   href="${properties.tdrHomeUrl}/contact">${msg("betaBannerLink")}</a>
+                   href="${properties.tdrHomeUrl}/contact">${msg("tdrBetaBannerLink")}</a>
                 </span>
             </p>
         </div>
@@ -173,7 +175,7 @@
                                 <#if properties.blockSharedPages = 'true'>
                                     ${pageTitle}
                                 <#else>
-                                    <#-- Display AYR Warning Text -->
+                                    <#-- Display Warning Text -->
                                     <div class="govuk-warning-text">
                                     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                                     <strong class="govuk-warning-text__text">
