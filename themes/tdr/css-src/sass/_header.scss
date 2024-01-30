@@ -19,7 +19,84 @@ $govuk-header-link: govuk-colour('white');
     padding-inline-start: 0;
   }
 
-  .govuk-header__link--service-name {
+  .govuk-header__link--service-name--tdr {
     margin-bottom: 0;
+  }
+}
+
+@mixin on-mobile {
+  @media screen and (width <=768px) {
+    @content;
+  }
+}
+
+.tna-header__link--homepage {
+  &:hover,
+  &:active {
+    border-bottom: none;
+    text-decoration: none;
+    margin-bottom: 0.8rem;
+  }
+
+  @include on-mobile {
+    margin-right: 0;
+    font-size: 0.8rem;
+    display: inline-block;
+  }
+}
+
+.tna-header {
+  &__logo {
+    width: auto;
+
+    @include on-mobile {
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  &__link {
+    font-weight: 700;
+  }
+
+  &__logotype {
+    white-space: nowrap;
+    margin-top: 0;
+    margin-bottom: 0;
+
+    @include on-mobile {
+      font-size: 1.8rem;
+      line-height: 1.8rem;
+      white-space: normal;
+    }
+
+  }
+
+  &__content {
+    text-align: right;
+    width: 100%;
+    padding-bottom: 0.5rem;
+    margin-top: 0.75rem;
+
+    @include on-mobile {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+      padding-bottom: 0;
+      margin-top: 0;
+    }
+  }
+
+  &__container {
+    display: flex;
+
+    @include on-mobile {
+      padding-bottom: 1rem;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding-top: 0;
+    }
   }
 }
