@@ -1,12 +1,11 @@
 <#import "template.ftl" as layout>
-<#assign tdrPasswordResetPageTitle = msg("tdrPasswordReset")>
-<#assign passwordResetPageTitle = msg("passwordReset")>
-
-#if properties.blockSharedPages = 'true'>
-<@layout.registrationLayout pageTitle=tdrPasswordResetPageTitle errorTarget="username"; section>
+<#if properties.blockSharedPages = 'true'>
+    <#assign passwordResetPageTitle = msg("tdrPasswordReset")>
 <#else>
-<@layout.registrationLayout pageTitle=passwordResetPageTitle errorTarget="username"; section>
+    <#assign passwordResetPageTitle = msg("passwordReset")>
 </#if>
+
+<@layout.registrationLayout pageTitle=passwordResetPageTitle errorTarget="username"; section>
     <#if section = "header">
         <#if properties.blockSharedPages = 'true'>
             ${tdrPasswordResetPageTitle}
