@@ -19,7 +19,7 @@ object Dependencies {
   lazy val quarkusCredentials = "io.quarkus" % "quarkus-credentials" % "3.7.2"
   lazy val rds = "software.amazon.awssdk" % "rds" % "2.23.17"
   lazy val scalaCache = "com.github.cb372" %% "scalacache-caffeine" % "0.28.0"
-  lazy val scalaTest: ModuleID = "org.scalatest" %% "scalatest" % "3.2.17"
+  lazy val scalaTest: ModuleID = "org.scalatest" %% "scalatest" % "3.2.18"
   lazy val snsSdk = "software.amazon.awssdk" % "sns" % "2.23.17"
   lazy val awsSsm = "software.amazon.awssdk" % "ssm" % "2.23.17"
   lazy val typeSafeConfig = "com.typesafe" % "config" % "1.4.3"
