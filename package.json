@@ -50,7 +50,7 @@
     "@nationalarchives/tdr-components": "1.0.37",
     "buffer": "^6.0.3",
     "copyfiles": "^2.4.1",
-    "husky": "^9.0.10",
+    "husky": "^9.0.11",
     "jest": "^27.5.1",
     "lint-staged": "^15.2.2",
     "minify": "^11.0.1",
