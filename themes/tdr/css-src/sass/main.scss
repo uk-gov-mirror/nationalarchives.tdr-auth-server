@@ -4,7 +4,7 @@ $govuk-fonts-path: '../fonts/';
 
 @import 'overrides/all';
 @import '../../../../node_modules/govuk-frontend/govuk/all';
-@import '../../../../node_modules/@nationalarchives/tdr-components/dist/components';
+@import '../../../../node_modules/@nationalarchives/tdr-components/dist/components/';
 
 @import 'header';
 @import 'drag-and-drop';
