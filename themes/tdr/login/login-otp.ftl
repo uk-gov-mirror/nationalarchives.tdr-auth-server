@@ -22,7 +22,12 @@
                           </span>
                         </summary>
                         <div class="govuk-details__text">
-                            Your one-time passcode can be found in your chosen authenticator app that was used to set up your account.
+                            <ul class="govuk-list govuk-list--number">
+                                <li>${msg("otpGuidanceOne")}</li>
+                                <li>${msg("otpGuidanceTwo")}</li>
+                                <li>${msg("otpGuidanceThree")}</li>
+                            </ul>
+                            <p class="govuk-body">Contact <a href="mailto:tdr@nationalarchives.gov.uk" class="govuk-link">tdr@nationalarchives.gov.uk</a> if you need support.</p>
                         </div>
                     </details>
                     <input id="code" name="otp" autocomplete="off" type="text" class="govuk-input govuk-input--width-5" inputmode="numeric" autofocus/>
