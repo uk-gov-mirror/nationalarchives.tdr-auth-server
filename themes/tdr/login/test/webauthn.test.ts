@@ -36,16 +36,21 @@ const authenticatorAssertionResponse: (authenticatorData: ArrayBuffer, clientDat
 })
 
 const authenticatorAttestationResponse: (clientDataJSON: ArrayBuffer, attestationObject: ArrayBuffer) => AuthenticatorAttestationResponse = (clientDataJSON, attestationObject) => ({
+  attestationObject,
   clientDataJSON,
-  attestationObject
+  getAuthenticatorData: jest.fn(),
+  getPublicKey: jest.fn(),
+  getPublicKeyAlgorithm: jest.fn(),
+  getTransports: jest.fn()
 })
 
 const publicKey: (response: AuthenticatorResponse, rawId: Buffer) => PublicKeyCredential = (response, rawId) => {
   const key: PublicKeyCredential = {
-    getClientExtensionResults: jest.fn(),
-    id: "id",
+    authenticatorAttachment: "attachment",
     rawId,
     response,
+    getClientExtensionResults: jest.fn(),
+    id: "id",
     type: "public-key",
   }
   return key
