@@ -62,6 +62,6 @@ class NotifyEmailSenderProviderSpec extends AnyFlatSpec with Matchers {
     }
 
     ex.isInstanceOf[EmailException] should be(true)
-    ex.getMessage should be("uk.gov.service.notify.NotificationClientException: Notification client error")
+    ex.getMessage should be("Notification client error")
   }
 }
