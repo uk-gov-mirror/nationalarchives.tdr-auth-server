@@ -14,15 +14,15 @@ import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
 
 class NotifyEmailSenderProvider() extends EmailSenderProvider {
-  val configFactory: TypeSafeConfig = ConfigFactory.load
-  val notifyApiKeyPath: String = configFactory.getString("notify.apiKeyPath")
-  val notifyTemplateIdPath: String = configFactory.getString("notify.templateIdPath")
+  private val configFactory: TypeSafeConfig = ConfigFactory.load
+  private val notifyApiKeyPath: String = configFactory.getString("notify.apiKeyPath")
+  private val notifyTemplateIdPath: String = configFactory.getString("notify.templateIdPath")
 
-  def getApiKey: String = {
+  private def getApiKey: String = {
     getSsmParameterValue(notifyApiKeyPath)
   }
 
-  def getTemplateId: String = {
+  private def getTemplateId: String = {
     getSsmParameterValue(notifyTemplateIdPath)
   }
 
@@ -61,7 +61,7 @@ class NotifyEmailSenderProvider() extends EmailSenderProvider {
         emailInfo.personalisation.asJava,
         emailInfo.reference)
     } match {
-      case Failure(exception) => throw new EmailException(exception)
+      case Failure(exception) => throw new EmailException(exception.getMessage)
       case Success(_) => ()
     }
   }
