@@ -1,16 +1,16 @@
 import sbt._
 
 object Dependencies {
-  private val keycloakVersion = "25.0.6"
+  private val keycloakVersion = "26.0.4"
   private val circeVersion = "0.14.10"
-  private val awsSdkVersion = "2.28.22"
+  private val awsSdkVersion = "2.28.29"
 
   lazy val awsSecretsManager = "com.amazonaws.secretsmanager" % "aws-secretsmanager-caching-java" % "2.0.0"
   lazy val awsUtils: ModuleID = "uk.gov.nationalarchives" %% "tdr-aws-utils" % "0.1.27"
   lazy val circeCore = "io.circe" %% "circe-core" % circeVersion
   lazy val circeGeneric = "io.circe" %% "circe-generic" % circeVersion
   lazy val circeParser = "io.circe" %% "circe-parser" % circeVersion
-  lazy val javaxEnterprise = "javax.enterprise" % "cdi-api" % "2.0-PFD2"
+  lazy val javaxEnterprise = "javax.enterprise" % "cdi-api" % "2.0"
   lazy val javaxInject = "javax.inject" % "javax.inject" % "1"
   lazy val keycloakCore: ModuleID = "org.keycloak" % "keycloak-core" % keycloakVersion % "provided"
   lazy val keycloakModelJpa: ModuleID = "org.keycloak" % "keycloak-model-jpa" % keycloakVersion % "provided"
