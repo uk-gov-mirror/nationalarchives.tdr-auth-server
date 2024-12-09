@@ -168,7 +168,7 @@ To run, build and test locally:
     * Run the local docker image:
        ```
        [root directory] $ docker run -d --name [some name] -p 8081:8080 \
-       -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin -e KEYCLOAK_IMPORT=/keycloak-configuration/tdr-realm.json \
+       -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin -e KEYCLOAK_IMPORT=/keycloak-configuration/tdr-realm.json \
        -e REALM_ADMIN_CLIENT_SECRET=[some value] -e CLIENT_SECRET=[some value] -e BACKEND_CHECKS_CLIENT_SECRET=[some value] \
        -e REPORTING_CLIENT_SECRET=[some value] \
        -e USER_ADMIN_CLIENT_SECRET=[some value] \
@@ -185,8 +185,8 @@ To run, build and test locally:
        -e BLOCK_SHARED_PAGES=false
        [account id].dkr.ecr.[region].amazonaws.com/tdr-auth-server:[your build tag]
        ```
-       * `KEYCLOAK_ADMIN`: root Keycloak username
-       * `KEYCLOAK_ADMIN_PASSWORD`: password for the root Keycloak user
+       * `KC_BOOTSTRAP_ADMIN_USERNAME`: root Keycloak username
+       * `KC_BOOTSTRAP_ADMIN_PASSWORD`: password for the root Keycloak user
        * `KEYCLOAK_IMPORT`: Location of the generated Keycloak TDR realm json file that contains the configuration for the TDR realm
        * `REALM_ADMIN_CLIENT_SECRET`: tdr realm admin client secret value
        * `CLIENT_SECRET`: tdr client secret value
