@@ -26,6 +26,7 @@ class UserMonitoringTask(snsClient: SnsClient,
       .getRealmsStream.iterator().asScala.toList
     realms.foreach(realm => {
 
+      session.getContext.setRealm(realm)
       val users: List[UserModel] = userProvider.searchForUserStream(realm, userSearchParams).iterator().asScala.toList
 
       val usersNoMFA = users
