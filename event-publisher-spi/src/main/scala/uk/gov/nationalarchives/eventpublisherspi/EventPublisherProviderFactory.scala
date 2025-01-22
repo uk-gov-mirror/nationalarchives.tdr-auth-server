@@ -30,7 +30,9 @@ class EventPublisherProviderFactory extends EventListenerProviderFactory {
         val session = factory.create()
         val provider: TimerProvider = session.getProvider(classOf[TimerProvider])
         val userMonitoringTask = UserMonitoringTask(eventPublisherConfig.get)
+        val inactiveUserMonitoringTask = InactiveUserMonitoringTask()
         provider.scheduleTask(userMonitoringTask, oneDayIntervalMillis, "userMonitoringTask")
+        provider.scheduleTask(inactiveUserMonitoringTask, oneDayIntervalMillis, "inactiveUserMonitoringTask")
       }
     })
   }

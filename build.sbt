@@ -15,6 +15,7 @@ lazy val commonSettings = Seq(
     javaxEnterprise,
     javaxInject,
     notifyJavaClient,
+    keycloakAdminClient,
     keycloakCore,
     keycloakModelJpa,
     keycloakServerSpi,

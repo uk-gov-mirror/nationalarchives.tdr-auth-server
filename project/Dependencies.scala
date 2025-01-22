@@ -12,11 +12,12 @@ object Dependencies {
   lazy val circeParser = "io.circe" %% "circe-parser" % circeVersion
   lazy val javaxEnterprise = "javax.enterprise" % "cdi-api" % "2.0"
   lazy val javaxInject = "javax.inject" % "javax.inject" % "1"
+  lazy val keycloakAdminClient: ModuleID = "org.keycloak" % "keycloak-admin-client" % "26.0.3" % "provided"
   lazy val keycloakCore: ModuleID = "org.keycloak" % "keycloak-core" % keycloakVersion % "provided"
   lazy val keycloakModelJpa: ModuleID = "org.keycloak" % "keycloak-model-jpa" % keycloakVersion % "provided"
   lazy val keycloakServerSpi: ModuleID = "org.keycloak" % "keycloak-server-spi" % keycloakVersion % "provided"
   lazy val mockito: ModuleID = "org.mockito" %% "mockito-scala" % "1.17.37"
-  lazy val notifyJavaClient: ModuleID = "uk.gov.service.notify" % "notifications-java-client" % "5.2.1-RELEASE" 
+  lazy val notifyJavaClient: ModuleID = "uk.gov.service.notify" % "notifications-java-client" % "5.2.1-RELEASE"
   lazy val quarkusCredentials = "io.quarkus" % "quarkus-credentials" % "3.17.5"
   lazy val rds = "software.amazon.awssdk" % "rds" % "2.26.27"
   lazy val scalaCache = "com.github.cb372" %% "scalacache-caffeine" % "0.28.0"
