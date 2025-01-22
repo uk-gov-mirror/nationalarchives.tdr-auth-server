@@ -1,9 +1,9 @@
 import sbt._
 
 object Dependencies {
-  private val keycloakVersion = "26.0.7"
+  private val keycloakVersion = "26.1.0"
   private val circeVersion = "0.14.10"
-  private val awsSdkVersion = "2.29.46"
+  private val awsSdkVersion = "2.30.2"
   
   lazy val awsSecretsManager = "com.amazonaws.secretsmanager" % "aws-secretsmanager-caching-java" % "2.0.0"
   lazy val awsUtils: ModuleID = "uk.gov.nationalarchives" %% "tdr-aws-utils" % "0.1.27"
@@ -17,12 +17,12 @@ object Dependencies {
   lazy val keycloakServerSpi: ModuleID = "org.keycloak" % "keycloak-server-spi" % keycloakVersion % "provided"
   lazy val mockito: ModuleID = "org.mockito" %% "mockito-scala" % "1.17.37"
   lazy val notifyJavaClient: ModuleID = "uk.gov.service.notify" % "notifications-java-client" % "5.2.1-RELEASE" 
-  lazy val quarkusCredentials = "io.quarkus" % "quarkus-credentials" % "3.17.5"
+  lazy val quarkusCredentials = "io.quarkus" % "quarkus-credentials" % "3.18.0.CR1"
   lazy val rds = "software.amazon.awssdk" % "rds" % "2.26.27"
   lazy val scalaCache = "com.github.cb372" %% "scalacache-caffeine" % "0.28.0"
   lazy val scalaTest: ModuleID = "org.scalatest" %% "scalatest" % "3.2.19"
   lazy val snsSdk = "software.amazon.awssdk" % "sns" % awsSdkVersion
   lazy val awsSsm = "software.amazon.awssdk" % "ssm" % awsSdkVersion
   lazy val typeSafeConfig = "com.typesafe" % "config" % "1.4.3"
-  lazy val caffiene = "com.github.ben-manes.caffeine" % "caffeine" % "3.1.8"
+  lazy val caffiene = "com.github.ben-manes.caffeine" % "caffeine" % "3.2.0"
 }
