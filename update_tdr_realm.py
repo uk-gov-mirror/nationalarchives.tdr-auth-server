@@ -8,6 +8,7 @@ from update_realm_configuration import update_realm_configuration
 stage_to_url = dict(
     local='http://localhost:8081',
     intg='https://auth.tdr-integration.nationalarchives.gov.uk',
+    test='https://auth.tdr-test.nationalarchives.gov.uk',
     prod='https://auth.tdr.nationalarchives.gov.uk',
     staging='https://auth.tdr-staging.nationalarchives.gov.uk',
     sandbox = 'https://auth.tdr-sandbox.nationalarchives.gov.uk'
