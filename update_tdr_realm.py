@@ -76,7 +76,7 @@ def update_realm():
         data=json.dumps(full_realm_data),
         headers=headers
     )
-    print(f"Top Level Import Response Status: {top_level_result.status_code}")
+    print(f"Top Level Import Response json: {top_level_result.json()}, text: {top_level_result.text}")
 
     partial_result = requests.post(
         f'{base_auth_url}/admin/realms/tdr/partialImport',
