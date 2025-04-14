@@ -1,7 +1,6 @@
 FROM python:3.13.1-alpine3.19
 RUN pip install requests
-RUN apk update \
-    && apk upgrade zlib libtirpc expat openssl libcrypto3 libssl3
+RUN apk update && apk upgrade
 RUN mkdir -p /opt/keycloak/data/import
 COPY update_tdr_realm.py update_client_configuration.py update_realm_configuration.py /keycloak-configuration/
 COPY environment-properties /keycloak-configuration/environment-properties
