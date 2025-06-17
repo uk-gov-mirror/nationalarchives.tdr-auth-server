@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - TDRD-658-add-security-flags
 jobs:
   pre-deploy:
     uses: nationalarchives/tdr-github-actions/.github/workflows/ecs_build.yml@main
