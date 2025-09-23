@@ -109,23 +109,33 @@
                             <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert"
                                  tabindex="-1" data-module="govuk-error-summary">
                                 <h2 class="govuk-error-summary__title" id="error-summary-title">
-                                    There is a problem
+                                    <#if message.summary = msg("accountDisabledMessage")>
+                                        ${msg("tdr-disabled-user-title")?no_esc}
+                                    <#else>
+                                        There is a problem
+                                    </#if>
                                 </h2>
                                 <div class="govuk-error-summary__body">
-                                    <ul class="govuk-list govuk-error-summary__list">
-                                        <li>
-                                            <#if message.summary = msg("webauthn-error-register-verification")>
-                                                <p>${msg("webauthn-error-register-verification")?no_esc}</p>
-                                            <#elseif message.summary = msg("webauthn-error-api-get")>
-                                                <p>${msg("webauthn-error-api-get")?no_esc}</p>
-                                            <#else>
-                                                <a href="#${errorTarget}">${message.summary}</a>
-                                            </#if>
-                                        </li>
-                                    </ul>
+                                    <#if message.summary = msg("accountDisabledMessage")>
+                                        <p class="govuk-body">${msg("tdr-disabled-user-message")?no_esc}</p>
+                                        <p class="govuk-body govuk-!-margin-top-4">${msg("tdr-disabled-user-reactivate")?no_esc}</p>
+                                    <#else>
+                                        <ul class="govuk-list govuk-error-summary__list">
+                                            <li>
+                                                <#if message.summary = msg("webauthn-error-register-verification")>
+                                                    <p>${msg("webauthn-error-register-verification")?no_esc}</p>
+                                                <#elseif message.summary = msg("webauthn-error-api-get")>
+                                                    <p>${msg("webauthn-error-api-get")?no_esc}</p>
+                                                <#else>
+                                                    <a href="#${errorTarget}">${message.summary}</a>
+                                                </#if>
+                                            </li>
+                                        </ul>
+                                    </#if>
                                     <#if message.summary = msg("invalidTotpMessage") || message.summary = msg("missingTotpDeviceNameMessage")>
                                         <p>${msg("totpErrorContact")?no_esc}</p>
                                     </#if>
+
                                 </div>
                             </div>
                         <#else>
