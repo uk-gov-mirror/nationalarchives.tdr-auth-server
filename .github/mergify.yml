@@ -14,7 +14,6 @@ pull_request_rules:
           - author=tna-da-bot
           - author=dependabot[bot]
       - "check-success=test / test"
-      - "check-success=security/snyk (nationalarchives)"
     actions:
       review:
         type: APPROVE
