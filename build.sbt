@@ -1,11 +1,16 @@
 import Dependencies._
 
+ThisBuild / scalaVersion := "2.13.18"
+
 lazy val commonSettings = Seq(
   scalaVersion := "2.13.18",
   Test / fork := true,
   assembly / assemblyJarName := s"${(This / name).value}.jar",
   assemblyPackageScala / assembleArtifact := false,
   assemblyPackageDependency / assembleArtifact := false,
+  (assembly / assemblyOutputPath) := Def.uncached {
+    baseDirectory.value / "target" / "scala-2.13" / (assembly / assemblyJarName).value
+  },
   libraryDependencies ++= Seq(
     caffiene,
     circeCore,
@@ -35,10 +40,14 @@ lazy val commonSettings = Seq(
     case PathList("META-INF", "MANIFEST.MF") => MergeStrategy.discard
     case _ => MergeStrategy.first
   }
-
 )
 
 lazy val root = (project in file("."))
+  .settings(
+    (assembly / assemblyOutputPath) := Def.uncached {
+      baseDirectory.value / "target" / "scala-2.13" / (assembly / assemblyJarName).value
+    },
+  )
   .aggregate(eventPublisherSpi, govUkNotifySpi, credentialProvider, customResponseProvider)
 
 lazy val eventPublisherSpi = (project in file("./event-publisher-spi"))
